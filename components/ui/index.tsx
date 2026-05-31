@@ -55,10 +55,10 @@ export const Card = ({ children, pad = 24, radius = 16, hover, style = {}, onCli
   );
 };
 
-export const IconChip = ({ name, size = 40, bg = 'var(--primary-fixed)', color = 'var(--primary)', radius = 8, fill = 0 }: {
-  name: string; size?: number; bg?: string; color?: string; radius?: number; fill?: number;
+export const IconChip = ({ name, size = 40, bg = 'var(--primary-fixed)', color = 'var(--primary)', radius = 8, fill = 0, style = {} }: {
+  name: string; size?: number; bg?: string; color?: string; radius?: number; fill?: number; style?: CSSProperties;
 }) => (
-  <div style={{ width: size, height: size, borderRadius: radius, background: bg, color, display: 'flex', alignItems: 'center', justifyContent: 'center', flex: 'none' }}>
+  <div style={{ width: size, height: size, borderRadius: radius, background: bg, color, display: 'flex', alignItems: 'center', justifyContent: 'center', flex: 'none', ...style }}>
     <Icon name={name} size={size * 0.55} fill={fill} />
   </div>
 );
