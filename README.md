@@ -1,15 +1,6 @@
-# Maturita KB — Martin Straňanek
+# Maturita KB
 
 Plnohodnotná webová aplikácia pre prípravu na maturitu. Next.js 14 + NeonDB (PostgreSQL).
-
-## Spustenie
-
-```bash
-npm install
-npm run dev
-```
-
-Otvor http://localhost:3000
 
 ## Prihlasovacie údaje (demo)
 
