@@ -8,6 +8,10 @@ type User = { id: string; name: string; email: string; role: string };
 type ToastCtx = { flash: (msg: string) => void };
 type UserCtx = { user: User | null; pinnedSubjects: any[]; refetchPinned: () => void };
 
+const ROLE_LABELS: Record<string, string> = { owner: 'Vlastník', admin: 'Administrátor', teacher: 'Učiteľ', student: 'Študent' };
+const isTeacherOrAbove = (role: string) => ['teacher', 'admin', 'owner'].includes(role);
+const isAdminOrAbove = (role: string) => ['admin', 'owner'].includes(role);
+
 export const ToastContext = createContext<ToastCtx>({ flash: () => {} });
 export const UserContext = createContext<UserCtx>({ user: null, pinnedSubjects: [], refetchPinned: () => {} });
 
@@ -18,8 +22,13 @@ export default function PortalLayout({ children }: { children: React.ReactNode }
   const [user, setUser] = useState<User | null>(null);
   const [pinnedSubjects, setPinnedSubjects] = useState<any[]>([]);
   const [toast, setToast] = useState<string | null>(null);
+  const [theme, setTheme] = useState<string>('');
   const router = useRouter();
   const pathname = usePathname();
+
+  useEffect(() => {
+    try { setTheme(localStorage.getItem('theme') || ''); } catch {}
+  }, []);
 
   const flash = (msg: string) => { setToast(msg); setTimeout(() => setToast(null), 2400); };
 
@@ -41,7 +50,9 @@ export default function PortalLayout({ children }: { children: React.ReactNode }
     { href: '/materials', icon: 'menu_book', label: 'Materiály' },
     { href: '/tests', icon: 'quiz', label: 'Testy' },
     { href: '/progress', icon: 'trending_up', label: 'Môj pokrok' },
-    ...(user?.role === 'admin' ? [{ href: '/admin', icon: 'admin_panel_settings', label: 'Admin' }] : []),
+    ...(isTeacherOrAbove(user?.role || '') ? [{ href: '/teacher', icon: 'school', label: 'Učiteľ' }] : []),
+    ...(isAdminOrAbove(user?.role || '') ? [{ href: '/admin', icon: 'admin_panel_settings', label: 'Admin' }] : []),
+    ...(user?.role === 'owner' ? [{ href: '/owner', icon: 'manage_accounts', label: 'Vlastník' }] : []),
   ];
 
   const footerItems = [
@@ -65,11 +76,15 @@ export default function PortalLayout({ children }: { children: React.ReactNode }
             {/* Logo */}
             <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '6px 8px', marginBottom: 20 }}>
               <div style={{ width: 40, height: 40, borderRadius: 10, background: 'var(--primary)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <Icon name="local_library" size={22} fill={1} style={{ color: '#fff' }} />
+                <Icon name={theme === 'spsit' ? 'computer' : 'local_library'} size={22} fill={1} style={{ color: '#fff' }} />
               </div>
               <div>
-                <Serif size={20} weight={600} style={{ color: 'var(--primary)', display: 'block', lineHeight: 1.1 }}>Study Portal</Serif>
-                <div style={{ fontSize: 11, color: 'var(--on-surface-variant)', marginTop: 1 }}>Academic Excellence</div>
+                <Serif size={20} weight={600} style={{ color: 'var(--primary)', display: 'block', lineHeight: 1.1 }}>
+                  {theme === 'spsit' ? 'SPSIT Portál' : 'Study Portal'}
+                </Serif>
+                <div style={{ fontSize: 11, color: 'var(--on-surface-variant)', marginTop: 1 }}>
+                  {theme === 'spsit' ? 'SPSKNM Nové Mesto' : 'Academic Excellence'}
+                </div>
               </div>
             </div>
 
@@ -112,7 +127,7 @@ export default function PortalLayout({ children }: { children: React.ReactNode }
                   </div>
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <div style={{ fontSize: 13, fontWeight: 600, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{user?.name || 'Načítavam…'}</div>
-                    <div style={{ fontSize: 11, color: 'var(--on-surface-variant)' }}>{user?.role === 'admin' ? 'Administrátor' : 'Študent'}</div>
+                    <div style={{ fontSize: 11, color: 'var(--on-surface-variant)' }}>{ROLE_LABELS[user?.role || ''] || user?.role || 'Používateľ'}</div>
                   </div>
                   <button onClick={logout} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--on-surface-variant)', padding: 4 }} title="Odhlásiť sa">
                     <Icon name="logout" size={16} />
