@@ -11,12 +11,55 @@ export default function SubjectDetailPage() {
   const [userData, setUserData] = useState<any>(null);
   const { refetchPinned } = useUser();
   const { flash } = useToastCtx();
-  const [activeTab, setActiveTab] = useState<'materials' | 'tests' | 'resources'>('materials');
+  const [activeTab, setActiveTab] = useState<'materials' | 'tests' | 'resources' | 'okruhy'>('materials');
+  const [okruhy, setOkruhy] = useState<any[]>([]);
+  const [newOkruhTitle, setNewOkruhTitle] = useState('');
+  const [addingOkruh, setAddingOkruh] = useState(false);
+  const [expandedOkruh, setExpandedOkruh] = useState<number | null>(null);
+  const [uploading, setUploading] = useState<number | null>(null);
 
   useEffect(() => {
     fetch(`/api/subjects/${params.id}`).then(r => r.json()).then(setSubject);
     fetch('/api/user/subjects').then(r => r.json()).then(setUserData);
+    fetch(`/api/subjects/${params.id}/okruhy`).then(r => r.json()).then(d => Array.isArray(d) ? setOkruhy(d) : null);
   }, [params.id]);
+
+  const refetchOkruhy = () =>
+    fetch(`/api/subjects/${params.id}/okruhy`).then(r => r.json()).then(d => Array.isArray(d) ? setOkruhy(d) : null);
+
+  const createOkruh = async () => {
+    if (!newOkruhTitle.trim()) return;
+    setAddingOkruh(true);
+    await fetch(`/api/subjects/${params.id}/okruhy`, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ title: newOkruhTitle }),
+    });
+    setNewOkruhTitle('');
+    setAddingOkruh(false);
+    await refetchOkruhy();
+    flash('Okruh vytvorený');
+  };
+
+  const uploadFile = async (okruhId: number, file: File) => {
+    setUploading(okruhId);
+    const fd = new FormData();
+    fd.append('file', file);
+    const res = await fetch(`/api/okruhy/${okruhId}/files`, { method: 'POST', body: fd });
+    setUploading(null);
+    if (!res.ok) {
+      const e = await res.json();
+      flash(e.error || 'Chyba pri nahrávaní');
+    } else {
+      await refetchOkruhy();
+      flash('Súbor nahraný');
+    }
+  };
+
+  const deleteFile = async (fileId: number) => {
+    await fetch(`/api/okruh-files/${fileId}`, { method: 'DELETE' });
+    await refetchOkruhy();
+    flash('Súbor odstránený');
+  };
 
   const isPinned = (userData?.pinned || []).some((s: any) => s.id === subject?.id);
 
@@ -96,9 +139,9 @@ export default function SubjectDetailPage() {
 
       {/* Tabs */}
       <div style={{ display: 'flex', gap: 4, borderBottom: '1px solid var(--outline-variant)', marginBottom: 28 }}>
-        {(['materials', 'tests', 'resources'] as const).map(t => (
+        {(['materials', 'tests', 'resources', 'okruhy'] as const).map(t => (
           <button key={t} onClick={() => setActiveTab(t)} style={{ fontFamily: 'var(--font-sans)', fontSize: 14, fontWeight: 600, padding: '10px 20px', background: 'none', border: 'none', cursor: 'pointer', color: activeTab === t ? 'var(--primary)' : 'var(--on-surface-variant)', borderBottom: activeTab === t ? '2px solid var(--primary)' : '2px solid transparent', marginBottom: -1 }}>
-            {t === 'materials' ? `Materiály (${subject.materials?.length || 0})` : t === 'tests' ? `Testy (${subject.tests?.length || 0})` : `Zdroje (${subject.resources?.length || 0})`}
+            {t === 'materials' ? `Materiály (${subject.materials?.length || 0})` : t === 'tests' ? `Testy (${subject.tests?.length || 0})` : t === 'resources' ? `Zdroje (${subject.resources?.length || 0})` : `Okruhy (${okruhy.length})`}
           </button>
         ))}
       </div>
@@ -150,6 +193,94 @@ export default function SubjectDetailPage() {
               </Card>
             </Link>
           ))}
+        </div>
+      )}
+
+      {/* Okruhy */}
+      {activeTab === 'okruhy' && (
+        <div>
+          {/* Add okruh */}
+          <div style={{ display: 'flex', gap: 12, marginBottom: 28 }}>
+            <input
+              value={newOkruhTitle}
+              onChange={e => setNewOkruhTitle(e.target.value)}
+              onKeyDown={e => e.key === 'Enter' && createOkruh()}
+              placeholder="Názov nového okruhu…"
+              style={{ flex: 1, padding: '10px 16px', borderRadius: 'var(--radius)', border: '1px solid var(--outline)', fontFamily: 'var(--font-sans)', fontSize: 14, background: 'var(--surface-container-lowest)', color: 'var(--on-surface)', outline: 'none' }}
+            />
+            <Button icon="add" onClick={createOkruh} disabled={addingOkruh || !newOkruhTitle.trim()}>
+              Pridať okruh
+            </Button>
+          </div>
+
+          {okruhy.length === 0 && (
+            <div style={{ textAlign: 'center', padding: 48, color: 'var(--on-surface-variant)', fontSize: 16 }}>
+              <IconChip name="list_alt" size={56} radius={14} style={{ margin: '0 auto 16px' }} />
+              Pre tento predmet zatiaľ nie sú žiadne okruhy.
+            </div>
+          )}
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+            {okruhy.map((okruh: any) => (
+              <Card key={okruh.id} pad={0} radius={12}>
+                {/* Okruh header */}
+                <div
+                  onClick={() => setExpandedOkruh(expandedOkruh === okruh.id ? null : okruh.id)}
+                  style={{ display: 'flex', alignItems: 'center', gap: 16, padding: '16px 20px', cursor: 'pointer' }}
+                >
+                  <IconChip name="topic" size={40} radius={10} />
+                  <div style={{ flex: 1 }}>
+                    <div style={{ fontWeight: 600, fontSize: 16 }}>{okruh.title}</div>
+                    {okruh.description && <div style={{ fontSize: 13, color: 'var(--on-surface-variant)', marginTop: 2 }}>{okruh.description}</div>}
+                  </div>
+                  <span style={{ fontSize: 13, color: 'var(--on-surface-variant)', marginRight: 8 }}>{okruh.files?.length || 0} súborov</span>
+                  <Icon name={expandedOkruh === okruh.id ? 'expand_less' : 'expand_more'} />
+                </div>
+
+                {/* Expanded: files + upload */}
+                {expandedOkruh === okruh.id && (
+                  <div style={{ borderTop: '1px solid var(--outline-variant)', padding: '16px 20px', display: 'flex', flexDirection: 'column', gap: 12 }}>
+                    {/* File list */}
+                    {(okruh.files || []).map((f: any) => (
+                      <div key={f.id} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '10px 14px', borderRadius: 10, background: 'var(--surface-container-high)' }}>
+                        <Icon name={f.mimetype?.startsWith('image/') ? 'image' : f.mimetype?.includes('pdf') ? 'picture_as_pdf' : f.mimetype?.includes('sheet') || f.mimetype?.includes('excel') ? 'table_chart' : f.mimetype?.includes('presentation') ? 'slideshow' : 'description'} size={22} style={{ color: 'var(--primary)', flexShrink: 0 }} />
+                        <div style={{ flex: 1, minWidth: 0 }}>
+                          <div style={{ fontSize: 14, fontWeight: 500, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{f.filename}</div>
+                          <div style={{ fontSize: 12, color: 'var(--on-surface-variant)' }}>{(f.size_bytes / 1024 / 1024).toFixed(2)} MB</div>
+                        </div>
+                        <a href={`/api/okruh-files/${f.id}`} download={f.filename}
+                          style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 13, color: 'var(--primary)', textDecoration: 'none', padding: '6px 12px', borderRadius: 8, background: 'var(--primary-fixed)', fontWeight: 600 }}>
+                          <Icon name="download" size={16} /> Stiahnuť
+                        </a>
+                        <button onClick={() => deleteFile(f.id)}
+                          style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--error)', padding: 6, borderRadius: 8, display: 'flex', alignItems: 'center' }}>
+                          <Icon name="delete" size={18} />
+                        </button>
+                      </div>
+                    ))}
+
+                    {/* Upload area */}
+                    <label style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8, padding: '20px 24px', border: '2px dashed var(--outline-variant)', borderRadius: 10, cursor: uploading === okruh.id ? 'not-allowed' : 'pointer', opacity: uploading === okruh.id ? 0.6 : 1, background: 'var(--surface-container-lowest)', transition: 'border-color .2s' }}
+                      onDragOver={e => { e.preventDefault(); (e.currentTarget as HTMLElement).style.borderColor = 'var(--primary)'; }}
+                      onDragLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = 'var(--outline-variant)'; }}
+                      onDrop={e => { e.preventDefault(); (e.currentTarget as HTMLElement).style.borderColor = 'var(--outline-variant)'; const f = e.dataTransfer.files[0]; if (f) uploadFile(okruh.id, f); }}
+                    >
+                      <input type="file" accept=".pdf,.docx,.doc,.pptx,.ppt,.xlsx,.xls,.png,.jpg,.jpeg,.gif,.webp,.txt" style={{ display: 'none' }}
+                        onChange={e => { const f = e.target.files?.[0]; if (f) uploadFile(okruh.id, f); e.target.value = ''; }}
+                        disabled={uploading === okruh.id} />
+                      <Icon name={uploading === okruh.id ? 'hourglass_empty' : 'upload_file'} size={32} style={{ color: 'var(--primary)' }} />
+                      <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--on-surface)' }}>
+                        {uploading === okruh.id ? 'Nahrávam…' : 'Kliknite alebo pretiahnite súbor'}
+                      </div>
+                      <div style={{ fontSize: 12, color: 'var(--on-surface-variant)' }}>
+                        PDF, DOCX, PPTX, XLSX, PNG, JPG, GIF, WEBP, TXT · max 30 MB
+                      </div>
+                    </label>
+                  </div>
+                )}
+              </Card>
+            ))}
+          </div>
         </div>
       )}
 
