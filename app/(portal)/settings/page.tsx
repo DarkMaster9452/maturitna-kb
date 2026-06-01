@@ -3,6 +3,11 @@ import { useState, useEffect } from 'react';
 import { Icon, Button, Card, IconChip, Serif, Eyebrow, Input } from '@/components/ui';
 import { useUser, useToastCtx } from '../layout';
 
+const THEMES = [
+  { id: '', label: 'Academic Hearth', icon: 'local_library', sub: 'Teplá hnedá paleta' },
+  { id: 'spsit', label: 'SPSIT', icon: 'computer', sub: 'Modrá — SPSKNM Nové Mesto' },
+];
+
 export default function SettingsPage() {
   const { user, refetchPinned } = useUser();
   const { flash } = useToastCtx();
@@ -13,12 +18,28 @@ export default function SettingsPage() {
   const [userData, setUserData] = useState<any>(null);
   const [saving, setSaving] = useState(false);
   const [notif, setNotif] = useState({ email: true, push: false, weekly: true, test: true });
+  const [currentTheme, setCurrentTheme] = useState('');
 
   useEffect(() => {
     if (user) { setName(user.name); setEmail(user.email); }
     fetch('/api/subjects').then(r => r.json()).then(setAllSubjects);
     fetch('/api/user/subjects').then(r => r.json()).then(setUserData);
+    try { setCurrentTheme(localStorage.getItem('theme') || ''); } catch {}
   }, [user]);
+
+  const applyTheme = (id: string) => {
+    try {
+      if (id) {
+        localStorage.setItem('theme', id);
+        document.documentElement.dataset.theme = id;
+      } else {
+        localStorage.removeItem('theme');
+        delete document.documentElement.dataset.theme;
+      }
+      setCurrentTheme(id);
+      flash(`Téma zmenená na ${THEMES.find(t => t.id === id)?.label}`);
+    } catch {}
+  };
 
   const saveProfile = async () => {
     setSaving(true);
@@ -130,6 +151,27 @@ export default function SettingsPage() {
         <Row label="Push notifikácie" sub="Upozornenia prehliadača na nové materiály"><Toggle val={notif.push} onChange={v => { setNotif({ ...notif, push: v }); flash(v ? 'Push notifikácie zapnuté' : 'Push notifikácie vypnuté'); }} /></Row>
         <Row label="Týždenný report" sub="Súhrn každý pondelok ráno"><Toggle val={notif.weekly} onChange={v => { setNotif({ ...notif, weekly: v }); flash(v ? 'Týždenný report zapnutý' : 'Týždenný report vypnutý'); }} /></Row>
         <Row label="Pripomienky testov" sub="Upozornenie pred naplánovanými testami"><Toggle val={notif.test} onChange={v => { setNotif({ ...notif, test: v }); flash(v ? 'Pripomienky testov zapnuté' : 'Pripomienky testov vypnuté'); }} /></Row>
+      </Section>
+
+      <Section title="Vzhľad">
+        <div style={{ display: 'flex', gap: 14, flexWrap: 'wrap' }}>
+          {THEMES.map(t => {
+            const active = currentTheme === t.id;
+            return (
+              <button key={t.id} onClick={() => applyTheme(t.id)}
+                style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '14px 20px', borderRadius: 10, border: `2px solid ${active ? 'var(--primary)' : 'var(--outline-variant)'}`, background: active ? 'var(--primary-fixed)' : 'var(--surface-container-lowest)', color: active ? 'var(--primary)' : 'var(--on-surface)', cursor: 'pointer', transition: 'all .2s', textAlign: 'left', fontFamily: 'var(--font-sans)' }}>
+                <div style={{ width: 36, height: 36, borderRadius: 8, background: active ? 'var(--primary)' : 'var(--surface-container-high)', display: 'flex', alignItems: 'center', justifyContent: 'center', flex: 'none' }}>
+                  <Icon name={t.icon} size={18} style={{ color: active ? '#fff' : 'var(--on-surface-variant)' }} />
+                </div>
+                <div>
+                  <div style={{ fontSize: 14, fontWeight: 700 }}>{t.label}</div>
+                  <div style={{ fontSize: 12, color: active ? 'var(--on-primary-fixed-variant)' : 'var(--on-surface-variant)', marginTop: 2 }}>{t.sub}</div>
+                </div>
+                {active && <Icon name="check_circle" size={18} style={{ marginLeft: 'auto', color: 'var(--primary)' }} />}
+              </button>
+            );
+          })}
+        </div>
       </Section>
 
       <Section title="Bezpečnosť">

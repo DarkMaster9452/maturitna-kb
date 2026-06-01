@@ -5,7 +5,7 @@ import { getSession } from '@/lib/auth';
 
 export async function GET() {
   const session = await getSession();
-  if (!session || session.role !== 'admin') return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+  if (!session || !['admin', 'owner'].includes(session.role)) return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
 
   const userCount = await sql`SELECT COUNT(*) as c FROM users`;
   const materialCount = await sql`SELECT COUNT(*) as c FROM materials`;

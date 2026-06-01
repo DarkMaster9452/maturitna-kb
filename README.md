@@ -15,8 +15,28 @@ Otvor http://localhost:3000
 
 | Rola | E-mail | Heslo |
 |------|--------|-------|
-| Študent (Martin Straňanek) | martin@skola.sk | heslo123 |
+| Vlastník | owner@skola.sk | heslo123 |
 | Administrátor | admin@skola.sk | heslo123 |
+| Učiteľ | ucitel@skola.sk | heslo123 |
+| Študent (Martin Straňanek) | martin@skola.sk | heslo123 |
+
+## Roly a oprávnenia
+
+| Rola | Dashboard | Materiály | Testy | Učiteľský panel | Admin panel | Vlastnícky panel |
+|------|-----------|-----------|-------|-----------------|-------------|------------------|
+| Študent | ✓ | ✓ (čítanie) | ✓ | — | — | — |
+| Učiteľ | ✓ | ✓ (editácia) | ✓ (tvorba) | ✓ | — | — |
+| Admin | ✓ | ✓ | ✓ | ✓ | ✓ | — |
+| Vlastník | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ (správa rôl) |
+
+## Témy
+
+| Téma | Popis | Farby |
+|------|-------|-------|
+| Academic Hearth (predvolená) | Teplá hnedá paleta, serif nadpisy | `#844f22` hnedá |
+| SPSIT | Inšpirovaná SPSKNM Nové Mesto, technická modrá paleta | `#1565c0` modrá |
+
+Tému prepneš v **Nastavenia → Vzhľad**.
 
 ## Funkcie
 
@@ -29,13 +49,14 @@ Otvor http://localhost:3000
 - Zdroje — filter, detail
 - Testy — interaktívny kvíz, ukladanie výsledkov do DB
 - Môj pokrok — grafy, odznaky, prehľad predmetov
+- Učiteľský panel — správa materiálov a testov
 - Admin panel — štatistiky, aktivita, rýchle akcie
-- Nastavenia — profil, výber predmetov, notifikácie
-- Podpora — FAQ, kontaktný formulár
+- Vlastnícky panel — správa rôl všetkých používateľov
+- Nastavenia — profil, výber predmetov, notifikácie, téma
 
 ## Stack
 
 - Next.js 14 (App Router)
 - NeonDB PostgreSQL (`@neondatabase/serverless`)
 - JWT auth (`jose`)
-- Inline CSS (design system "Academic Hearth")
+- Inline CSS (témy: Academic Hearth, SPSIT)
