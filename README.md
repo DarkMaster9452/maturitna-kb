@@ -8,6 +8,7 @@ Plnohodnotná webová aplikácia pre prípravu na maturitu. Next.js 14 + NeonDB 
 |------|--------|-------|
 
 | Administrátor | admin@skola.sk | heslo123 |
+
 | Študent | martin@skola.sk | heslo123 |
 
 ## Roly a oprávnenia
