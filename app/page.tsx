@@ -2,12 +2,13 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { Icon, Button, Card, IconChip, Progress, Chip, Serif, Eyebrow, Logo } from '@/components/ui';
+import { Icon, Button, Card, IconChip, Chip, Serif, Eyebrow, Logo } from '@/components/ui';
 
+type Tab = 'hub' | 'resources' | 'subjects' | 'schedule';
 type Subject = { id: string; slug: string; name_sk: string; name_en: string; icon: string; description_sk: string; sort_order: number };
 
 export default function LandingPage() {
-  const [tab, setTab] = useState<'hub' | 'resources' | 'subjects' | 'schedule'>('hub');
+  const [tab, setTab] = useState<Tab>('hub');
   const [subjects, setSubjects] = useState<Subject[]>([]);
   const [scrolled, setScrolled] = useState(false);
   const router = useRouter();
@@ -19,27 +20,21 @@ export default function LandingPage() {
     return () => window.removeEventListener('scroll', h);
   }, []);
 
-  const navLinks = [
-    { id: 'hub', label: 'Študijný hub' },
-    { id: 'resources', label: 'Zdroje' },
-    { id: 'subjects', label: 'Predmety' },
-    { id: 'schedule', label: 'Rozvrh' },
-  ] as const;
-
   return (
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
-      {/* Nav */}
-      <nav style={{ position: 'sticky', top: 0, zIndex: 50, background: scrolled ? 'rgba(252,249,245,.95)' : 'var(--surface)', backdropFilter: 'blur(12px)', padding: '14px 48px', borderBottom: `1px solid ${scrolled ? 'var(--outline-variant)' : 'transparent'}`, transition: 'all .3s' }}>
+      {/* Nav — only logo + login */}
+      <nav style={{
+        position: 'sticky', top: 0, zIndex: 50,
+        background: scrolled ? 'rgba(250,251,255,.95)' : 'var(--surface)',
+        backdropFilter: 'blur(12px)',
+        padding: '14px 48px',
+        borderBottom: `1px solid ${scrolled ? 'var(--outline-variant)' : 'transparent'}`,
+        transition: 'all .3s',
+      }}>
         <div style={{ maxWidth: 1200, margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <Logo />
-          <div style={{ display: 'flex', gap: 28, alignItems: 'center' }}>
-            {navLinks.map(l => (
-              <button key={l.id} onClick={() => setTab(l.id)}
-                style={{ fontFamily: 'var(--font-sans)', fontWeight: 600, fontSize: 14, letterSpacing: '.04em', background: 'none', border: 'none', cursor: 'pointer', color: tab === l.id ? 'var(--primary)' : 'var(--on-surface-variant)', borderBottom: tab === l.id ? '2px solid var(--primary)' : '2px solid transparent', paddingBottom: 2, transition: 'color .2s' }}>
-                {l.label}
-              </button>
-            ))}
-          </div>
+          <button onClick={() => setTab('hub')} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}>
+            <Logo />
+          </button>
           <Link href="/login">
             <Button>Prihlásenie študenta</Button>
           </Link>
@@ -47,12 +42,12 @@ export default function LandingPage() {
       </nav>
 
       {/* Main */}
-      <main style={{ flex: 1, background: 'radial-gradient(circle at 50% 0%,#fffcf5 0%,#f8f5f0 100%)', padding: '0 48px' }}>
+      <main style={{ flex: 1, background: 'radial-gradient(circle at 50% 0%, #fafbff 0%, #f0f2ff 100%)', padding: '0 48px' }}>
         <div style={{ maxWidth: 1200, margin: '0 auto' }}>
-          {tab === 'hub' && <HubTab onEnter={() => router.push('/login')} />}
-          {tab === 'resources' && <ResourcesTab />}
-          {tab === 'subjects' && <SubjectsTab subjects={subjects} onEnter={() => router.push('/login')} />}
-          {tab === 'schedule' && <ScheduleTab />}
+          {tab === 'hub' && <HubTab onEnter={() => router.push('/login')} onNavigate={setTab} />}
+          {tab === 'resources' && <ResourcesTab onBack={() => setTab('hub')} />}
+          {tab === 'subjects' && <SubjectsTab subjects={subjects} onEnter={() => router.push('/login')} onBack={() => setTab('hub')} />}
+          {tab === 'schedule' && <ScheduleTab onBack={() => setTab('hub')} />}
         </div>
       </main>
 
@@ -71,12 +66,46 @@ export default function LandingPage() {
   );
 }
 
-function HubTab({ onEnter }: { onEnter: () => void }) {
+/* ── Section nav cards shown on the hub ─── */
+const sectionCards = [
+  {
+    id: 'hub' as Tab,
+    icon: 'rocket_launch',
+    label: 'Vstúpiť do databázy',
+    desc: 'Prihlás sa a začni študovať — okruhy, testy a plán na jednom mieste.',
+    cta: 'Prihlásiť sa',
+  },
+  {
+    id: 'resources' as Tab,
+    icon: 'library_books',
+    label: 'Zdroje',
+    desc: 'Externé materiály, videá a odporúčané zdroje na prípravu na maturitu.',
+    cta: 'Prehľadať zdroje',
+  },
+  {
+    id: 'subjects' as Tab,
+    icon: 'school',
+    label: 'Predmety',
+    desc: 'Všetky maturitné predmety s materiálmi, okruhmi a cvičnými testami.',
+    cta: 'Zobraziť predmety',
+  },
+  {
+    id: 'schedule' as Tab,
+    icon: 'calendar_month',
+    label: 'Rozvrh',
+    desc: 'Týždenný plán štúdia optimalizovaný na maturitu s prehľadom termínov.',
+    cta: 'Otvoriť rozvrh',
+  },
+];
+
+function HubTab({ onEnter, onNavigate }: { onEnter: () => void; onNavigate: (t: Tab) => void }) {
   return (
     <div>
-      <div style={{ textAlign: 'center', maxWidth: 768, margin: '0 auto', paddingTop: 72, paddingBottom: 80 }}>
-        <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'rgba(215,195,182,.3)', color: 'var(--on-surface-variant)', padding: '7px 16px', borderRadius: 9999, marginBottom: 32, fontSize: 12, fontWeight: 500 }}>
-          <span style={{ width: 8, height: 8, borderRadius: '50%', background: 'var(--primary)' }} /> Všetko pre vašu maturitu na jednom mieste
+      {/* Hero */}
+      <div style={{ textAlign: 'center', maxWidth: 768, margin: '0 auto', paddingTop: 72, paddingBottom: 56 }}>
+        <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'rgba(197,195,232,.35)', color: 'var(--on-surface-variant)', padding: '7px 16px', borderRadius: 9999, marginBottom: 32, fontSize: 12, fontWeight: 500 }}>
+          <span style={{ width: 8, height: 8, borderRadius: '50%', background: 'var(--primary)' }} />
+          Všetko pre vašu maturitu na jednom mieste
         </div>
         <h1 style={{ fontFamily: 'var(--font-serif)', fontSize: 56, lineHeight: 1.1, letterSpacing: '-.02em', fontWeight: 700, color: 'var(--on-surface)', marginBottom: 24 }}>
           Vaša cesta k úspešnej <span style={{ fontStyle: 'italic', fontWeight: 400, color: 'var(--primary)' }}>maturite</span> začína tu.
@@ -89,6 +118,8 @@ function HubTab({ onEnter }: { onEnter: () => void }) {
           <Button variant="secondary">Viac informácií</Button>
         </div>
       </div>
+
+      {/* Stats */}
       <div style={{ background: 'var(--surface-container-lowest)', border: '1px solid var(--outline-variant)', borderRadius: 16, padding: '32px 48px', marginBottom: 64, display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 24 }}>
         {[['14 000+', 'Aktívnych študentov'], ['10 predmetov', 'Pokrytých predmetov'], ['98%', 'Úspešnosť maturity']].map(([v, l]) => (
           <div key={l} style={{ textAlign: 'center' }}>
@@ -97,22 +128,108 @@ function HubTab({ onEnter }: { onEnter: () => void }) {
           </div>
         ))}
       </div>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 24, paddingBottom: 80 }}>
-        {[['menu_book', 'Prehľadné okruhy', 'Všetky maturitné otázky spracované v logických celkoch.'], ['auto_stories', 'Kvalitné materiály', 'Preverené poznámky, videá a externé zdroje pre hlbšie štúdium.'], ['import_contacts', 'Študijný plán', 'Sledujte svoj pokrok a majte prehľad o tom, čo vám zostáva.']].map(([icon, title, body]) => (
-          <Card key={title as string} hover pad={32} radius={12}>
-            <div style={{ width: 48, height: 48, borderRadius: 9999, background: 'rgba(215,195,182,.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--primary)', marginBottom: 24 }}>
-              <Icon name={icon as string} />
-            </div>
-            <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: 24, fontWeight: 600, color: 'var(--on-surface)', marginBottom: 12 }}>{title}</h3>
-            <p style={{ fontFamily: 'var(--font-sans)', fontSize: 16, lineHeight: 1.5, color: 'var(--on-surface-variant)' }}>{body}</p>
-          </Card>
-        ))}
+
+      {/* Section navigation cards */}
+      <div style={{ marginBottom: 80 }}>
+        <div style={{ textAlign: 'center', marginBottom: 40 }}>
+          <Eyebrow>Čo tu nájdeš</Eyebrow>
+          <Serif size={36} weight={700} style={{ display: 'block', marginTop: 10, letterSpacing: '-.02em' }}>Preskúmaj platformu</Serif>
+        </div>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 20 }}>
+          {sectionCards.map((s) => (
+            <SectionCard
+              key={s.id}
+              icon={s.icon}
+              label={s.label}
+              desc={s.desc}
+              cta={s.cta}
+              onClick={s.id === 'hub' ? onEnter : () => onNavigate(s.id)}
+              highlight={s.id === 'hub'}
+            />
+          ))}
+        </div>
       </div>
     </div>
   );
 }
 
-function ResourcesTab() {
+function SectionCard({ icon, label, desc, cta, onClick, highlight }: {
+  icon: string; label: string; desc: string; cta: string; onClick: () => void; highlight?: boolean;
+}) {
+  const [hovered, setHovered] = useState(false);
+
+  return (
+    <div
+      onClick={onClick}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      style={{
+        background: highlight
+          ? hovered ? 'var(--primary)' : 'linear-gradient(135deg, var(--primary) 0%, #6366f1 100%)'
+          : 'var(--surface-container-lowest)',
+        border: `1px solid ${highlight ? 'transparent' : hovered ? 'var(--primary)' : 'var(--outline-variant)'}`,
+        borderRadius: 16,
+        padding: 28,
+        cursor: 'pointer',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 0,
+        boxShadow: hovered
+          ? highlight ? '0 12px 40px rgba(79,70,229,.35)' : 'var(--shadow-card-hover)'
+          : highlight ? '0 4px 20px rgba(79,70,229,.2)' : 'var(--shadow-card)',
+        transform: hovered ? 'translateY(-3px)' : 'translateY(0)',
+        transition: 'all .25s',
+      }}
+    >
+      <div style={{
+        width: 52, height: 52, borderRadius: 14,
+        background: highlight ? 'rgba(255,255,255,.2)' : 'var(--primary-fixed)',
+        color: highlight ? '#fff' : 'var(--primary)',
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        marginBottom: 20,
+      }}>
+        <Icon name={icon} size={26} />
+      </div>
+      <div style={{
+        fontFamily: 'var(--font-serif)', fontSize: 18, fontWeight: 600,
+        color: highlight ? '#fff' : 'var(--on-surface)',
+        marginBottom: 10, lineHeight: 1.3,
+      }}>{label}</div>
+      <div style={{
+        fontSize: 14, lineHeight: 1.55,
+        color: highlight ? 'rgba(255,255,255,.8)' : 'var(--on-surface-variant)',
+        flex: 1, marginBottom: 20,
+      }}>{desc}</div>
+      <div style={{
+        fontSize: 13, fontWeight: 700,
+        color: highlight ? 'rgba(255,255,255,.9)' : 'var(--primary)',
+        display: 'flex', alignItems: 'center', gap: 4,
+      }}>
+        {cta} <Icon name="arrow_forward" size={15} />
+      </div>
+    </div>
+  );
+}
+
+/* ── Sub-page back button ─── */
+function BackButton({ onClick }: { onClick: () => void }) {
+  return (
+    <button onClick={onClick} style={{
+      display: 'inline-flex', alignItems: 'center', gap: 6,
+      fontFamily: 'var(--font-sans)', fontSize: 14, fontWeight: 600,
+      color: 'var(--on-surface-variant)', background: 'none', border: 'none',
+      cursor: 'pointer', padding: '6px 0', marginBottom: 32,
+      transition: 'color .2s',
+    }}
+      onMouseEnter={e => (e.currentTarget.style.color = 'var(--primary)')}
+      onMouseLeave={e => (e.currentTarget.style.color = 'var(--on-surface-variant)')}
+    >
+      <Icon name="arrow_back" size={18} /> Späť na úvod
+    </button>
+  );
+}
+
+function ResourcesTab({ onBack }: { onBack: () => void }) {
   const [resources, setResources] = useState<any[]>([]);
   const [filter, setFilter] = useState('all');
   const [subjects, setSubjects] = useState<Subject[]>([]);
@@ -133,6 +250,7 @@ function ResourcesTab() {
 
   return (
     <div style={{ paddingTop: 48, paddingBottom: 80 }}>
+      <BackButton onClick={onBack} />
       <header style={{ marginBottom: 32 }}>
         <Eyebrow>Externé zdroje</Eyebrow>
         <Serif size={52} weight={700} style={{ letterSpacing: '-.02em', display: 'block', margin: '8px 0' }}>Zdroje</Serif>
@@ -165,9 +283,10 @@ function ResourcesTab() {
   );
 }
 
-function SubjectsTab({ subjects, onEnter }: { subjects: Subject[]; onEnter: () => void }) {
+function SubjectsTab({ subjects, onEnter, onBack }: { subjects: Subject[]; onEnter: () => void; onBack: () => void }) {
   return (
     <div style={{ paddingTop: 48, paddingBottom: 80 }}>
+      <BackButton onClick={onBack} />
       <header style={{ marginBottom: 40 }}>
         <Eyebrow>Predmety maturity</Eyebrow>
         <Serif size={52} weight={700} style={{ letterSpacing: '-.02em', display: 'block', margin: '8px 0' }}>Predmety</Serif>
@@ -187,7 +306,7 @@ function SubjectsTab({ subjects, onEnter }: { subjects: Subject[]; onEnter: () =
   );
 }
 
-function ScheduleTab() {
+function ScheduleTab({ onBack }: { onBack: () => void }) {
   const sessions = [
     { day: 'Pondelok', time: '08:00', dur: 90, subj: 'Matematika', topic: 'Integrálny počet – opakovanie', icon: 'calculate', color: 'var(--primary-fixed)', border: 'var(--primary)' },
     { day: 'Pondelok', time: '14:00', dur: 60, subj: 'Anglický jazyk', topic: 'Writing – esej', icon: 'language', color: '#dcedf5', border: '#1a6b8a' },
@@ -198,6 +317,7 @@ function ScheduleTab() {
   ];
   return (
     <div style={{ paddingTop: 48, paddingBottom: 80 }}>
+      <BackButton onClick={onBack} />
       <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'end', marginBottom: 40 }}>
         <div>
           <Eyebrow>Študijný rozvrh</Eyebrow>
