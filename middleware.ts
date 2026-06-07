@@ -5,12 +5,12 @@ const SECRET = new TextEncoder().encode(
   process.env.JWT_SECRET || 'maturita-kb-secret-2024'
 );
 
-const PUBLIC_PATHS = ['/', '/login', '/api/auth/login'];
+const PUBLIC_PATHS = ['/', '/login', '/zdroje', '/predmety', '/rozvrh', '/api/auth/login', '/api/subjects', '/api/resources'];
 
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
-  if (PUBLIC_PATHS.some(p => pathname === p) || pathname.startsWith('/_next') || pathname.startsWith('/fonts') || pathname.startsWith('/spec')) {
+  if (PUBLIC_PATHS.some(p => pathname === p) || pathname.startsWith('/_next') || pathname.startsWith('/fonts')) {
     return NextResponse.next();
   }
 
