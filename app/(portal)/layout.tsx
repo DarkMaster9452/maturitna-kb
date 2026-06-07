@@ -2,25 +2,28 @@
 import { useState, useEffect, createContext, useContext } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import Link from 'next/link';
-import { Icon, Button, Serif, Toast } from '@/components/ui';
+import { Icon, Button, Serif, Toast, useMediaQuery } from '@/components/ui';
 
 type User = { id: string; name: string; email: string; role: string };
 type ToastCtx = { flash: (msg: string) => void };
-type UserCtx = { user: User | null; pinnedSubjects: any[]; refetchPinned: () => void };
+type UserCtx = { user: User | null; pinnedSubjects: any[]; userData: any; refetchPinned: () => void; refetchUserData: () => void };
 
 const ROLE_LABELS: Record<string, string> = { owner: 'Vlastník', admin: 'Administrátor', teacher: 'Učiteľ', student: 'Študent' };
 const isTeacherOrAbove = (role: string) => ['teacher', 'admin', 'owner'].includes(role);
 const isAdminOrAbove = (role: string) => ['admin', 'owner'].includes(role);
 
 export const ToastContext = createContext<ToastCtx>({ flash: () => {} });
-export const UserContext = createContext<UserCtx>({ user: null, pinnedSubjects: [], refetchPinned: () => {} });
+export const UserContext = createContext<UserCtx>({ user: null, pinnedSubjects: [], userData: null, refetchPinned: () => {}, refetchUserData: () => {} });
 
 export function useUser() { return useContext(UserContext); }
 export function useToastCtx() { return useContext(ToastContext); }
 
 export default function PortalLayout({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
+  const [userData, setUserData] = useState<any>(null);
   const [pinnedSubjects, setPinnedSubjects] = useState<any[]>([]);
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const isMobile = useMediaQuery('(max-width: 768px)');
   const [toast, setToast] = useState<string | null>(null);
   const [theme, setTheme] = useState<string>('');
   const router = useRouter();
@@ -38,12 +41,17 @@ export default function PortalLayout({ children }: { children: React.ReactNode }
     setUser(await res.json());
   };
 
-  const fetchPinned = async () => {
-    const res = await fetch('/api/user/subjects');
-    if (res.ok) { const d = await res.json(); setPinnedSubjects(d.pinned || []); }
+  const fetchUserData = async () => {
+    try {
+      const res = await fetch('/api/user/subjects');
+      if (res.ok) { const d = await res.json(); setUserData(d); setPinnedSubjects(d.pinned || []); }
+    } catch {}
   };
 
-  useEffect(() => { fetchUser(); fetchPinned(); }, []);
+  useEffect(() => { fetchUser(); fetchUserData(); }, []);
+
+  // close mobile drawer on navigation
+  useEffect(() => { setDrawerOpen(false); }, [pathname]);
 
   const navItems = [
     { href: '/dashboard', icon: 'dashboard', label: 'Dashboard' },
@@ -68,11 +76,21 @@ export default function PortalLayout({ children }: { children: React.ReactNode }
   const isActive = (href: string) => pathname === href || pathname.startsWith(href + '/');
 
   return (
-    <UserContext.Provider value={{ user, pinnedSubjects, refetchPinned: fetchPinned }}>
+    <UserContext.Provider value={{ user, pinnedSubjects, userData, refetchPinned: fetchUserData, refetchUserData: fetchUserData }}>
       <ToastContext.Provider value={{ flash }}>
         <div style={{ display: 'flex', minHeight: '100vh' }}>
+          {/* Mobile top bar */}
+          <div className="mkb-mobilebar">
+            <button onClick={() => setDrawerOpen(true)} aria-label="Otvoriť menu" style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--on-surface)', padding: 8, display: 'flex' }}>
+              <Icon name="menu" size={24} />
+            </button>
+            <Serif size={18} weight={600} style={{ color: 'var(--primary)' }}>{theme === 'spsit' ? 'SPSIT Portál' : 'Study Portal'}</Serif>
+          </div>
+          {/* Drawer overlay */}
+          <div className={'mkb-drawer-overlay' + (drawerOpen ? ' open' : '')} onClick={() => setDrawerOpen(false)} />
+
           {/* Sidebar */}
-          <nav style={{ width: 264, height: '100vh', position: 'sticky', top: 0, flex: 'none', background: 'var(--surface-container-low)', borderRight: '1px solid var(--outline-variant)', display: 'flex', flexDirection: 'column', padding: 16, overflowY: 'auto' }}>
+          <nav className={'mkb-sidebar' + (drawerOpen ? ' open' : '')} style={{ width: 264, height: '100vh', position: 'sticky', top: 0, flex: 'none', background: 'var(--surface-container-low)', borderRight: '1px solid var(--outline-variant)', display: 'flex', flexDirection: 'column', padding: 16, overflowY: 'auto' }}>
             {/* Logo */}
             <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '6px 8px', marginBottom: 20 }}>
               <div style={{ width: 40, height: 40, borderRadius: 10, background: 'var(--primary)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -138,7 +156,7 @@ export default function PortalLayout({ children }: { children: React.ReactNode }
           </nav>
 
           {/* Main content */}
-          <main style={{ flex: 1, minWidth: 0, overflowY: 'auto', padding: '48px 48px 80px' }}>
+          <main className="mkb-main" style={{ flex: 1, minWidth: 0, overflowY: 'auto' }}>
             {children}
           </main>
         </div>

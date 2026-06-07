@@ -27,7 +27,7 @@ export default function LandingPage() {
         position: 'sticky', top: 0, zIndex: 50,
         background: scrolled ? 'rgba(250,251,255,.95)' : 'var(--surface)',
         backdropFilter: 'blur(12px)',
-        padding: '14px 48px',
+        padding: '14px clamp(16px, 4vw, 48px)',
         borderBottom: `1px solid ${scrolled ? 'var(--outline-variant)' : 'transparent'}`,
         transition: 'all .3s',
       }}>
@@ -42,7 +42,7 @@ export default function LandingPage() {
       </nav>
 
       {/* Main */}
-      <main style={{ flex: 1, background: 'radial-gradient(circle at 50% 0%, #fafbff 0%, #f0f2ff 100%)', padding: '0 48px' }}>
+      <main style={{ flex: 1, background: 'radial-gradient(circle at 50% 0%, #fafbff 0%, #f0f2ff 100%)', padding: '0 clamp(16px, 4vw, 48px)' }}>
         <div style={{ maxWidth: 1200, margin: '0 auto' }}>
           {tab === 'hub' && <HubTab onEnter={() => router.push('/login')} onNavigate={setTab} />}
           {tab === 'resources' && <ResourcesTab onBack={() => setTab('hub')} />}
@@ -51,7 +51,7 @@ export default function LandingPage() {
         </div>
       </main>
 
-      <footer style={{ background: 'var(--surface-container)', padding: '32px 48px', borderTop: '1px solid var(--outline-variant)' }}>
+      <footer style={{ background: 'var(--surface-container)', padding: '32px clamp(16px, 4vw, 48px)', borderTop: '1px solid var(--outline-variant)' }}>
         <div style={{ maxWidth: 1200, margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 24, flexWrap: 'wrap' }}>
           <Logo />
           <div style={{ display: 'flex', gap: 24 }}>
@@ -59,7 +59,7 @@ export default function LandingPage() {
               <span key={f} style={{ fontSize: 12, color: 'var(--on-surface-variant)', cursor: 'pointer' }}>{f}</span>
             ))}
           </div>
-          <div style={{ fontSize: 14, color: 'var(--on-surface-variant)' }}>© 2024 Maturita Knowledge Base</div>
+          <div style={{ fontSize: 14, color: 'var(--on-surface-variant)' }}>© {new Date().getFullYear()} Maturita Knowledge Base</div>
         </div>
       </footer>
     </div>
@@ -107,7 +107,7 @@ function HubTab({ onEnter, onNavigate }: { onEnter: () => void; onNavigate: (t: 
           <span style={{ width: 8, height: 8, borderRadius: '50%', background: 'var(--primary)' }} />
           Všetko pre vašu maturitu na jednom mieste
         </div>
-        <h1 style={{ fontFamily: 'var(--font-serif)', fontSize: 56, lineHeight: 1.1, letterSpacing: '-.02em', fontWeight: 700, color: 'var(--on-surface)', marginBottom: 24 }}>
+        <h1 style={{ fontFamily: 'var(--font-serif)', fontSize: 'clamp(34px, 7vw, 56px)', lineHeight: 1.1, letterSpacing: '-.02em', fontWeight: 700, color: 'var(--on-surface)', marginBottom: 24 }}>
           Vaša cesta k úspešnej <span style={{ fontStyle: 'italic', fontWeight: 400, color: 'var(--primary)' }}>maturite</span> začína tu.
         </h1>
         <p style={{ fontFamily: 'var(--font-sans)', fontSize: 18, lineHeight: 1.6, color: 'var(--on-surface-variant)', marginBottom: 40, maxWidth: 600, marginLeft: 'auto', marginRight: 'auto' }}>
@@ -115,15 +115,15 @@ function HubTab({ onEnter, onNavigate }: { onEnter: () => void; onNavigate: (t: 
         </p>
         <div style={{ display: 'flex', justifyContent: 'center', gap: 16, flexWrap: 'wrap' }}>
           <Button onClick={onEnter} iconAfter="chevron_right">Vstúpiť do databázy</Button>
-          <Button variant="secondary">Viac informácií</Button>
+          <Button variant="secondary" onClick={() => onNavigate('subjects')}>Viac informácií</Button>
         </div>
       </div>
 
       {/* Stats */}
-      <div style={{ background: 'var(--surface-container-lowest)', border: '1px solid var(--outline-variant)', borderRadius: 16, padding: '32px 48px', marginBottom: 64, display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 24 }}>
-        {[['14 000+', 'Aktívnych študentov'], ['10 predmetov', 'Pokrytých predmetov'], ['98%', 'Úspešnosť maturity']].map(([v, l]) => (
+      <div style={{ background: 'var(--surface-container-lowest)', border: '1px solid var(--outline-variant)', borderRadius: 16, padding: '32px 24px', marginBottom: 64, display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 24 }}>
+        {[['Tvoje predmety', 'Vyber si, čo maturuješ'], ['Okruhy a súbory', 'Nahraj a organizuj materiály'], ['Tvoj pokrok', 'Sleduj, čo ti zostáva']].map(([v, l]) => (
           <div key={l} style={{ textAlign: 'center' }}>
-            <Serif size={40} weight={700} style={{ display: 'block', color: 'var(--primary)' }}>{v}</Serif>
+            <Serif size={24} weight={700} style={{ display: 'block', color: 'var(--primary)' }}>{v}</Serif>
             <div style={{ fontSize: 15, color: 'var(--on-surface-variant)', marginTop: 4 }}>{l}</div>
           </div>
         ))}
@@ -135,7 +135,7 @@ function HubTab({ onEnter, onNavigate }: { onEnter: () => void; onNavigate: (t: 
           <Eyebrow>Čo tu nájdeš</Eyebrow>
           <Serif size={36} weight={700} style={{ display: 'block', marginTop: 10, letterSpacing: '-.02em' }}>Preskúmaj platformu</Serif>
         </div>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 20 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 20 }}>
           {sectionCards.map((s) => (
             <SectionCard
               key={s.id}

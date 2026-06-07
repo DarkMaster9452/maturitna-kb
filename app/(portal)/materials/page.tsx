@@ -1,17 +1,20 @@
 'use client';
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Icon, Card, IconChip, Chip, Serif, Eyebrow } from '@/components/ui';
+import { Icon, Card, IconChip, Chip, Serif, Eyebrow, SkeletonCard } from '@/components/ui';
 
 export default function MaterialsPage() {
   const [materials, setMaterials] = useState<any[]>([]);
   const [subjects, setSubjects] = useState<any[]>([]);
   const [filter, setFilter] = useState('all');
   const [search, setSearch] = useState('');
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch('/api/materials').then(r => r.json()).then(setMaterials);
-    fetch('/api/subjects').then(r => r.json()).then(setSubjects);
+    Promise.all([
+      fetch('/api/materials').then(r => r.json()).then(d => setMaterials(Array.isArray(d) ? d : [])).catch(() => setMaterials([])),
+      fetch('/api/subjects').then(r => r.json()).then(d => setSubjects(Array.isArray(d) ? d : [])).catch(() => setSubjects([])),
+    ]).finally(() => setLoading(false));
   }, []);
 
   const filtered = materials.filter(m => {
@@ -33,7 +36,7 @@ export default function MaterialsPage() {
     <div>
       <header style={{ marginBottom: 32 }}>
         <Eyebrow>Databáza vedomostí</Eyebrow>
-        <Serif size={52} weight={700} style={{ letterSpacing: '-.02em', display: 'block', margin: '8px 0' }}>Materiály</Serif>
+        <Serif size={52} weight={700} style={{ letterSpacing: '-.02em', display: 'block', margin: '8px 0', fontSize: 'clamp(34px, 7vw, 52px)' }}>Materiály</Serif>
         <div style={{ fontSize: 18, color: 'var(--on-surface-variant)' }}>Každá maturitná téma, usporiadaná do logických celkov.</div>
       </header>
 
@@ -55,8 +58,10 @@ export default function MaterialsPage() {
 
       <div style={{ marginBottom: 16, fontSize: 14, color: 'var(--on-surface-variant)' }}>{filtered.length} materiálov</div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 }}>
-        {filtered.map((m: any) => (
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 20 }}>
+        {loading && filtered.length === 0
+          ? [0,1,2,3].map(i => <SkeletonCard key={i} />)
+          : filtered.map((m: any) => (
           <Link key={m.id} href={`/materials/${m.id}`} style={{ textDecoration: 'none' }}>
             <Card hover pad={20} radius={12} style={{ display: 'flex', gap: 16, alignItems: 'flex-start', cursor: 'pointer' }}>
               <div style={{ width: 48, height: 48, borderRadius: 12, background: typeColor[m.type]?.bg || 'var(--primary-fixed)', color: typeColor[m.type]?.c || 'var(--primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', flex: 'none' }}>
@@ -78,7 +83,7 @@ export default function MaterialsPage() {
         ))}
       </div>
 
-      {filtered.length === 0 && (
+      {!loading && filtered.length === 0 && (
         <div style={{ textAlign: 'center', padding: 64, color: 'var(--on-surface-variant)' }}>
           <Icon name="search_off" size={48} style={{ opacity: .4, display: 'block', margin: '0 auto 16px' }} />
           <div style={{ fontSize: 18, fontWeight: 600, marginBottom: 8 }}>Žiadne materiály</div>

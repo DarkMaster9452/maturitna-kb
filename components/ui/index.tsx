@@ -1,5 +1,5 @@
 'use client';
-import { useState, ReactNode, CSSProperties } from 'react';
+import { useState, useEffect, ReactNode, CSSProperties } from 'react';
 
 export const Icon = ({ name, fill = 0, size = 24, style = {}, className = '' }: {
   name: string; fill?: number; size?: number; style?: CSSProperties; className?: string;
@@ -148,3 +148,36 @@ export function useToast() {
   };
   return { toast, flash };
 }
+
+
+// Responsive helper: returns true when the media query matches (SSR-safe)
+export function useMediaQuery(query: string): boolean {
+  const [matches, setMatches] = useState(false);
+  useEffect(() => {
+    const m = window.matchMedia(query);
+    const handler = () => setMatches(m.matches);
+    handler();
+    m.addEventListener('change', handler);
+    return () => m.removeEventListener('change', handler);
+  }, [query]);
+  return matches;
+}
+
+// Loading skeleton block (shimmer)
+export const Skeleton = ({ height = 16, width = '100%', radius = 8, style = {} }: {
+  height?: number | string; width?: number | string; radius?: number; style?: CSSProperties;
+}) => (
+  <div className="mkb-skeleton" style={{ height, width, borderRadius: radius, ...style }} />
+);
+
+// Card-shaped skeleton placeholder
+export const SkeletonCard = ({ lines = 2 }: { lines?: number }) => (
+  <div style={{ background: 'var(--surface-container-lowest)', border: '1px solid var(--outline-variant)', borderRadius: 12, padding: 20, display: 'flex', gap: 16, alignItems: 'flex-start' }}>
+    <Skeleton width={48} height={48} radius={12} />
+    <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 10 }}>
+      <Skeleton width="40%" height={12} />
+      <Skeleton width="80%" height={16} />
+      {Array.from({ length: lines }).map((_, i) => <Skeleton key={i} width={i % 2 ? '60%' : '90%'} height={10} />)}
+    </div>
+  </div>
+);

@@ -31,7 +31,7 @@ export default function OnboardingPage() {
   };
 
   return (
-    <div style={{ minHeight: '100vh', background: 'var(--background)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: 48 }}>
+    <div style={{ minHeight: '100vh', background: 'var(--background)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: 'clamp(20px, 5vw, 48px)' }}>
       <div style={{ width: '100%', maxWidth: 800 }}>
         <div style={{ textAlign: 'center', marginBottom: 48 }}>
           <div style={{ width: 64, height: 64, borderRadius: 16, background: 'var(--primary-fixed)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 24px' }}>
@@ -44,7 +44,7 @@ export default function OnboardingPage() {
           </p>
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 16, marginBottom: 40 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: 16, marginBottom: 40 }}>
           {subjects.map(s => {
             const isSelected = selected.has(s.id);
             return (

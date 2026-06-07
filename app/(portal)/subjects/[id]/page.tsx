@@ -101,7 +101,7 @@ export default function SubjectDetailPage() {
       </div>
 
       {/* Header */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start', marginBottom: 32 }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start', marginBottom: 32, gap: 16, flexWrap: 'wrap' }}>
         <div style={{ display: 'flex', gap: 20, alignItems: 'center' }}>
           <IconChip name={subject.icon} size={64} radius={16} />
           <div>
@@ -121,7 +121,7 @@ export default function SubjectDetailPage() {
 
       {/* Progress card */}
       {prog && (
-        <Card pad={24} radius={12} style={{ marginBottom: 32, display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 24 }}>
+        <Card pad={24} radius={12} style={{ marginBottom: 32, display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: 24 }}>
           <div>
             <div style={{ fontSize: 13, color: 'var(--on-surface-variant)', marginBottom: 4 }}>Pokrok kurzu</div>
             <Progress value={prog.progress_pct} right={prog.progress_pct + '%'} />
@@ -138,9 +138,9 @@ export default function SubjectDetailPage() {
       )}
 
       {/* Tabs */}
-      <div style={{ display: 'flex', gap: 4, borderBottom: '1px solid var(--outline-variant)', marginBottom: 28 }}>
+      <div style={{ display: 'flex', gap: 4, borderBottom: '1px solid var(--outline-variant)', marginBottom: 28, overflowX: 'auto' }}>
         {(['materials', 'tests', 'resources', 'okruhy'] as const).map(t => (
-          <button key={t} onClick={() => setActiveTab(t)} style={{ fontFamily: 'var(--font-sans)', fontSize: 14, fontWeight: 600, padding: '10px 20px', background: 'none', border: 'none', cursor: 'pointer', color: activeTab === t ? 'var(--primary)' : 'var(--on-surface-variant)', borderBottom: activeTab === t ? '2px solid var(--primary)' : '2px solid transparent', marginBottom: -1 }}>
+          <button key={t} onClick={() => setActiveTab(t)} style={{ fontFamily: 'var(--font-sans)', fontSize: 14, fontWeight: 600, padding: '10px 20px', background: 'none', border: 'none', cursor: 'pointer', whiteSpace: 'nowrap', color: activeTab === t ? 'var(--primary)' : 'var(--on-surface-variant)', borderBottom: activeTab === t ? '2px solid var(--primary)' : '2px solid transparent', marginBottom: -1 }}>
             {t === 'materials' ? `Materiály (${subject.materials?.length || 0})` : t === 'tests' ? `Testy (${subject.tests?.length || 0})` : t === 'resources' ? `Zdroje (${subject.resources?.length || 0})` : `Okruhy (${okruhy.length})`}
           </button>
         ))}
@@ -148,7 +148,7 @@ export default function SubjectDetailPage() {
 
       {/* Materials */}
       {activeTab === 'materials' && (
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 20 }}>
           {(subject.materials || []).map((m: any) => (
             <Link key={m.id} href={`/materials/${m.id}`} style={{ textDecoration: 'none' }}>
               <Card hover pad={20} radius={12} style={{ display: 'flex', gap: 16, alignItems: 'flex-start', cursor: 'pointer' }}>
@@ -177,7 +177,7 @@ export default function SubjectDetailPage() {
 
       {/* Tests */}
       {activeTab === 'tests' && (
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 20 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: 20 }}>
           {(subject.tests || []).map((t: any) => (
             <Link key={t.id} href={`/tests/${t.id}`} style={{ textDecoration: 'none' }}>
               <Card hover pad={24} radius={12} style={{ cursor: 'pointer' }}>
@@ -286,7 +286,7 @@ export default function SubjectDetailPage() {
 
       {/* Resources */}
       {activeTab === 'resources' && (
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 20 }}>
           {(subject.resources || []).map((r: any) => (
             <Link key={r.id} href={`/resources/${r.id}`} style={{ textDecoration: 'none' }}>
               <Card hover pad={20} radius={12} style={{ display: 'flex', gap: 16, cursor: 'pointer' }}>

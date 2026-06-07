@@ -1,7 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Icon, Button, Card, IconChip, Progress, Chip, Serif, Eyebrow } from '@/components/ui';
+import { Icon, Button, Card, IconChip, Progress, Chip, Serif, Eyebrow, SkeletonCard } from '@/components/ui';
 import { useUser, useToastCtx } from '../layout';
 
 export default function SubjectsPage() {
@@ -9,10 +9,13 @@ export default function SubjectsPage() {
   const [userData, setUserData] = useState<any>(null);
   const { user, refetchPinned } = useUser();
   const { flash } = useToastCtx();
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch('/api/subjects').then(r => r.json()).then(setAllSubjects);
-    fetch('/api/user/subjects').then(r => r.json()).then(setUserData);
+    Promise.all([
+      fetch('/api/subjects').then(r => r.json()).then(d => setAllSubjects(Array.isArray(d) ? d : [])).catch(() => setAllSubjects([])),
+      fetch('/api/user/subjects').then(r => r.json()).then(setUserData).catch(() => {}),
+    ]).finally(() => setLoading(false));
   }, []);
 
   const selectedIds = new Set((userData?.selected || []).map((s: any) => s.id));
@@ -38,10 +41,10 @@ export default function SubjectsPage() {
 
   return (
     <div>
-      <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'end', marginBottom: 40 }}>
+      <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'end', marginBottom: 40, gap: 16, flexWrap: 'wrap' }}>
         <div>
           <Eyebrow>Maturitné predmety</Eyebrow>
-          <Serif size={52} weight={700} style={{ letterSpacing: '-.02em', display: 'block', margin: '8px 0' }}>Predmety</Serif>
+          <Serif size={52} weight={700} style={{ letterSpacing: '-.02em', display: 'block', margin: '8px 0', fontSize: 'clamp(34px, 7vw, 52px)' }}>Predmety</Serif>
           <div style={{ fontSize: 18, color: 'var(--on-surface-variant)' }}>Vyber predmety, ktoré maturuješ, a pripni ich do sidebaru.</div>
         </div>
         <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
@@ -50,7 +53,8 @@ export default function SubjectsPage() {
         </div>
       </header>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 20 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: 20 }}>
+        {loading && allSubjects.length === 0 && [0,1,2].map(i => <SkeletonCard key={'sk'+i} lines={3} />)}
         {allSubjects.map(s => {
           const isSelected = selectedIds.has(s.id);
           const isPinned = pinnedIds.has(s.id);

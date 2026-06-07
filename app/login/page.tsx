@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { Icon, Button, Logo, Input } from '@/components/ui';
 
 export default function LoginPage() {
-  const [email, setEmail] = useState('martin@skola.sk');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPass, setShowPass] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -28,7 +28,7 @@ export default function LoginPage() {
   return (
     <div style={{ minHeight: '100vh', display: 'flex', background: 'var(--background)' }}>
       {/* Left */}
-      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', padding: 48 }}>
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', padding: 'clamp(24px, 5vw, 48px)' }}>
         <div style={{ width: '100%', maxWidth: 400 }}>
           <Link href="/" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, color: 'var(--on-surface-variant)', fontFamily: 'var(--font-sans)', fontSize: 14, fontWeight: 600, marginBottom: 40, padding: 0, background: 'none', border: 'none', cursor: 'pointer', textDecoration: 'none' }}>
             <Icon name="arrow_back" size={18} /> Späť na úvodnú stránku
@@ -67,20 +67,6 @@ export default function LoginPage() {
               {loading ? 'Prihlasovanie…' : 'Prihlásiť sa'}
             </Button>
 
-            <div style={{ textAlign: 'center', position: 'relative' }}>
-              <div style={{ position: 'absolute', top: '50%', left: 0, right: 0, height: 1, background: 'var(--outline-variant)' }} />
-              <span style={{ position: 'relative', background: 'var(--background)', padding: '0 12px', fontSize: 13, color: 'var(--on-surface-variant)' }}>alebo</span>
-            </div>
-
-            <button onClick={() => { setEmail('admin@skola.sk'); setPassword('heslo123'); }}
-              style={{ fontFamily: 'var(--font-sans)', fontSize: 14, fontWeight: 600, cursor: 'pointer', padding: '11px 22px', borderRadius: 'var(--radius)', border: '1px solid var(--outline-variant)', background: 'var(--surface-container-lowest)', color: 'var(--on-surface)', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, transition: 'border-color .2s' }}
-              onMouseEnter={e => (e.currentTarget.style.borderColor = 'var(--primary)')} onMouseLeave={e => (e.currentTarget.style.borderColor = 'var(--outline-variant)')}>
-              <Icon name="admin_panel_settings" size={18} style={{ color: 'var(--primary)' }} /> Prihlásiť sa ako administrátor
-            </button>
-
-            <div style={{ padding: '12px 16px', background: 'var(--surface-container)', borderRadius: 8, fontSize: 13, color: 'var(--on-surface-variant)' }}>
-              <strong>Demo:</strong> martin@skola.sk / heslo123 &nbsp;|&nbsp; admin@skola.sk / heslo123
-            </div>
           </div>
 
           <div style={{ marginTop: 24, textAlign: 'center', fontSize: 14, color: 'var(--on-surface-variant)' }}>
@@ -91,7 +77,7 @@ export default function LoginPage() {
       </div>
 
       {/* Right */}
-      <div style={{ flex: 1, background: 'linear-gradient(135deg,var(--primary) 0%,#6b3b0e 100%)', display: 'flex', flexDirection: 'column', justifyContent: 'center', padding: 64, position: 'relative', overflow: 'hidden' }}>
+      <div className="mkb-hide-mobile" style={{ flex: 1, background: 'linear-gradient(135deg,var(--primary) 0%,#3730a3 100%)', display: 'flex', flexDirection: 'column', justifyContent: 'center', padding: 64, position: 'relative', overflow: 'hidden' }}>
         <div style={{ position: 'absolute', top: -80, right: -80, width: 300, height: 300, background: 'rgba(255,255,255,.08)', borderRadius: '50%' }} />
         <div style={{ position: 'absolute', bottom: -40, left: -40, width: 200, height: 200, background: 'rgba(255,255,255,.05)', borderRadius: '50%' }} />
         <div style={{ position: 'relative' }}>
@@ -102,9 +88,9 @@ export default function LoginPage() {
             Tvoja maturita.<br /><span style={{ fontStyle: 'italic', fontWeight: 400 }}>Tvoje pravidlá.</span>
           </div>
           <p style={{ fontSize: 17, lineHeight: 1.7, color: 'rgba(255,255,255,.8)', maxWidth: 380, marginBottom: 48 }}>
-            Prístup k tisícom overených materiálov, cvičným testom a personalizovaným plánov štúdia – všetko na jednom mieste.
+            Tvoje okruhy, materiály a poznámky pre maturitu – prehľadne na jednom mieste.
           </p>
-          {[['check_circle', '14 000+ aktívnych študentov'], ['check_circle', 'Všetky predmety maturity'], ['check_circle', 'Sledovanie pokroku v reálnom čase']].map(([icon, text]) => (
+          {[['check_circle', 'Vlastné okruhy a materiály'], ['check_circle', 'Všetky predmety maturity'], ['check_circle', 'Sledovanie pokroku štúdia']].map(([icon, text]) => (
             <div key={text as string} style={{ display: 'flex', alignItems: 'center', gap: 12, fontSize: 15, color: 'rgba(255,255,255,.9)', fontWeight: 500, marginBottom: 12 }}>
               <Icon name={icon as string} size={20} fill={1} style={{ color: 'rgba(255,220,196,.8)' }} />{text}
             </div>
