@@ -23,12 +23,12 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
   if (!rows.length) return NextResponse.json({ error: 'Not found' }, { status: 404 });
   const subject = rows[0];
 
-  const { title, description } = await req.json();
+  const { title, description, category, icon, color } = await req.json();
   if (!title?.trim()) return NextResponse.json({ error: 'Title required' }, { status: 400 });
 
   const [okruh] = await sql`
-    INSERT INTO okruhy (subject_id, title, description)
-    VALUES (${subject.id}, ${title.trim()}, ${description || null})
+    INSERT INTO okruhy (subject_id, title, description, category, icon, color)
+    VALUES (${subject.id}, ${title.trim()}, ${description || null}, ${category || null}, ${icon || null}, ${color || null})
     RETURNING *
   `;
   return NextResponse.json(okruh, { status: 201 });

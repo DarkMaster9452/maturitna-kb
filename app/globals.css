@@ -156,6 +156,18 @@ input, textarea, select { font-family: var(--font-sans); }
   .mkb-tap { min-width: 44px !important; min-height: 44px !important; }
 }
 
+
+/* ── Mobile bottom navigation ─────────────────────────────── */
+.mkb-bottomnav { display: none; }
+@media (max-width: 768px) {
+  .mkb-bottomnav {
+    display: flex; position: fixed; left: 0; right: 0; bottom: 0; z-index: 140;
+    background: var(--surface-container-low);
+    border-top: 1px solid var(--outline-variant);
+    padding-bottom: env(safe-area-inset-bottom, 0);
+  }
+}
+
 .material-symbols-outlined {
   font-family: 'Material Symbols Outlined';
   font-weight: normal;

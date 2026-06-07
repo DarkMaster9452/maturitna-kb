@@ -56,6 +56,7 @@ export default function PortalLayout({ children }: { children: React.ReactNode }
   const navItems = [
     { href: '/dashboard', icon: 'dashboard', label: 'Dashboard' },
     { href: '/materials', icon: 'menu_book', label: 'Materiály' },
+    { href: '/notes', icon: 'edit_note', label: 'Poznámky' },
     { href: '/tests', icon: 'quiz', label: 'Testy' },
     { href: '/progress', icon: 'trending_up', label: 'Môj pokrok' },
     ...(isTeacherOrAbove(user?.role || '') ? [{ href: '/teacher', icon: 'school', label: 'Učiteľ' }] : []),
@@ -159,6 +160,24 @@ export default function PortalLayout({ children }: { children: React.ReactNode }
           <main className="mkb-main" style={{ flex: 1, minWidth: 0, overflowY: 'auto' }}>
             {children}
           </main>
+
+          {/* Mobile bottom navigation */}
+          <nav className="mkb-bottomnav">
+            {[
+              { href: '/dashboard', icon: 'dashboard', label: 'Domov' },
+              { href: '/notes', icon: 'edit_note', label: 'Poznámky' },
+              { href: '/materials', icon: 'menu_book', label: 'Materiály' },
+              { href: '/subjects', icon: 'school', label: 'Predmety' },
+            ].map(it => {
+              const on = isActive(it.href);
+              return (
+                <Link key={it.href} href={it.href} style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2, padding: '6px 0', color: on ? 'var(--primary)' : 'var(--on-surface-variant)', textDecoration: 'none' }}>
+                  <Icon name={it.icon} size={22} fill={on ? 1 : 0} />
+                  <span style={{ fontSize: 10.5, fontWeight: 600 }}>{it.label}</span>
+                </Link>
+              );
+            })}
+          </nav>
         </div>
         {toast && <Toast msg={toast} onDismiss={() => setToast(null)} />}
       </ToastContext.Provider>

@@ -4,6 +4,7 @@ import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import { Icon, Button, Card, IconChip, Progress, Chip, Serif, Eyebrow } from '@/components/ui';
 import { useUser, useToastCtx } from '../../layout';
+import { OKRUH_CATEGORIES, DEFAULT_OKRUH, categoryById } from '@/lib/categories';
 
 export default function SubjectDetailPage() {
   const params = useParams();
@@ -14,6 +15,7 @@ export default function SubjectDetailPage() {
   const [activeTab, setActiveTab] = useState<'materials' | 'tests' | 'resources' | 'okruhy'>('materials');
   const [okruhy, setOkruhy] = useState<any[]>([]);
   const [newOkruhTitle, setNewOkruhTitle] = useState('');
+  const [newOkruhCat, setNewOkruhCat] = useState('');
   const [addingOkruh, setAddingOkruh] = useState(false);
   const [expandedOkruh, setExpandedOkruh] = useState<number | null>(null);
   const [uploading, setUploading] = useState<number | null>(null);
@@ -30,11 +32,13 @@ export default function SubjectDetailPage() {
   const createOkruh = async () => {
     if (!newOkruhTitle.trim()) return;
     setAddingOkruh(true);
+    const cat = OKRUH_CATEGORIES.find(c => c.id === newOkruhCat);
     await fetch(`/api/subjects/${params.id}/okruhy`, {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ title: newOkruhTitle }),
+      body: JSON.stringify({ title: newOkruhTitle, category: cat?.id || null, icon: cat?.icon || null, color: cat?.color || null }),
     });
     setNewOkruhTitle('');
+    setNewOkruhCat('');
     setAddingOkruh(false);
     await refetchOkruhy();
     flash('Okruh vytvorený');
@@ -199,18 +203,32 @@ export default function SubjectDetailPage() {
       {/* Okruhy */}
       {activeTab === 'okruhy' && (
         <div>
-          {/* Add okruh */}
-          <div style={{ display: 'flex', gap: 12, marginBottom: 28 }}>
-            <input
-              value={newOkruhTitle}
-              onChange={e => setNewOkruhTitle(e.target.value)}
-              onKeyDown={e => e.key === 'Enter' && createOkruh()}
-              placeholder="Názov nového okruhu…"
-              style={{ flex: 1, padding: '10px 16px', borderRadius: 'var(--radius)', border: '1px solid var(--outline)', fontFamily: 'var(--font-sans)', fontSize: 14, background: 'var(--surface-container-lowest)', color: 'var(--on-surface)', outline: 'none' }}
-            />
-            <Button icon="add" onClick={createOkruh} disabled={addingOkruh || !newOkruhTitle.trim()}>
-              Pridať okruh
-            </Button>
+          {/* Add okruh — with category templates */}
+          <div style={{ marginBottom: 28 }}>
+            <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: '.06em', textTransform: 'uppercase', color: 'var(--on-surface-variant)', marginBottom: 8 }}>Typ okruhu</div>
+            <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 12 }}>
+              {[{ id: '', label: DEFAULT_OKRUH.label, icon: DEFAULT_OKRUH.icon, color: DEFAULT_OKRUH.color }, ...OKRUH_CATEGORIES].map(c => {
+                const active = newOkruhCat === c.id;
+                return (
+                  <button key={c.id || 'custom'} onClick={() => setNewOkruhCat(c.id)} title={c.label}
+                    style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontFamily: 'var(--font-sans)', fontSize: 13, fontWeight: 600, cursor: 'pointer', borderRadius: 9999, padding: '7px 14px', background: active ? (c.color + '1f') : 'var(--surface-container-lowest)', color: active ? c.color : 'var(--on-surface-variant)', border: `1px solid ${active ? c.color : 'var(--outline-variant)'}`, transition: 'all .15s' }}>
+                    <Icon name={c.icon} size={16} fill={active ? 1 : 0} style={{ color: active ? c.color : 'var(--on-surface-variant)' }} />{c.label}
+                  </button>
+                );
+              })}
+            </div>
+            <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+              <input
+                value={newOkruhTitle}
+                onChange={e => setNewOkruhTitle(e.target.value)}
+                onKeyDown={e => e.key === 'Enter' && createOkruh()}
+                placeholder="Názov nového okruhu…"
+                style={{ flex: '1 1 220px', padding: '10px 16px', borderRadius: 'var(--radius)', border: '1px solid var(--outline)', fontFamily: 'var(--font-sans)', fontSize: 14, background: 'var(--surface-container-lowest)', color: 'var(--on-surface)', outline: 'none' }}
+              />
+              <Button icon="add" onClick={createOkruh} disabled={addingOkruh || !newOkruhTitle.trim()}>
+                Pridať okruh
+              </Button>
+            </div>
           </div>
 
           {okruhy.length === 0 && (
@@ -228,7 +246,7 @@ export default function SubjectDetailPage() {
                   onClick={() => setExpandedOkruh(expandedOkruh === okruh.id ? null : okruh.id)}
                   style={{ display: 'flex', alignItems: 'center', gap: 16, padding: '16px 20px', cursor: 'pointer' }}
                 >
-                  <IconChip name="topic" size={40} radius={10} />
+                  {(() => { const c = categoryById(okruh.category); return <IconChip name={okruh.icon || c.icon} size={40} radius={10} bg={(okruh.color || c.color) + '22'} color={okruh.color || c.color} />; })()}
                   <div style={{ flex: 1 }}>
                     <div style={{ fontWeight: 600, fontSize: 16 }}>{okruh.title}</div>
                     {okruh.description && <div style={{ fontSize: 13, color: 'var(--on-surface-variant)', marginTop: 2 }}>{okruh.description}</div>}
