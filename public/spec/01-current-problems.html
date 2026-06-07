@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="sk"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Súčasné problémy — Maturita KB</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head><body>
+<div class="bar"><div class="bar-in">
+  <a class="brand" href="index.html"><span class="dot"><span class="material-symbols-outlined">local_library</span></span> Maturita KB · Spec</a>
+  <a class="home" href="index.html">Prehľad</a>
+</div>
+<div class="nav"><a class="" href="index.html">Prehľad</a>
+<a class="active" href="01-current-problems.html"><span class="n">1</span>Problémy</a>
+<a class="" href="02-ui-improvements.html"><span class="n">2</span>UI</a>
+<a class="" href="03-new-features.html"><span class="n">3</span>Funkcie</a>
+<a class="" href="04-file-upload.html"><span class="n">4</span>Upload</a>
+<a class="" href="05-topic-categories.html"><span class="n">5</span>Kategórie</a>
+<a class="" href="06-mobile.html"><span class="n">6</span>Mobil</a>
+<a class="" href="07-technical.html"><span class="n">7</span>Technika</a>
+<a class="" href="08-roadmap.html"><span class="n">8</span>Roadmapa</a></div>
+</div>
+<div class="wrap">
+  <div class="eyebrow">Section 1 — Current Problems</div>
+  <h1>Súčasné problémy</h1>
+  <p class="lead">Konkrétne body, ktoré dnes blokujú alebo znižujú kvalitu.</p>
+  
+  <div class="callout warn"><span class="k">Súbory v produkcii reálne nedosiahnu 30&nbsp;MB</span>
+  Upload ide ako <code>FormData</code> cez Next API route. Vercel serverless funkcie majú limit tela požiadavky <strong>4,5&nbsp;MB</strong> — väčší súbor zlyhá ešte pred validáciou. Bajty navyše ležia v Neone (<code>okruh_files.data bytea</code>): každé stiahnutie tečie cez funkciu, platíš egress a veľké riadky nafukujú tabuľku.</div>
+  <h3>Poznámky nemajú editor</h3>
+  <p><code>materials.content</code> existuje a detail ho už zobrazuje (opravený fake obsah), ale chýba UI na <em>písanie</em> a úpravu. Hlavné sloveso produktu — „vytvor poznámku" — nie je na nič napojené.</p>
+  <h3>Organizácia končí na dvoch úrovniach</h3>
+  <p>Predmet → okruh je dobré, no vnútri okruhu je len plochý zoznam súborov. Žiadne tagy, obľúbené, archív ani koncepty. Pri 12 predmetoch a 80 okruhoch v apríli sa už len skroluje. Chýba prierezový spôsob nájsť „všetky moje vzorce" alebo „čo si mám zopakovať".</p>
+  <h3>Vyhľadávanie je plytké</h3>
+  <p>Zoznam materiálov filtruje len podreťazec v <code>title</code> na klientovi nad už načítanými riadkami — nedotýka sa <code>content</code>, okruhov ani názvov súborov a neškáluje.</p>
+  <h3>Nekonzistentný vizuálny lešt</h3>
+  <p>Tokeny sú pekné, ale spacing je ad-hoc (natvrdo <code>marginBottom:32</code> po súboroch), každá stránka začína 44–52px serif H1 (nič nepôsobí dôležitejšie), tiene sú väčšinou vypnuté. Pôsobí to ako „čistý prototyp", nie „premium SaaS".</p>
+  <h3>Všetko je client component</h3>
+  <p>Landing aj všetky portálové stránky sú <code>'use client'</code> s <code>useEffect</code> fetchmi → bliknutia a waterfally namiesto serverového renderu.</p>
+  
+  <div class="pn"><a class="prev" href="index.html"><div class="dir">‹ Späť</div><div class="ttl">Maturita KB — Plán vylepšení</div></a><a class="next" href="02-ui-improvements.html"><div class="dir">Ďalej ›</div><div class="ttl">UI vylepšenia</div></a></div>
+</div>
+</body></html>

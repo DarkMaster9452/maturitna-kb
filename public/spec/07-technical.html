@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="sk"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Technické zmeny — Maturita KB</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head><body>
+<div class="bar"><div class="bar-in">
+  <a class="brand" href="index.html"><span class="dot"><span class="material-symbols-outlined">local_library</span></span> Maturita KB · Spec</a>
+  <a class="home" href="index.html">Prehľad</a>
+</div>
+<div class="nav"><a class="" href="index.html">Prehľad</a>
+<a class="" href="01-current-problems.html"><span class="n">1</span>Problémy</a>
+<a class="" href="02-ui-improvements.html"><span class="n">2</span>UI</a>
+<a class="" href="03-new-features.html"><span class="n">3</span>Funkcie</a>
+<a class="" href="04-file-upload.html"><span class="n">4</span>Upload</a>
+<a class="" href="05-topic-categories.html"><span class="n">5</span>Kategórie</a>
+<a class="" href="06-mobile.html"><span class="n">6</span>Mobil</a>
+<a class="active" href="07-technical.html"><span class="n">7</span>Technika</a>
+<a class="" href="08-roadmap.html"><span class="n">8</span>Roadmapa</a></div>
+</div>
+<div class="wrap">
+  <div class="eyebrow">Section 7 — Technical Changes</div>
+  <h1>Technické zmeny</h1>
+  <p class="lead">Predpokladaný stack je Tailwind; realita sú inline štýly. Nemigruj naraz.</p>
+  
+  <h3>Otázka Tailwindu</h3><p>Dve cesty: <strong>(a)</strong> drž tokeny a vytiahni opakované inline vzory do komponentov (<code>Card</code>, <code>Input</code>, <code>EmptyState</code>, <code>Stack</code>) — nižšie riziko, zachová vzhľad; <strong>(b)</strong> Tailwind prírastkovo len pre <em>nové</em> plochy (editor, hľadanie, bottom-nav). Odporúčam (a) teraz, (b) zváž až pri druhom vývojárovi.</p>
+  <h3>Storage</h3><p>Vercel Blob, client-direct upload, v Postgrese len metadáta (sekcia 4). Najväčšia tech zmena a opravuje reálny prod bug.</p>
+  <h3>Zmeny v DB (aditívne)</h3>
+  <ul>
+   <li><code>okruhy</code>: <code>category</code>, <code>icon</code>, <code>color</code>, <code>metadata jsonb</code>, <code>archived_at</code>.</li>
+   <li><code>materials</code>: <code>status</code> (draft/published/archived), <code>content_hash</code>, <code>archived_at</code>. <code>content</code> už je.</li>
+   <li>Nové <code>tags</code> + <code>note_tags</code>; <code>favorites</code> (alebo booleany).</li>
+   <li><code>okruh_files</code> → <code>attachments(parent_type, parent_id, blob_url, content_hash, …)</code>.</li>
+   <li>Indexy: GIN <code>tsvector</code> na obsah; btree na <code>(subject_id, archived_at)</code> a <code>(okruh_id)</code>.</li>
+  </ul>
+  <h3>Výkon</h3><p>Landing a read-only zoznamy (subjects, materials) na <strong>Server Components</strong> — preč s waterfallom a bliknutím. Už hotové: de-dup <code>/api/user/subjects</code> cez context, <code>Promise.all</code> trojice dotazov, atomický PUT. Ďalej: cacheuj takmer statické čítania (<code>subjects</code>, <code>resources</code>) cez <code>revalidate</code> namiesto <code>force-dynamic</code> všade.</p>
+  <h3>Caching</h3><p>Statický katalóg cez ISR; per-user dáta dynamické, ale fetchnuté raz a zdieľané cez context. Pri vyhľadávaní debounce + cache posledných dopytov.</p>
+  <h3>Stav</h3><p>Netreba Redux/Zustand. React Context (session) + stav vo URL (filtre/hľadanie/taby) stačí. SWR/React Query pridaj <em>len</em> pre editor a hľadanie kvôli optimistickým updatom.</p>
+  <h3>API</h3><p>Drž REST-ish route handlery: <code>/api/notes</code>, <code>/api/attachments</code>, <code>/api/okruhy</code>, <code>/api/search</code>. Jednotné odpovede <code>{data}</code>/<code>{error}</code>, tenký <code>requireSession()</code> wrapper, validácia vstupov (zod).</p>
+  <h3>Bezpečnosť</h3><p>Preč od nesoleného SHA-256, odstráň hardcoded <code>JWT_SECRET</code> fallback, zmeň zdieľané <code>heslo123</code> účty a vyhoď ich z README.</p>
+  
+  <div class="pn"><a class="prev" href="06-mobile.html"><div class="dir">‹ Späť</div><div class="ttl">Mobilné vylepšenia</div></a><a class="next" href="08-roadmap.html"><div class="dir">Ďalej ›</div><div class="ttl">Roadmapa nasadenia</div></a></div>
+</div>
+</body></html>

@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="sk"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Maturita KB — Plán vylepšení — Maturita KB</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head><body>
+<div class="bar"><div class="bar-in">
+  <a class="brand" href="index.html"><span class="dot"><span class="material-symbols-outlined">local_library</span></span> Maturita KB · Spec</a>
+  <a class="home" href="index.html">Prehľad</a>
+</div>
+<div class="nav"><a class="active" href="index.html">Prehľad</a>
+<a class="" href="01-current-problems.html"><span class="n">1</span>Problémy</a>
+<a class="" href="02-ui-improvements.html"><span class="n">2</span>UI</a>
+<a class="" href="03-new-features.html"><span class="n">3</span>Funkcie</a>
+<a class="" href="04-file-upload.html"><span class="n">4</span>Upload</a>
+<a class="" href="05-topic-categories.html"><span class="n">5</span>Kategórie</a>
+<a class="" href="06-mobile.html"><span class="n">6</span>Mobil</a>
+<a class="" href="07-technical.html"><span class="n">7</span>Technika</a>
+<a class="" href="08-roadmap.html"><span class="n">8</span>Roadmapa</a></div>
+</div>
+<div class="wrap">
+  <div class="eyebrow">Improvement &amp; Extension Spec</div>
+  <h1>Maturita KB — Plán vylepšení</h1>
+  <p class="lead">Návrh vychádza zo skutočného kódu (commit <code>d70a34f</code>): Next.js 14, TypeScript, Neon Postgres a — dôležité — <strong>inline štýly + CSS premenné, nie Tailwind</strong>. Cieľom je vybrúsiť a rozšíriť, nie prepisovať.</p>
+  
+  <div class="callout"><span class="k">Dve veci, ktoré menia celé zadanie</span>
+  Upload súborov <strong>už máš</strong> (okruhy: drag&amp;drop, validácia, 30&nbsp;MB, mazanie), takže ide o „oprav a škáluj", nie „postav od nuly". A <strong>editor poznámok zatiaľ neexistuje</strong> — <code>materials.content</code> v DB je, ale chýba UI na písanie. To je hlavné sloveso produktu.</div>
+  <h2>Obsah</h2>
+  <div class="grid">
+   <a class="cat" href="01-current-problems.html"><div class="ic" style="background:#5b6478"><span class="material-symbols-outlined">bug_report</span></div><h3>1 · Súčasné problémy</h3><div class="meta">Čo dnes blokuje alebo kazí zážitok.</div></a>
+   <a class="cat" href="02-ui-improvements.html"><div class="ic" style="background:#4f46e5"><span class="material-symbols-outlined">palette</span></div><h3>2 · UI vylepšenia</h3><div class="meta">Spacing, typografia, karty, hĺbka, navigácia.</div></a>
+   <a class="cat" href="03-new-features.html"><div class="ic" style="background:#7c3aed"><span class="material-symbols-outlined">add_circle</span></div><h3>3 · Nové funkcie</h3><div class="meta">Editor, autosave, tagy, archív, vyhľadávanie.</div></a>
+   <a class="cat" href="04-file-upload.html"><div class="ic" style="background:#b45309"><span class="material-symbols-outlined">cloud_upload</span></div><h3>4 · Architektúra uploadu</h3><div class="meta">Vercel Blob, 20&nbsp;MB, progres, náhľady.</div></a>
+   <a class="cat" href="05-topic-categories.html"><div class="ic" style="background:#0d9488"><span class="material-symbols-outlined">category</span></div><h3>5 · Kategórie okruhov</h3><div class="meta">7 šablón s ikonou, farbou a metadátami.</div></a>
+   <a class="cat" href="06-mobile.html"><div class="ic" style="background:#9f1239"><span class="material-symbols-outlined">smartphone</span></div><h3>6 · Mobil</h3><div class="meta">Bottom-nav, sticky akcie, editácia.</div></a>
+   <a class="cat" href="07-technical.html"><div class="ic" style="background:#6366f1"><span class="material-symbols-outlined">database</span></div><h3>7 · Technické zmeny</h3><div class="meta">Storage, DB, výkon, caching, API.</div></a>
+   <a class="cat" href="08-roadmap.html"><div class="ic" style="background:#4f46e5"><span class="material-symbols-outlined">map</span></div><h3>8 · Roadmapa</h3><div class="meta">Zoradené podľa hodnota/námaha.</div></a>
+  </div>
+  
+  <div class="pn"><a class="prev disabled">&nbsp;</a><a class="next" href="01-current-problems.html"><div class="dir">Ďalej ›</div><div class="ttl">Súčasné problémy</div></a></div>
+</div>
+</body></html>
