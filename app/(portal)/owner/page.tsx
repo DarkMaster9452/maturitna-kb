@@ -56,7 +56,7 @@ export default function OwnerPage() {
       </header>
 
       {/* Role stats */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 16, marginBottom: 32 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 16, marginBottom: 32 }}>
         {(['owner', 'admin', 'teacher', 'student'] as const).map(role => (
           <Card key={role} pad={20} radius={12}>
             <div style={{ fontSize: 32, fontWeight: 700, fontFamily: 'var(--font-serif)', color: 'var(--primary)' }}>

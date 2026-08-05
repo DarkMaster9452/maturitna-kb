@@ -39,7 +39,7 @@ export default function TeacherPage() {
       </header>
 
       {/* Quick actions */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16, marginBottom: 32 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 16, marginBottom: 32 }}>
         {quickActions.map(a => (
           <Card key={a.label} hover pad={20} radius={12} onClick={() => flash(`${a.label}…`)}>
             <IconChip name={a.icon} size={44} bg="var(--primary-fixed)" color="var(--primary)" radius={10} />

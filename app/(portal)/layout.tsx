@@ -2,7 +2,7 @@
 import { useState, useEffect, createContext, useContext } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import Link from 'next/link';
-import { Icon, Button, Serif, Toast, useMediaQuery } from '@/components/ui';
+import { Icon, Button, Serif, Toast, Avatar, ModeToggle, useMediaQuery } from '@/components/ui';
 
 type User = { id: string; name: string; email: string; role: string };
 type ToastCtx = { flash: (msg: string) => void };
@@ -23,15 +23,10 @@ export default function PortalLayout({ children }: { children: React.ReactNode }
   const [userData, setUserData] = useState<any>(null);
   const [pinnedSubjects, setPinnedSubjects] = useState<any[]>([]);
   const [drawerOpen, setDrawerOpen] = useState(false);
-  const isMobile = useMediaQuery('(max-width: 768px)');
+  const isMobile = useMediaQuery('(max-width: 900px)');
   const [toast, setToast] = useState<string | null>(null);
-  const [theme, setTheme] = useState<string>('');
   const router = useRouter();
   const pathname = usePathname();
-
-  useEffect(() => {
-    try { setTheme(localStorage.getItem('theme') || ''); } catch {}
-  }, []);
 
   const flash = (msg: string) => { setToast(msg); setTimeout(() => setToast(null), 2400); };
 
@@ -49,8 +44,6 @@ export default function PortalLayout({ children }: { children: React.ReactNode }
   };
 
   useEffect(() => { fetchUser(); fetchUserData(); }, []);
-
-  // close mobile drawer on navigation
   useEffect(() => { setDrawerOpen(false); }, [pathname]);
 
   const navItems = [
@@ -59,7 +52,7 @@ export default function PortalLayout({ children }: { children: React.ReactNode }
     { href: '/notes', icon: 'edit_note', label: 'Poznámky' },
     { href: '/tests', icon: 'quiz', label: 'Testy' },
     { href: '/progress', icon: 'trending_up', label: 'Môj pokrok' },
-    ...(isTeacherOrAbove(user?.role || '') ? [{ href: '/teacher', icon: 'school', label: 'Učiteľ' }] : []),
+    ...(isTeacherOrAbove(user?.role || '') ? [{ href: '/teacher', icon: 'co_present', label: 'Učiteľ' }] : []),
     ...(isAdminOrAbove(user?.role || '') ? [{ href: '/admin', icon: 'admin_panel_settings', label: 'Admin' }] : []),
     ...(user?.role === 'owner' ? [{ href: '/owner', icon: 'manage_accounts', label: 'Vlastník' }] : []),
   ];
@@ -81,88 +74,91 @@ export default function PortalLayout({ children }: { children: React.ReactNode }
       <ToastContext.Provider value={{ flash }}>
         <div style={{ display: 'flex', minHeight: '100vh' }}>
           {/* Mobile top bar */}
-          <div className="mkb-mobilebar">
-            <button onClick={() => setDrawerOpen(true)} aria-label="Otvoriť menu" style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--on-surface)', padding: 8, display: 'flex' }}>
+          <div className="mkb-mobilebar mkb-glass" style={{ borderBottom: '1px solid var(--outline-variant)' }}>
+            <button onClick={() => setDrawerOpen(true)} aria-label="Otvoriť menu" className="mkb-tap" style={{ color: 'var(--on-surface)', padding: 8, display: 'flex' }}>
               <Icon name="menu" size={24} />
             </button>
-            <Serif size={18} weight={600} style={{ color: 'var(--primary)' }}>{theme === 'spsit' ? 'SPSIT Portál' : 'Study Portal'}</Serif>
+            <Serif size={18} weight={700} style={{ color: 'var(--on-surface)' }}>Maturita<span style={{ color: 'var(--primary)' }}>KB</span></Serif>
+            <div style={{ marginLeft: 'auto' }}><ModeToggle compact /></div>
           </div>
+
           {/* Drawer overlay */}
           <div className={'mkb-drawer-overlay' + (drawerOpen ? ' open' : '')} onClick={() => setDrawerOpen(false)} />
 
           {/* Sidebar */}
-          <nav className={'mkb-sidebar' + (drawerOpen ? ' open' : '')} style={{ width: 264, height: '100vh', position: 'sticky', top: 0, flex: 'none', background: 'var(--surface-container-low)', borderRight: '1px solid var(--outline-variant)', display: 'flex', flexDirection: 'column', padding: 16, overflowY: 'auto' }}>
+          <nav className={'mkb-sidebar' + (drawerOpen ? ' open' : '')} style={{ width: 272, height: '100vh', position: 'sticky', top: 0, flex: 'none', background: 'var(--surface-container-low)', borderRight: '1px solid var(--outline-variant)', display: 'flex', flexDirection: 'column', padding: 16, overflowY: 'auto' }}>
             {/* Logo */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '6px 8px', marginBottom: 20 }}>
-              <div style={{ width: 40, height: 40, borderRadius: 10, background: 'var(--primary)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <Icon name={theme === 'spsit' ? 'computer' : 'local_library'} size={22} fill={1} style={{ color: '#fff' }} />
+            <div style={{ display: 'flex', alignItems: 'center', gap: 11, padding: '8px 8px 4px', marginBottom: 18 }}>
+              <div style={{ width: 42, height: 42, borderRadius: 13, backgroundImage: 'var(--grad-brand)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 8px 20px -8px color-mix(in srgb, var(--primary) 60%, transparent)' }}>
+                <Icon name="school" size={23} fill={1} style={{ color: '#fff' }} />
               </div>
               <div>
-                <Serif size={20} weight={600} style={{ color: 'var(--primary)', display: 'block', lineHeight: 1.1 }}>
-                  {theme === 'spsit' ? 'SPSIT Portál' : 'Study Portal'}
+                <Serif size={20} weight={700} style={{ display: 'block', lineHeight: 1.1 }}>
+                  Maturita<span style={{ color: 'var(--primary)' }}>KB</span>
                 </Serif>
-                <div style={{ fontSize: 11, color: 'var(--on-surface-variant)', marginTop: 1 }}>
-                  {theme === 'spsit' ? 'SPSKNM Nové Mesto' : 'Academic Excellence'}
-                </div>
+                <div style={{ fontSize: 11, color: 'var(--on-surface-variant)', marginTop: 1, fontWeight: 500 }}>Študentský portál</div>
               </div>
             </div>
 
-            <Button icon="play_arrow" full onClick={() => flash('Štartuje 25-minútová session…')} style={{ marginBottom: 20 }}>Spustiť session</Button>
+            <Button icon="play_arrow" full onClick={() => flash('Štartuje 25-minútová session…')} style={{ marginBottom: 18 }}>Spustiť session</Button>
 
             {/* Main nav */}
             <div style={{ flex: 1 }}>
-              <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: '.1em', textTransform: 'uppercase', color: 'var(--on-surface-variant)', padding: '0 16px', marginBottom: 8 }}>Hlavné</div>
+              <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: '.1em', textTransform: 'uppercase', color: 'var(--on-surface-variant)', padding: '0 14px', marginBottom: 8 }}>Hlavné</div>
               {navItems.map(it => <NavItem key={it.href} {...it} active={isActive(it.href)} />)}
 
-              {/* Pinned subjects */}
               {pinnedSubjects.length > 0 && (
                 <>
-                  <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: '.1em', textTransform: 'uppercase', color: 'var(--on-surface-variant)', padding: '12px 16px 8px', marginTop: 8 }}>Pripnuté predmety</div>
-                  {pinnedSubjects.map(s => (
-                    <Link key={s.id} href={`/subjects/${s.slug}`}
-                      style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '9px 16px', borderRadius: 'var(--radius)', textDecoration: 'none', marginBottom: 2, fontFamily: 'var(--font-sans)', fontSize: 13, fontWeight: 600, color: isActive(`/subjects/${s.slug}`) ? 'var(--on-primary-fixed-variant)' : 'var(--on-surface-variant)', background: isActive(`/subjects/${s.slug}`) ? 'var(--primary-fixed)' : 'transparent', transition: 'background .2s' }}
-                      onMouseEnter={e => { if (!isActive(`/subjects/${s.slug}`)) e.currentTarget.style.background = 'var(--surface-container-high)'; }}
-                      onMouseLeave={e => { if (!isActive(`/subjects/${s.slug}`)) e.currentTarget.style.background = 'transparent'; }}>
-                      <Icon name={s.icon} size={18} fill={isActive(`/subjects/${s.slug}`) ? 1 : 0} />
-                      {s.name_sk}
-                    </Link>
-                  ))}
+                  <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: '.1em', textTransform: 'uppercase', color: 'var(--on-surface-variant)', padding: '12px 14px 8px', marginTop: 8 }}>Pripnuté predmety</div>
+                  {pinnedSubjects.map(s => {
+                    const on = isActive(`/subjects/${s.slug}`);
+                    return (
+                      <Link key={s.id} href={`/subjects/${s.slug}`}
+                        style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '9px 14px', borderRadius: 12, marginBottom: 2, fontSize: 13.5, fontWeight: 600, color: on ? 'var(--on-primary-fixed-variant)' : 'var(--on-surface-variant)', background: on ? 'var(--primary-fixed)' : 'transparent', transition: 'background .2s, color .2s' }}
+                        onMouseEnter={e => { if (!on) e.currentTarget.style.background = 'var(--surface-container-high)'; }}
+                        onMouseLeave={e => { if (!on) e.currentTarget.style.background = 'transparent'; }}>
+                        <Icon name={s.icon} size={18} fill={on ? 1 : 0} />
+                        <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{s.name_sk}</span>
+                      </Link>
+                    );
+                  })}
                 </>
               )}
 
               <Link href="/subjects"
-                style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '9px 16px', borderRadius: 'var(--radius)', textDecoration: 'none', fontFamily: 'var(--font-sans)', fontSize: 13, fontWeight: 600, color: 'var(--primary)', marginTop: 4 }}>
+                style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '9px 14px', borderRadius: 12, fontSize: 13.5, fontWeight: 600, color: 'var(--primary)', marginTop: 4 }}>
                 <Icon name="add" size={18} /> Spravovať predmety
               </Link>
             </div>
 
             {/* Footer */}
-            <div style={{ borderTop: '1px solid var(--outline-variant)', paddingTop: 12 }}>
+            <div style={{ borderTop: '1px solid var(--outline-variant)', paddingTop: 12, marginTop: 8 }}>
               {footerItems.map(it => <NavItem key={it.href} {...it} active={isActive(it.href)} small />)}
-              <div style={{ marginTop: 12, padding: '12px 16px', borderRadius: 'var(--radius)', background: 'var(--surface-container)' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                  <div style={{ width: 32, height: 32, borderRadius: 9999, background: 'var(--primary-fixed)', display: 'flex', alignItems: 'center', justifyContent: 'center', flex: 'none' }}>
-                    <Serif size={13} weight={700} style={{ color: 'var(--primary)' }}>{user?.name?.[0] || 'M'}</Serif>
-                  </div>
+              <div style={{ marginTop: 12, padding: 12, borderRadius: 14, background: 'var(--surface-container)', display: 'flex', alignItems: 'center', gap: 10 }}>
+                <Link href="/settings" style={{ display: 'flex', alignItems: 'center', gap: 10, flex: 1, minWidth: 0 }}>
+                  <Avatar name={user?.name} size={36} />
                   <div style={{ flex: 1, minWidth: 0 }}>
-                    <div style={{ fontSize: 13, fontWeight: 600, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{user?.name || 'Načítavam…'}</div>
+                    <div style={{ fontSize: 13, fontWeight: 700, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{user?.name || 'Načítavam…'}</div>
                     <div style={{ fontSize: 11, color: 'var(--on-surface-variant)' }}>{ROLE_LABELS[user?.role || ''] || user?.role || 'Používateľ'}</div>
                   </div>
-                  <button onClick={logout} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--on-surface-variant)', padding: 4 }} title="Odhlásiť sa">
-                    <Icon name="logout" size={16} />
-                  </button>
-                </div>
+                </Link>
+                <ModeToggle compact />
+                <button onClick={logout} className="mkb-tap" style={{ color: 'var(--on-surface-variant)', padding: 6, display: 'flex', borderRadius: 8 }} title="Odhlásiť sa"
+                  onMouseEnter={e => { e.currentTarget.style.color = 'var(--error)'; e.currentTarget.style.background = 'var(--surface-container-high)'; }}
+                  onMouseLeave={e => { e.currentTarget.style.color = 'var(--on-surface-variant)'; e.currentTarget.style.background = 'transparent'; }}>
+                  <Icon name="logout" size={18} />
+                </button>
               </div>
             </div>
           </nav>
 
           {/* Main content */}
-          <main className="mkb-main" style={{ flex: 1, minWidth: 0, overflowY: 'auto' }}>
-            {children}
+          <main className="mkb-main" style={{ flex: 1, minWidth: 0, overflowX: 'hidden' }}>
+            <div className="mkb-fade-in">{children}</div>
           </main>
 
           {/* Mobile bottom navigation */}
-          <nav className="mkb-bottomnav">
+          <nav className="mkb-bottomnav mkb-glass" style={{ borderTop: '1px solid var(--outline-variant)' }}>
             {[
               { href: '/dashboard', icon: 'dashboard', label: 'Domov' },
               { href: '/notes', icon: 'edit_note', label: 'Poznámky' },
@@ -171,8 +167,10 @@ export default function PortalLayout({ children }: { children: React.ReactNode }
             ].map(it => {
               const on = isActive(it.href);
               return (
-                <Link key={it.href} href={it.href} style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2, padding: '6px 0', color: on ? 'var(--primary)' : 'var(--on-surface-variant)', textDecoration: 'none' }}>
-                  <Icon name={it.icon} size={22} fill={on ? 1 : 0} />
+                <Link key={it.href} href={it.href} style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3, padding: '9px 0', color: on ? 'var(--primary)' : 'var(--on-surface-variant)' }}>
+                  <div style={{ width: 40, height: 26, borderRadius: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center', background: on ? 'var(--primary-fixed)' : 'transparent', transition: 'background .2s' }}>
+                    <Icon name={it.icon} size={21} fill={on ? 1 : 0} />
+                  </div>
                   <span style={{ fontSize: 10.5, fontWeight: 600 }}>{it.label}</span>
                 </Link>
               );
@@ -188,9 +186,10 @@ export default function PortalLayout({ children }: { children: React.ReactNode }
 function NavItem({ href, icon, label, active, small }: { href: string; icon: string; label: string; active: boolean; small?: boolean }) {
   return (
     <Link href={href}
-      style={{ display: 'flex', alignItems: 'center', gap: 12, padding: small ? '8px 16px' : '11px 16px', borderRadius: 'var(--radius)', textDecoration: 'none', marginBottom: 4, fontFamily: 'var(--font-sans)', fontSize: 14, fontWeight: active ? 700 : 600, letterSpacing: '.03em', color: active ? 'var(--on-primary-fixed-variant)' : 'var(--on-surface-variant)', background: active ? 'var(--primary-fixed)' : 'transparent', transition: 'background .2s' }}
+      style={{ position: 'relative', display: 'flex', alignItems: 'center', gap: 12, padding: small ? '9px 14px' : '11px 14px', borderRadius: 12, marginBottom: 3, fontSize: 14, fontWeight: active ? 700 : 600, color: active ? 'var(--on-primary-fixed-variant)' : 'var(--on-surface-variant)', background: active ? 'var(--primary-fixed)' : 'transparent', transition: 'background .2s, color .2s' }}
       onMouseEnter={e => { if (!active) e.currentTarget.style.background = 'var(--surface-container-high)'; }}
       onMouseLeave={e => { if (!active) e.currentTarget.style.background = 'transparent'; }}>
+      {active && <span style={{ position: 'absolute', left: 0, top: '50%', transform: 'translateY(-50%)', width: 4, height: 20, borderRadius: 9999, backgroundImage: 'var(--grad-brand)' }} />}
       <Icon name={icon} size={22} fill={active ? 1 : 0} />{label}
     </Link>
   );

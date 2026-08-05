@@ -33,7 +33,7 @@ export default function SupportPage() {
       </header>
 
       {/* Quick actions */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 16, marginBottom: 40 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 16, marginBottom: 40 }}>
         {[['article', 'Dokumentácia', 'Prehľadaj príručky a tutoriály.'], ['chat', 'Live chat', 'Porozprávaj sa s agentom.'], ['bug_report', 'Nahlásiť chybu', 'Niečo nefunguje? Daj nám vedieť.']].map(([icon, label, sub]) => (
           <Card key={label as string} hover pad={20} radius={12} onClick={() => flash(`Otvára sa ${label}…`)} style={{ cursor: 'pointer', textAlign: 'center' }}>
             <div style={{ margin: '0 auto 12px', width: 44, height: 44, borderRadius: 10, background: 'var(--primary-fixed)', color: 'var(--primary)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -73,7 +73,7 @@ export default function SupportPage() {
             <span style={{ fontSize: 13, fontWeight: 600, letterSpacing: '.04em', color: 'var(--on-surface-variant)' }}>Správa</span>
             <textarea value={msg} onChange={e => setMsg(e.target.value)} rows={4} placeholder="Poskytni čo najviac detailov…"
               style={{ fontFamily: 'var(--font-sans)', fontSize: 15, background: 'var(--surface-container-low)', border: '1px solid var(--outline-variant)', borderRadius: 8, padding: '12px 14px', color: 'var(--on-surface)', outline: 'none', resize: 'vertical', transition: 'border-color .2s' }}
-              onFocus={e => { e.target.style.borderColor = 'var(--primary)'; e.target.style.boxShadow = '0 0 0 2px rgba(132,79,34,.15)'; }}
+              onFocus={e => { e.target.style.borderColor = 'var(--primary)'; e.target.style.boxShadow = '0 0 0 2px color-mix(in srgb, var(--primary) 30%, transparent)'; }}
               onBlur={e => { e.target.style.borderColor = 'var(--outline-variant)'; e.target.style.boxShadow = 'none'; }} />
           </label>
           <Button onClick={send} icon="send" style={{ alignSelf: 'flex-start' }}>Odoslať správu</Button>

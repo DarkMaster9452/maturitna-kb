@@ -18,7 +18,7 @@ export default function ResourceDetailPage() {
 
   const typeColor: Record<string, any> = {
     PDF: { bg: 'var(--primary-fixed)', c: 'var(--primary)' },
-    Video: { bg: '#dcedf5', c: '#1a6b8a' },
+    Video: { bg: 'var(--secondary-fixed)', c: 'var(--secondary)' },
     Web: { bg: 'var(--tertiary-fixed)', c: 'var(--tertiary)' },
     Audio: { bg: 'var(--secondary-container)', c: 'var(--secondary)' },
   };

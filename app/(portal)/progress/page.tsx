@@ -17,26 +17,26 @@ export default function ProgressPage() {
   const maxHours = sessions.length > 0 ? Math.max(...sessions.map((s: any) => Number(s.minutes) / 60)) : 8;
 
   const achievements = [
-    { icon: 'emoji_events', label: 'Prvý test', date: 'Oct 5', bg: 'var(--primary-fixed)', c: 'var(--primary)', earned: Number(testCount) >= 1 },
-    { icon: 'local_fire_department', label: '7-dňová séria', date: 'Oct 12', bg: '#ffe0cc', c: '#c45f00', earned: true },
-    { icon: 'star', label: 'Skóre 90%+', date: 'Oct 18', bg: '#fff3c4', c: '#a07000', earned: results.some((r: any) => r.score >= 90) },
-    { icon: 'military_tech', label: '10 testov', date: 'Oct 24', bg: 'var(--tertiary-fixed)', c: 'var(--tertiary)', earned: Number(testCount) >= 10 },
+    { icon: 'emoji_events', label: 'Prvý test', bg: 'var(--primary-fixed)', c: 'var(--primary)', earned: Number(testCount) >= 1 },
+    { icon: 'local_fire_department', label: 'Séria štúdia', bg: 'var(--warning-container)', c: 'var(--warning)', earned: sessions.length >= 5 },
+    { icon: 'star', label: 'Skóre 90 %+', bg: 'var(--success-container)', c: 'var(--success)', earned: results.some((r: any) => r.score >= 90) },
+    { icon: 'military_tech', label: '10 testov', bg: 'var(--tertiary-fixed)', c: 'var(--tertiary)', earned: Number(testCount) >= 10 },
   ];
 
   return (
     <div>
-      <header style={{ marginBottom: 32 }}>
-        <Eyebrow>Analytika</Eyebrow>
-        <Serif size={52} weight={700} style={{ letterSpacing: '-.02em', display: 'block', margin: '8px 0' }}>Môj pokrok</Serif>
+      <header style={{ marginBottom: 28 }}>
+        <Eyebrow icon="insights">Analytika</Eyebrow>
+        <Serif size={52} weight={700} style={{ display: 'block', margin: '10px 0', fontSize: 'clamp(30px, 6vw, 48px)' }}>Môj pokrok</Serif>
         <div style={{ fontSize: 18, color: 'var(--on-surface-variant)' }}>Sleduj hodiny štúdia, výsledky testov a zvládnutie predmetov.</div>
       </header>
 
       {/* Stats row */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 20, marginBottom: 32 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(190px, 1fr))', gap: 20, marginBottom: 32 }}>
         {[
           ['trending_up', 'Celkový pokrok', `${avgProgress}%`, 'priemerný vo všetkých predmetoch'],
           ['schedule', 'Celkové hodiny', `${totals.total_hours}h`, 'tento semester'],
-          ['quiz', 'Dokončené testy', String(testCount), `z ${results.length + 5} naplánovaných`],
+          ['quiz', 'Dokončené testy', String(testCount), 'úspešne absolvovaných'],
           ['school', 'Aktívne predmety', String(progress.length), 'predmetov v pláne'],
         ].map(([icon, label, val, sub]) => (
           <Card key={label as string} pad={20} radius={12} style={{ boxShadow: 'var(--shadow-card)' }}>
@@ -48,7 +48,7 @@ export default function ProgressPage() {
         ))}
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: 24, marginBottom: 24 }}>
+      <div className="mkb-split" style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: 24, marginBottom: 24 }}>
         {/* Bar chart */}
         <Card pad={24} radius={12}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
@@ -86,7 +86,7 @@ export default function ProgressPage() {
                 </div>
                 <div style={{ flex: 1 }}>
                   <div style={{ fontSize: 13, fontWeight: 600 }}>{a.label}</div>
-                  <div style={{ fontSize: 11, color: 'var(--on-surface-variant)' }}>{a.earned ? a.date : 'Zatiaľ nezískaný'}</div>
+                  <div style={{ fontSize: 11, color: 'var(--on-surface-variant)' }}>{a.earned ? 'Získané' : 'Zatiaľ nezískaný'}</div>
                 </div>
                 {a.earned && <Icon name="check_circle" size={16} fill={1} style={{ color: 'var(--success)' }} />}
               </div>
@@ -101,7 +101,7 @@ export default function ProgressPage() {
         {progress.length > 0 ? (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
             {progress.map((p: any) => (
-              <div key={p.subject_id} style={{ display: 'grid', gridTemplateColumns: '200px 1fr 60px 80px', gap: 16, alignItems: 'center' }}>
+              <div key={p.subject_id} style={{ display: 'grid', gridTemplateColumns: '150px 1fr 46px 68px', gap: 12, alignItems: 'center', minWidth: 0 }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                   <IconChip name={p.icon} size={32} radius={8} />
                   <span style={{ fontSize: 14, fontWeight: 600 }}>{p.name_sk}</span>

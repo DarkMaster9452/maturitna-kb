@@ -69,7 +69,7 @@ export default function SubjectsPage() {
                     <Icon name="push_pin" size={16} fill={isPinned ? 1 : 0} />
                   </button>
                   <button onClick={() => toggleSelect(s.id)} title={isSelected ? 'Odstrániť z plánu' : 'Pridať do plánu'}
-                    style={{ width: 32, height: 32, borderRadius: 8, background: isSelected ? 'var(--primary)' : 'var(--surface-container)', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', color: isSelected ? '#fff' : 'var(--on-surface-variant)', transition: 'all .2s' }}>
+                    style={{ width: 32, height: 32, borderRadius: 8, background: isSelected ? undefined : 'var(--surface-container)', backgroundImage: isSelected ? 'var(--grad-brand)' : undefined, border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', color: isSelected ? '#fff' : 'var(--on-surface-variant)', transition: 'all .2s' }}>
                     <Icon name={isSelected ? 'check' : 'add'} size={16} />
                   </button>
                 </div>

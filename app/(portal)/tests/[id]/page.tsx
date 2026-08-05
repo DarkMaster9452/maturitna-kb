@@ -76,7 +76,7 @@ export default function TestRunPage() {
     const passed = pct >= 60;
     return (
       <div style={{ maxWidth: 600, margin: '0 auto', paddingTop: 48, textAlign: 'center' }}>
-        <div style={{ width: 96, height: 96, borderRadius: 9999, background: passed ? '#dcf0d4' : '#ffdad6', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 24px' }}>
+        <div style={{ width: 96, height: 96, borderRadius: 9999, background: passed ? 'var(--success-container)' : 'var(--error-container)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 24px' }}>
           <Icon name={passed ? 'emoji_events' : 'sentiment_dissatisfied'} size={48} fill={1} style={{ color: passed ? 'var(--success)' : 'var(--error)' }} />
         </div>
         <Serif size={44} weight={700} style={{ display: 'block', marginBottom: 8 }}>Test dokončený!</Serif>
@@ -91,7 +91,7 @@ export default function TestRunPage() {
             const userAnswer = answers[i];
             const correct = userAnswer === q.correct;
             return (
-              <div key={i} style={{ padding: '12px 16px', borderRadius: 10, background: correct ? '#dcf0d4' : '#ffdad6', display: 'flex', gap: 10, alignItems: 'flex-start', textAlign: 'left' }}>
+              <div key={i} style={{ padding: '12px 16px', borderRadius: 10, background: correct ? 'var(--success-container)' : 'var(--error-container)', display: 'flex', gap: 10, alignItems: 'flex-start', textAlign: 'left' }}>
                 <Icon name={correct ? 'check_circle' : 'cancel'} size={18} fill={1} style={{ color: correct ? 'var(--success)' : 'var(--error)', flex: 'none', marginTop: 2 }} />
                 <div>
                   <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--on-surface)' }}>{q.q}</div>
@@ -125,8 +125,8 @@ export default function TestRunPage() {
             let border = 'var(--outline-variant)';
             let color = 'var(--on-surface)';
             if (answered) {
-              if (i === q.correct) { bg = '#dcf0d4'; border = 'var(--success)'; color = 'var(--success)'; }
-              else if (i === selected && i !== q.correct) { bg = '#ffdad6'; border = 'var(--error)'; color = 'var(--error)'; }
+              if (i === q.correct) { bg = 'var(--success-container)'; border = 'var(--success)'; color = 'var(--success)'; }
+              else if (i === selected && i !== q.correct) { bg = 'var(--error-container)'; border = 'var(--error)'; color = 'var(--error)'; }
             } else if (selected === i) { bg = 'var(--primary-fixed)'; border = 'var(--primary)'; }
             return (
               <button key={i} onClick={() => handleAnswer(i)}

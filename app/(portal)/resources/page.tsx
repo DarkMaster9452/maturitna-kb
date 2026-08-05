@@ -22,7 +22,7 @@ export default function ResourcesPage() {
 
   const typeColor: Record<string, any> = {
     PDF: { bg: 'var(--primary-fixed)', c: 'var(--primary)', icon: 'picture_as_pdf' },
-    Video: { bg: '#dcedf5', c: '#1a6b8a', icon: 'play_circle' },
+    Video: { bg: 'var(--secondary-fixed)', c: 'var(--secondary)', icon: 'play_circle' },
     Web: { bg: 'var(--tertiary-fixed)', c: 'var(--tertiary)', icon: 'public' },
     Audio: { bg: 'var(--secondary-container)', c: 'var(--secondary)', icon: 'headphones' },
   };
@@ -40,12 +40,12 @@ export default function ResourcesPage() {
           <Icon name="search" size={18} style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', color: 'var(--on-surface-variant)' }} />
           <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Hľadať zdroje…"
             style={{ fontFamily: 'var(--font-sans)', fontSize: 14, background: 'var(--surface-container-lowest)', border: '1px solid var(--outline-variant)', borderRadius: 9999, padding: '9px 14px 9px 38px', color: 'var(--on-surface)', outline: 'none', width: '100%' }}
-            onFocus={e => { e.target.style.borderColor = 'var(--primary)'; e.target.style.boxShadow = '0 0 0 2px rgba(132,79,34,.15)'; }}
+            onFocus={e => { e.target.style.borderColor = 'var(--primary)'; e.target.style.boxShadow = '0 0 0 2px color-mix(in srgb, var(--primary) 30%, transparent)'; }}
             onBlur={e => { e.target.style.borderColor = 'var(--outline-variant)'; e.target.style.boxShadow = 'none'; }} />
         </div>
-        <button onClick={() => setFilter('all')} style={{ fontFamily: 'var(--font-sans)', fontSize: 13, fontWeight: 600, cursor: 'pointer', borderRadius: 9999, padding: '7px 16px', background: filter === 'all' ? 'var(--primary)' : 'var(--surface-container-lowest)', color: filter === 'all' ? '#fff' : 'var(--on-surface-variant)', border: `1px solid ${filter === 'all' ? 'var(--primary)' : 'var(--outline-variant)'}` }}>Všetky</button>
+        <button onClick={() => setFilter('all')} style={{ fontFamily: 'var(--font-sans)', fontSize: 13, fontWeight: 600, cursor: 'pointer', borderRadius: 9999, padding: '7px 16px', background: filter === 'all' ? 'var(--primary-fixed)' : 'var(--surface-container-lowest)', color: filter === 'all' ? 'var(--on-primary-fixed-variant)' : 'var(--on-surface-variant)', border: `1px solid ${filter === 'all' ? 'var(--primary)' : 'var(--outline-variant)'}` }}>Všetky</button>
         {subjects.map(s => (
-          <button key={s.id} onClick={() => setFilter(s.id)} style={{ fontFamily: 'var(--font-sans)', fontSize: 13, fontWeight: 600, cursor: 'pointer', borderRadius: 9999, padding: '7px 16px', background: filter === s.id ? 'var(--primary)' : 'var(--surface-container-lowest)', color: filter === s.id ? '#fff' : 'var(--on-surface-variant)', border: `1px solid ${filter === s.id ? 'var(--primary)' : 'var(--outline-variant)'}` }}>{s.name_sk}</button>
+          <button key={s.id} onClick={() => setFilter(s.id)} style={{ fontFamily: 'var(--font-sans)', fontSize: 13, fontWeight: 600, cursor: 'pointer', borderRadius: 9999, padding: '7px 16px', background: filter === s.id ? 'var(--primary-fixed)' : 'var(--surface-container-lowest)', color: filter === s.id ? 'var(--on-primary-fixed-variant)' : 'var(--on-surface-variant)', border: `1px solid ${filter === s.id ? 'var(--primary)' : 'var(--outline-variant)'}` }}>{s.name_sk}</button>
         ))}
       </div>
 

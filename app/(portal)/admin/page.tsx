@@ -1,7 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { Icon, Button, Card, IconChip, Progress, Chip, Serif, Eyebrow } from '@/components/ui';
+import { Icon, Button, Card, IconChip, Progress, Serif, Eyebrow, StatCard } from '@/components/ui';
 import { useUser, useToastCtx } from '../layout';
 
 export default function AdminPage() {
@@ -23,21 +23,21 @@ export default function AdminPage() {
   const { stats, recentResults, subjectStats } = data;
 
   const statCards = [
-    { icon: 'school', bg: 'var(--primary-fixed)', color: 'var(--primary)', label: 'Celkovo študentov', value: String(stats.users), trend: '+12% tento mesiac', tBg: 'var(--primary-fixed-dim)', tC: 'var(--primary)' },
-    { icon: 'library_books', bg: 'var(--tertiary-fixed)', color: 'var(--tertiary)', label: 'Aktívne predmety', value: String(stats.subjects), trend: 'Stabilné', tBg: 'var(--tertiary-fixed-dim)', tC: 'var(--tertiary)' },
-    { icon: 'upload_file', bg: 'var(--secondary-container)', color: 'var(--secondary)', label: 'Materiálov', value: String(stats.materials), trend: '+5 dnes', tBg: 'var(--secondary-fixed)', tC: 'var(--secondary)' },
-    { icon: 'quiz', bg: 'var(--primary-fixed)', color: 'var(--primary)', label: 'Absolvovaných testov', value: String(stats.testResults), trend: '+1 240 tento týždeň', tBg: 'var(--primary-fixed-dim)', tC: 'var(--primary)' },
+    { icon: 'school', label: 'Používateľov', value: String(stats.users), tone: 'primary' as const },
+    { icon: 'library_books', label: 'Aktívnych predmetov', value: String(stats.subjects), tone: 'tertiary' as const },
+    { icon: 'upload_file', label: 'Materiálov', value: String(stats.materials), tone: 'success' as const },
+    { icon: 'quiz', label: 'Absolvovaných testov', value: String(stats.testResults), tone: 'warning' as const },
   ];
 
   return (
     <div>
-      <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 32 }}>
+      <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 28, gap: 16, flexWrap: 'wrap' }}>
         <div>
-          <Eyebrow>Administrácia</Eyebrow>
-          <Serif size={40} weight={700} style={{ display: 'block', margin: '8px 0' }}>Admin Dashboard</Serif>
-          <div style={{ fontSize: 17, color: 'var(--on-surface-variant)' }}>Prehľad Maturita Knowledge Base.</div>
+          <Eyebrow icon="shield_person">Administrácia</Eyebrow>
+          <Serif size={40} weight={700} style={{ display: 'block', margin: '8px 0', fontSize: 'clamp(28px, 6vw, 40px)' }}>Admin Dashboard</Serif>
+          <div style={{ fontSize: 17, color: 'var(--on-surface-variant)' }}>Prehľad MaturitaKB.</div>
         </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+        <div className="mkb-hide-mobile" style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
           <div style={{ position: 'relative' }}>
             <Icon name="search" size={18} style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', color: 'var(--on-surface-variant)' }} />
             <input placeholder="Hľadať…" style={{ fontFamily: 'var(--font-sans)', fontSize: 14, background: 'var(--surface-container-low)', border: '1px solid var(--outline-variant)', borderRadius: 9999, padding: '9px 16px 9px 38px', width: 220, color: 'var(--on-surface)', outline: 'none' }}
@@ -51,34 +51,26 @@ export default function AdminPage() {
       </header>
 
       {/* Sub-tabs */}
-      <div style={{ display: 'flex', gap: 4, borderBottom: '1px solid var(--outline-variant)', marginBottom: 32 }}>
+      <div style={{ display: 'flex', gap: 4, borderBottom: '1px solid var(--outline-variant)', marginBottom: 32, overflowX: 'auto' }}>
         {[['overview', 'Prehľad'], ['subjects', 'Predmety'], ['users', 'Používatelia'], ['reports', 'Reporty']].map(([id, label]) => (
-          <button key={id} onClick={() => setTab(id)} style={{ fontFamily: 'var(--font-sans)', fontSize: 14, fontWeight: 600, padding: '10px 20px', background: 'none', border: 'none', cursor: 'pointer', color: tab === id ? 'var(--primary)' : 'var(--on-surface-variant)', borderBottom: tab === id ? '2px solid var(--primary)' : '2px solid transparent', marginBottom: -1 }}>{label}</button>
+          <button key={id} onClick={() => setTab(id)} style={{ fontFamily: 'var(--font-sans)', fontSize: 14, fontWeight: 600, padding: '10px 20px', background: 'none', border: 'none', cursor: 'pointer', whiteSpace: 'nowrap', color: tab === id ? 'var(--primary)' : 'var(--on-surface-variant)', borderBottom: tab === id ? '2px solid var(--primary)' : '2px solid transparent', marginBottom: -1 }}>{label}</button>
         ))}
       </div>
 
       {/* Stats */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 20, marginBottom: 32 }}>
-        {statCards.map(s => (
-          <Card key={s.label} hover pad={20} radius={12}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start', marginBottom: 12 }}>
-              <IconChip name={s.icon} size={44} bg={s.bg} color={s.color} radius={10} />
-              <span style={{ fontSize: 11, fontWeight: 600, color: s.tC, background: s.tBg, padding: '4px 10px', borderRadius: 9999 }}>{s.trend}</span>
-            </div>
-            <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--on-surface-variant)', marginBottom: 4 }}>{s.label}</div>
-            <Serif size={36} weight={700}>{s.value}</Serif>
-          </Card>
-        ))}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(190px, 1fr))', gap: 16, marginBottom: 32 }}>
+        {statCards.map(s => <StatCard key={s.label} {...s} />)}
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: 24, alignItems: 'start' }}>
+      <div className="mkb-split" style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: 24, alignItems: 'start' }}>
         {/* Activity table */}
         <Card pad={24} radius={12}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
             <Serif size={22} weight={600}>Posledné výsledky testov</Serif>
             <span style={{ fontSize: 12, fontWeight: 600, color: 'var(--primary)', cursor: 'pointer' }}>Zobraziť všetko</span>
           </div>
-          <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+          <div style={{ overflowX: 'auto' }}>
+          <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: 460 }}>
             <thead>
               <tr style={{ borderBottom: '1px solid var(--outline-variant)' }}>
                 {['Používateľ', 'Test', 'Predmet', 'Skóre', 'Čas'].map((h, i) => (
@@ -98,12 +90,13 @@ export default function AdminPage() {
               ))}
             </tbody>
           </table>
+          </div>
         </Card>
 
         {/* Right panel */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
-          <div style={{ background: 'var(--primary)', color: '#fff', borderRadius: 12, padding: 24, position: 'relative', overflow: 'hidden' }}>
-            <div style={{ position: 'absolute', top: -40, right: -40, width: 128, height: 128, background: '#fff', opacity: .1, borderRadius: '0 0 0 9999px' }} />
+          <div style={{ backgroundImage: 'var(--grad-brand)', color: '#fff', borderRadius: 18, padding: 24, position: 'relative', overflow: 'hidden', boxShadow: '0 18px 40px -20px color-mix(in srgb, var(--primary) 60%, transparent)' }}>
+            <div style={{ position: 'absolute', top: -40, right: -40, width: 128, height: 128, background: '#fff', opacity: .12, borderRadius: '0 0 0 9999px' }} />
             <Serif size={22} weight={600} style={{ color: '#fff', display: 'block', marginBottom: 8 }}>Pridať obsah</Serif>
             <div style={{ fontSize: 15, opacity: .9, marginBottom: 24 }}>Vytvor a publikuj nové študijné materiály.</div>
             <Button variant="white" icon="add" full onClick={() => flash('Otvára sa editor obsahu…')}>Vytvoriť materiál</Button>
