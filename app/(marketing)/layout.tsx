@@ -26,10 +26,10 @@ export default function MarketingLayout({ children }: { children: React.ReactNod
 
   return (
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
-      <nav className={scrolled ? 'mkb-glass' : ''} style={{
+      <nav style={{
         position: 'sticky', top: 0, zIndex: 50,
-        background: scrolled ? undefined : 'transparent',
-        padding: '12px clamp(16px, 4vw, 48px)',
+        background: scrolled ? 'var(--surface)' : 'transparent',
+        padding: '13px clamp(16px, 4vw, 48px)',
         borderBottom: `1px solid ${scrolled ? 'var(--outline-variant)' : 'transparent'}`,
         transition: 'border-color .3s, background .3s',
       }}>
@@ -72,7 +72,7 @@ export default function MarketingLayout({ children }: { children: React.ReactNod
 
       <main style={{
         flex: 1, position: 'relative',
-        background: `radial-gradient(62% 48% at 12% -4%, color-mix(in srgb, var(--primary) 14%, transparent), transparent 70%), radial-gradient(52% 42% at 92% 4%, color-mix(in srgb, var(--tertiary) 14%, transparent), transparent 70%), var(--background)`,
+        background: 'var(--background)',
         padding: '0 clamp(16px, 4vw, 48px)',
       }}>
         <div style={{ maxWidth: 1200, margin: '0 auto' }}>{children}</div>

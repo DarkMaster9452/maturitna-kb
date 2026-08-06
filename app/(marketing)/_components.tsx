@@ -11,12 +11,11 @@ export function NavCard({ icon, label, desc, cta, href, highlight }: {
   return (
     <Link href={href} onMouseEnter={() => setH(true)} onMouseLeave={() => setH(false)}
       style={{
-        background: highlight ? undefined : 'var(--surface-container-lowest)',
-        backgroundImage: highlight ? 'var(--grad-brand-vivid)' : undefined,
+        background: highlight ? 'var(--panel-ink)' : 'var(--surface-container-lowest)',
         border: `1px solid ${highlight ? 'transparent' : 'var(--outline-variant)'}`,
-        borderRadius: 20, padding: 26, cursor: 'pointer', display: 'flex', flexDirection: 'column',
-        boxShadow: h ? (highlight ? '0 22px 48px -18px color-mix(in srgb, var(--primary) 70%, transparent)' : 'var(--shadow-card-hover)') : (highlight ? '0 12px 30px -14px color-mix(in srgb, var(--primary) 55%, transparent)' : 'var(--shadow-card)'),
-        transform: h ? 'translateY(-4px)' : 'none', transition: 'all .28s cubic-bezier(.16,.84,.44,1)',
+        borderRadius: 16, padding: 26, cursor: 'pointer', display: 'flex', flexDirection: 'column',
+        boxShadow: h ? 'var(--shadow-card-hover)' : 'none',
+        transform: h ? 'translateY(-3px)' : 'none', transition: 'all .24s cubic-bezier(.16,.84,.44,1)',
       }}>
       <div style={{
         width: 52, height: 52, borderRadius: 15,
@@ -53,7 +52,7 @@ export function StepCard({ num, icon, title, desc }: { num: number; icon: string
   return (
     <div style={{ position: 'relative', background: 'var(--surface-container-lowest)', border: '1px solid var(--outline-variant)', borderRadius: 18, padding: '28px 24px', boxShadow: 'var(--shadow-card)' }}>
       <div style={{ position: 'absolute', top: 20, right: 22, fontFamily: 'var(--font-serif)', fontSize: 40, fontWeight: 700, lineHeight: 1, color: 'var(--outline-variant)' }}>{num}</div>
-      <div style={{ width: 50, height: 50, borderRadius: 15, backgroundImage: 'var(--grad-brand)', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 18, boxShadow: '0 8px 20px -8px color-mix(in srgb, var(--primary) 60%, transparent)' }}>
+      <div style={{ width: 48, height: 48, borderRadius: 12, background: 'var(--panel-ink)', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 18 }}>
         <Icon name={icon} size={24} fill={1} />
       </div>
       <div style={{ fontFamily: 'var(--font-serif)', fontSize: 19, fontWeight: 600, marginBottom: 8 }}>{title}</div>
@@ -103,7 +102,7 @@ export function HeroPreview() {
         <div style={{ display: 'grid', gridTemplateColumns: '86px 1fr', minHeight: 300 }}>
           {/* mini sidebar */}
           <div style={{ borderRight: '1px solid var(--outline-variant)', background: 'var(--surface-container-low)', padding: '16px 10px', display: 'flex', flexDirection: 'column', gap: 8 }}>
-            <div style={{ width: 30, height: 30, borderRadius: 9, backgroundImage: 'var(--grad-brand)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 6 }}><Icon name="school" size={18} fill={1} style={{ color: '#fff' }} /></div>
+            <div style={{ width: 30, height: 30, borderRadius: 8, background: 'var(--panel-ink)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 6 }}><Icon name="bookmark" size={18} fill={1} style={{ color: '#fff' }} /></div>
             {['dashboard', 'menu_book', 'edit_note', 'quiz', 'trending_up'].map((ic, i) => (
               <div key={ic} style={{ width: 34, height: 34, borderRadius: 10, display: 'flex', alignItems: 'center', justifyContent: 'center', background: i === 0 ? 'var(--primary-fixed)' : 'transparent', color: i === 0 ? 'var(--primary)' : 'var(--on-surface-variant)' }}><Icon name={ic} size={19} fill={i === 0 ? 1 : 0} /></div>
             ))}
@@ -127,7 +126,7 @@ export function HeroPreview() {
                   <div style={{ flex: 1 }}>
                     <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 5 }}>{r.name}</div>
                     <div style={{ height: 6, borderRadius: 9999, background: 'var(--surface-container-high)', overflow: 'hidden' }}>
-                      <div style={{ height: '100%', width: r.pct + '%', backgroundImage: 'var(--grad-brand)', borderRadius: 9999 }} />
+                      <div style={{ height: '100%', width: r.pct + '%', background: 'var(--primary)', borderRadius: 9999 }} />
                     </div>
                   </div>
                   <span style={{ fontSize: 12, fontWeight: 700, color: 'var(--primary)' }}>{r.pct}%</span>

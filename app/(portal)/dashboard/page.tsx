@@ -62,15 +62,15 @@ export default function DashboardPage() {
         {/* Left */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
           {/* Hero resume card */}
-          <div style={{ position: 'relative', overflow: 'hidden', borderRadius: 20, padding: 28, backgroundImage: 'var(--grad-brand-vivid)', boxShadow: '0 24px 50px -24px color-mix(in srgb, var(--primary) 60%, transparent)' }}>
-            <div className="mkb-blob" style={{ position: 'absolute', top: -60, right: -30, width: 220, height: 220, borderRadius: '50%', background: 'rgba(255,255,255,.14)', filter: 'blur(24px)' }} />
+          <div style={{ position: 'relative', overflow: 'hidden', borderRadius: 16, padding: 28, background: 'var(--panel-ink)' }}>
+            <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', backgroundImage: 'radial-gradient(var(--panel-ink-line) 1px, transparent 1px)', backgroundSize: '22px 22px', opacity: .5 }} />
             <div style={{ position: 'relative', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 16, flexWrap: 'wrap' }}>
               <div style={{ minWidth: 0 }}>
-                <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: 'rgba(255,255,255,.18)', color: '#fff', fontSize: 12.5, fontWeight: 600, borderRadius: 9999, padding: '5px 12px' }}>
+                <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6, color: 'var(--primary)', fontFamily: 'var(--font-mono)', fontSize: 11, fontWeight: 500, letterSpacing: '.12em', textTransform: 'uppercase' }}>
                   <Icon name={resume ? 'bookmark' : 'rocket_launch'} size={15} fill={1} />{resume ? 'Pokračuj v štúdiu' : 'Začni tu'}
                 </span>
-                <Serif size={30} weight={700} style={{ display: 'block', margin: '14px 0 6px', color: '#fff' }}>{resume ? resume.name_sk : 'Vyber si predmety'}</Serif>
-                <div style={{ fontSize: 15.5, color: 'rgba(255,255,255,.85)', maxWidth: 420 }}>{resume ? (resume.description_sk || 'Otvor si okruhy a materiály tohto predmetu.') : 'Pridaj predmety, ktoré maturuješ, a pripni si ich do menu.'}</div>
+                <Serif size={30} weight={700} style={{ display: 'block', margin: '12px 0 6px', color: '#fff' }}>{resume ? resume.name_sk : 'Vyber si predmety'}</Serif>
+                <div style={{ fontSize: 15.5, color: 'var(--panel-ink-variant)', maxWidth: 420 }}>{resume ? (resume.description_sk || 'Otvor si okruhy a materiály tohto predmetu.') : 'Pridaj predmety, ktoré maturuješ, a pripni si ich do menu.'}</div>
               </div>
               <Button variant="white" iconAfter="arrow_forward" onClick={() => router.push(resume ? `/subjects/${resume.slug}` : '/subjects')}>
                 {resume ? 'Pokračovať' : 'Vybrať predmety'}
@@ -128,7 +128,7 @@ export default function DashboardPage() {
               <div style={{ position: 'relative', borderLeft: '2px solid var(--outline-variant)', marginLeft: 6, display: 'flex', flexDirection: 'column', gap: 22 }}>
                 {recentResults.map((r: any, i: number) => (
                   <div key={i} style={{ position: 'relative', paddingLeft: 22 }}>
-                    <div style={{ position: 'absolute', width: 12, height: 12, borderRadius: '50%', left: -7, top: 4, backgroundImage: i === 0 ? 'var(--grad-brand)' : undefined, background: i === 0 ? undefined : 'var(--surface-container-high)', boxShadow: '0 0 0 4px var(--surface-container-lowest)' }} />
+                    <div style={{ position: 'absolute', width: 11, height: 11, borderRadius: '50%', left: -6.5, top: 4, background: i === 0 ? 'var(--primary)' : 'var(--surface-container-high)', boxShadow: '0 0 0 4px var(--surface-container-lowest)' }} />
                     <div style={{ fontSize: 14, fontWeight: 700, marginBottom: 3 }}>{r.title}</div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 3 }}>
                       <Chip tone={r.score >= 80 ? 'success' : r.score >= 50 ? 'warning' : 'error'}>{r.score}%</Chip>
@@ -147,9 +147,9 @@ export default function DashboardPage() {
             <Link href="/progress"><Button variant="secondary" full style={{ marginTop: 22 }}>Zobraziť celú históriu</Button></Link>
           </Card>
 
-          <div style={{ position: 'relative', overflow: 'hidden', borderRadius: 18, padding: 22, backgroundImage: 'var(--grad-brand)', boxShadow: '0 18px 40px -20px color-mix(in srgb, var(--primary) 60%, transparent)' }}>
+          <div style={{ position: 'relative', overflow: 'hidden', borderRadius: 14, padding: 22, background: 'var(--panel-ink)' }}>
             <Serif size={18} weight={600} style={{ color: '#fff', display: 'block', marginBottom: 8 }}>Otestuj sa</Serif>
-            <div style={{ fontSize: 14, color: 'rgba(255,255,255,.85)', marginBottom: 18, lineHeight: 1.5 }}>Precvič si témy cvičnými testami a over si, čo už vieš.</div>
+            <div style={{ fontSize: 14, color: 'var(--panel-ink-variant)', marginBottom: 18, lineHeight: 1.5 }}>Precvič si témy cvičnými testami a over si, čo už vieš.</div>
             <Link href="/tests"><Button variant="white" full icon="quiz">Spustiť test</Button></Link>
           </div>
         </div>

@@ -95,11 +95,11 @@ export default function AdminPage() {
 
         {/* Right panel */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
-          <div style={{ backgroundImage: 'var(--grad-brand)', color: '#fff', borderRadius: 18, padding: 24, position: 'relative', overflow: 'hidden', boxShadow: '0 18px 40px -20px color-mix(in srgb, var(--primary) 60%, transparent)' }}>
-            <div style={{ position: 'absolute', top: -40, right: -40, width: 128, height: 128, background: '#fff', opacity: .12, borderRadius: '0 0 0 9999px' }} />
-            <Serif size={22} weight={600} style={{ color: '#fff', display: 'block', marginBottom: 8 }}>Pridať obsah</Serif>
-            <div style={{ fontSize: 15, opacity: .9, marginBottom: 24 }}>Vytvor a publikuj nové študijné materiály.</div>
-            <Button variant="white" icon="add" full onClick={() => flash('Otvára sa editor obsahu…')}>Vytvoriť materiál</Button>
+          <div style={{ background: 'var(--panel-ink)', color: '#fff', borderRadius: 14, padding: 24, position: 'relative', overflow: 'hidden' }}>
+            <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', backgroundImage: 'radial-gradient(var(--panel-ink-line) 1px, transparent 1px)', backgroundSize: '22px 22px', opacity: .5 }} />
+            <Serif size={22} weight={600} style={{ color: '#fff', display: 'block', marginBottom: 8, position: 'relative' }}>Pridať obsah</Serif>
+            <div style={{ fontSize: 15, color: 'var(--panel-ink-variant)', marginBottom: 24, position: 'relative' }}>Vytvor a publikuj nové študijné materiály.</div>
+            <div style={{ position: 'relative' }}><Button variant="white" icon="add" full onClick={() => flash('Otvára sa editor obsahu…')}>Vytvoriť materiál</Button></div>
           </div>
 
           <Card pad={20} radius={12}>

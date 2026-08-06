@@ -4,8 +4,8 @@ import { Icon, Button, Card, IconChip, Serif, Eyebrow, Input, useAppearance, typ
 import { useUser, useToastCtx } from '../layout';
 
 const ACCENTS: { id: Accent; label: string; sub: string; swatch: string }[] = [
-  { id: '', label: 'Indigo', sub: 'Predvolená paleta', swatch: 'linear-gradient(135deg,#6366f1,#8b5cf6)' },
-  { id: 'spsit', label: 'SPSIT', sub: 'Modrá — SPŠ IT', swatch: 'linear-gradient(135deg,#1976d2,#0288d1)' },
+  { id: '', label: 'Emerald', sub: 'Predvolený akcent', swatch: '#0a7d54' },
+  { id: 'spsit', label: 'SPSIT', sub: 'Modrý akcent — SPŠ IT', swatch: '#1466c8' },
 ];
 
 const MODES: { id: Mode; label: string; icon: string }[] = [
@@ -59,7 +59,7 @@ export default function SettingsPage() {
   };
 
   const Toggle = ({ val, onChange }: { val: boolean; onChange: (v: boolean) => void }) => (
-    <button onClick={() => onChange(!val)} style={{ width: 46, height: 26, borderRadius: 9999, background: val ? undefined : 'var(--surface-container-high)', backgroundImage: val ? 'var(--grad-brand)' : undefined, position: 'relative', transition: 'background .2s', flex: 'none' }}>
+    <button onClick={() => onChange(!val)} style={{ width: 46, height: 26, borderRadius: 9999, background: val ? 'var(--primary)' : 'var(--surface-container-high)', position: 'relative', transition: 'background .2s', flex: 'none' }}>
       <div style={{ width: 20, height: 20, borderRadius: 9999, background: '#fff', position: 'absolute', top: 3, left: val ? 23 : 3, transition: 'left .22s cubic-bezier(.16,.84,.44,1)', boxShadow: '0 1px 4px rgba(0,0,0,.25)' }} />
     </button>
   );
@@ -92,8 +92,8 @@ export default function SettingsPage() {
 
       <Section title="Profil">
         <div style={{ display: 'flex', gap: 16, alignItems: 'center', marginBottom: 22 }}>
-          <div style={{ width: 72, height: 72, borderRadius: 9999, backgroundImage: 'var(--grad-brand)', display: 'flex', alignItems: 'center', justifyContent: 'center', flex: 'none', boxShadow: '0 10px 24px -10px color-mix(in srgb, var(--primary) 55%, transparent)' }}>
-            <span style={{ fontFamily: 'var(--font-serif)', fontSize: 28, fontWeight: 700, color: '#fff' }}>{(name[0] || 'M').toUpperCase()}</span>
+          <div style={{ width: 72, height: 72, borderRadius: 9999, background: 'var(--inverse-surface)', display: 'flex', alignItems: 'center', justifyContent: 'center', flex: 'none' }}>
+            <span style={{ fontFamily: 'var(--font-display)', fontSize: 28, fontWeight: 700, color: 'var(--inverse-on-surface)' }}>{(name[0] || 'M').toUpperCase()}</span>
           </div>
           <Button variant="secondary" icon="photo_camera" onClick={() => flash('Nahrávanie fotky — bude dostupné čoskoro')}>Zmeniť foto</Button>
         </div>
@@ -160,7 +160,7 @@ export default function SettingsPage() {
                     <Icon name="push_pin" size={16} fill={isPinned ? 1 : 0} />
                   </button>
                   <button onClick={() => toggleSelect(s.id)}
-                    style={{ width: 30, height: 30, borderRadius: 8, background: isSelected ? undefined : 'var(--surface-container-high)', backgroundImage: isSelected ? 'var(--grad-brand)' : undefined, display: 'flex', alignItems: 'center', justifyContent: 'center', color: isSelected ? '#fff' : 'var(--on-surface-variant)' }}>
+                    style={{ width: 30, height: 30, borderRadius: 8, background: isSelected ? 'var(--primary)' : 'var(--surface-container-high)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: isSelected ? 'var(--on-primary)' : 'var(--on-surface-variant)' }}>
                     <Icon name={isSelected ? 'check' : 'add'} size={16} />
                   </button>
                 </div>

@@ -45,12 +45,12 @@ export default function HubPage() {
       <section style={{ display: 'grid', gridTemplateColumns: '1.05fr .95fr', gap: 48, alignItems: 'center', paddingTop: 'clamp(40px, 6vw, 80px)', paddingBottom: 64 }} className="mkb-herogrid">
         <div className="mkb-fade-up">
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'var(--surface-container-lowest)', border: '1px solid var(--outline-variant)', color: 'var(--on-surface-variant)', padding: '7px 14px', borderRadius: 9999, marginBottom: 24, fontSize: 13, fontWeight: 600, boxShadow: 'var(--shadow-sm)' }}>
-            <span style={{ width: 8, height: 8, borderRadius: '50%', backgroundImage: 'var(--grad-brand)' }} />
+            <span style={{ width: 7, height: 7, borderRadius: '50%', background: 'var(--primary)' }} />
             Všetko pre tvoju maturitu na jednom mieste
           </div>
           <h1 style={{ fontFamily: 'var(--font-serif)', fontSize: 'clamp(36px, 6vw, 60px)', lineHeight: 1.05, letterSpacing: '-.025em', fontWeight: 700, color: 'var(--on-surface)', marginBottom: 22 }}>
             Tvoja cesta k úspešnej{' '}
-            <span className="mkb-gradient-text" style={{ fontStyle: 'italic', fontWeight: 400 }}>maturite</span>{' '}
+            <span className="mkb-underline-accent" style={{ color: 'var(--primary)' }}>maturite</span>{' '}
             začína tu.
           </h1>
           <p style={{ fontSize: 18, lineHeight: 1.65, color: 'var(--on-surface-variant)', marginBottom: 32, maxWidth: 520 }}>
@@ -123,14 +123,14 @@ export default function HubPage() {
 
       {/* ── CTA band ─────────────────────────────────────── */}
       <section style={{ marginBottom: 88 }}>
-        <div style={{ position: 'relative', overflow: 'hidden', borderRadius: 28, padding: 'clamp(36px, 5vw, 64px)', backgroundImage: 'var(--grad-brand-vivid)', textAlign: 'center', boxShadow: '0 30px 60px -24px color-mix(in srgb, var(--primary) 65%, transparent)' }}>
-          <div className="mkb-blob" style={{ position: 'absolute', top: -60, right: -40, width: 260, height: 260, borderRadius: '50%', background: 'rgba(255,255,255,.12)', filter: 'blur(30px)' }} />
-          <div className="mkb-blob" style={{ position: 'absolute', bottom: -70, left: -30, width: 220, height: 220, borderRadius: '50%', background: 'rgba(255,255,255,.10)', filter: 'blur(30px)', animationDelay: '3s' }} />
+        <div style={{ position: 'relative', overflow: 'hidden', borderRadius: 20, padding: 'clamp(40px, 5vw, 72px)', background: 'var(--panel-ink)', textAlign: 'center' }}>
+          <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', backgroundImage: 'radial-gradient(var(--panel-ink-line) 1px, transparent 1px)', backgroundSize: '22px 22px', opacity: .5 }} />
           <div style={{ position: 'relative' }}>
-            <Serif size={40} weight={700} style={{ display: 'block', color: '#fff', marginBottom: 14, fontSize: 'clamp(28px, 4vw, 42px)' }}>
+            <span className="mkb-eyebrow" style={{ color: 'var(--panel-ink-variant)' }}>Začni ešte dnes</span>
+            <Serif size={40} weight={700} style={{ display: 'block', color: '#fff', margin: '16px 0 14px', fontSize: 'clamp(30px, 4vw, 46px)' }}>
               Pripravený začať?
             </Serif>
-            <p style={{ fontSize: 17.5, color: 'rgba(255,255,255,.9)', maxWidth: 520, margin: '0 auto 30px', lineHeight: 1.6 }}>
+            <p style={{ fontSize: 17, color: 'var(--panel-ink-variant)', maxWidth: 520, margin: '0 auto 30px', lineHeight: 1.6 }}>
               Prihlás sa, vyber si predmety a maj celú prípravu na maturitu pod kontrolou.
             </p>
             <Link href="/login"><Button size="lg" variant="white" iconAfter="arrow_forward">Prihlásiť sa</Button></Link>

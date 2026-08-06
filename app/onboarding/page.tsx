@@ -29,14 +29,13 @@ export default function OnboardingPage() {
   return (
     <div style={{
       minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
-      padding: 'clamp(24px, 5vw, 56px)', position: 'relative',
-      background: `radial-gradient(60% 45% at 15% 0%, color-mix(in srgb, var(--primary) 14%, transparent), transparent 70%), radial-gradient(50% 40% at 90% 8%, color-mix(in srgb, var(--tertiary) 14%, transparent), transparent 70%), var(--background)`,
+      padding: 'clamp(24px, 5vw, 56px)', position: 'relative', background: 'var(--background)',
     }}>
       <div style={{ position: 'absolute', top: 20, right: 20 }}><ModeToggle /></div>
       <div style={{ width: '100%', maxWidth: 820 }} className="mkb-fade-up">
         <div style={{ textAlign: 'center', marginBottom: 40 }}>
-          <div style={{ width: 68, height: 68, borderRadius: 20, backgroundImage: 'var(--grad-brand)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 22px', boxShadow: '0 12px 30px -12px color-mix(in srgb, var(--primary) 60%, transparent)' }}>
-            <Icon name="school" size={34} fill={1} style={{ color: '#fff' }} />
+          <div style={{ width: 64, height: 64, borderRadius: 16, background: 'var(--panel-ink)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 22px' }}>
+            <Icon name="bookmark" size={32} fill={1} style={{ color: '#fff' }} />
           </div>
           <Eyebrow>Krok 1 z 1</Eyebrow>
           <Serif size={40} weight={700} style={{ display: 'block', margin: '12px 0 8px', fontSize: 'clamp(28px, 5vw, 40px)' }}>Vyber si svoje predmety</Serif>
@@ -56,8 +55,8 @@ export default function OnboardingPage() {
                 boxShadow: on ? 'var(--shadow-card)' : 'none',
               }}>
                 {on && (
-                  <div style={{ position: 'absolute', top: 12, right: 12, width: 24, height: 24, borderRadius: 9999, backgroundImage: 'var(--grad-brand)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    <Icon name="check" size={15} style={{ color: '#fff' }} />
+                  <div style={{ position: 'absolute', top: 12, right: 12, width: 24, height: 24, borderRadius: 9999, background: 'var(--primary)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <Icon name="check" size={15} style={{ color: 'var(--on-primary)' }} />
                   </div>
                 )}
                 <IconChip name={s.icon} size={44} radius={12} grad={on} />

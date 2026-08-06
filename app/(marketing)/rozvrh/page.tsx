@@ -79,9 +79,9 @@ export default function RozvrhPage() {
               </div>
             ))}
           </Card>
-          <Card pad={22} style={{ backgroundImage: 'var(--grad-brand)', border: 'none' }}>
+          <Card pad={22} style={{ background: 'var(--panel-ink)', border: 'none' }}>
             <Serif size={18} weight={600} style={{ color: '#fff', display: 'block', marginBottom: 8 }}>Plánuj chytro</Serif>
-            <div style={{ fontSize: 14, color: 'rgba(255,255,255,.88)', lineHeight: 1.55, marginBottom: 4 }}>
+            <div style={{ fontSize: 14, color: 'var(--panel-ink-variant)', lineHeight: 1.55, marginBottom: 4 }}>
               Rozdeľ si učenie na kratšie bloky a strieda predmety — pomáha to pamäti viac než dlhé nárazové sedenia.
             </div>
           </Card>

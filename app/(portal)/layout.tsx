@@ -74,7 +74,7 @@ export default function PortalLayout({ children }: { children: React.ReactNode }
       <ToastContext.Provider value={{ flash }}>
         <div style={{ display: 'flex', minHeight: '100vh' }}>
           {/* Mobile top bar */}
-          <div className="mkb-mobilebar mkb-glass" style={{ borderBottom: '1px solid var(--outline-variant)' }}>
+          <div className="mkb-mobilebar" style={{ background: 'var(--surface-container-low)', borderBottom: '1px solid var(--outline-variant)' }}>
             <button onClick={() => setDrawerOpen(true)} aria-label="Otvoriť menu" className="mkb-tap" style={{ color: 'var(--on-surface)', padding: 8, display: 'flex' }}>
               <Icon name="menu" size={24} />
             </button>
@@ -89,8 +89,8 @@ export default function PortalLayout({ children }: { children: React.ReactNode }
           <nav className={'mkb-sidebar' + (drawerOpen ? ' open' : '')} style={{ width: 272, height: '100vh', position: 'sticky', top: 0, flex: 'none', background: 'var(--surface-container-low)', borderRight: '1px solid var(--outline-variant)', display: 'flex', flexDirection: 'column', padding: 16, overflowY: 'auto' }}>
             {/* Logo */}
             <div style={{ display: 'flex', alignItems: 'center', gap: 11, padding: '8px 8px 4px', marginBottom: 18 }}>
-              <div style={{ width: 42, height: 42, borderRadius: 13, backgroundImage: 'var(--grad-brand)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 8px 20px -8px color-mix(in srgb, var(--primary) 60%, transparent)' }}>
-                <Icon name="school" size={23} fill={1} style={{ color: '#fff' }} />
+              <div style={{ width: 40, height: 40, borderRadius: 11, background: 'var(--inverse-surface)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <Icon name="bookmark" size={22} fill={1} style={{ color: 'var(--inverse-on-surface)' }} />
               </div>
               <div>
                 <Serif size={20} weight={700} style={{ display: 'block', lineHeight: 1.1 }}>
@@ -158,7 +158,7 @@ export default function PortalLayout({ children }: { children: React.ReactNode }
           </main>
 
           {/* Mobile bottom navigation */}
-          <nav className="mkb-bottomnav mkb-glass" style={{ borderTop: '1px solid var(--outline-variant)' }}>
+          <nav className="mkb-bottomnav" style={{ background: 'var(--surface-container-low)', borderTop: '1px solid var(--outline-variant)' }}>
             {[
               { href: '/dashboard', icon: 'dashboard', label: 'Domov' },
               { href: '/notes', icon: 'edit_note', label: 'Poznámky' },
@@ -189,7 +189,7 @@ function NavItem({ href, icon, label, active, small }: { href: string; icon: str
       style={{ position: 'relative', display: 'flex', alignItems: 'center', gap: 12, padding: small ? '9px 14px' : '11px 14px', borderRadius: 12, marginBottom: 3, fontSize: 14, fontWeight: active ? 700 : 600, color: active ? 'var(--on-primary-fixed-variant)' : 'var(--on-surface-variant)', background: active ? 'var(--primary-fixed)' : 'transparent', transition: 'background .2s, color .2s' }}
       onMouseEnter={e => { if (!active) e.currentTarget.style.background = 'var(--surface-container-high)'; }}
       onMouseLeave={e => { if (!active) e.currentTarget.style.background = 'transparent'; }}>
-      {active && <span style={{ position: 'absolute', left: 0, top: '50%', transform: 'translateY(-50%)', width: 4, height: 20, borderRadius: 9999, backgroundImage: 'var(--grad-brand)' }} />}
+      {active && <span style={{ position: 'absolute', left: 0, top: '50%', transform: 'translateY(-50%)', width: 3, height: 18, borderRadius: 9999, background: 'var(--primary)' }} />}
       <Icon name={icon} size={22} fill={active ? 1 : 0} />{label}
     </Link>
   );

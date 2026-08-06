@@ -105,28 +105,25 @@ export default function LoginPage() {
       </div>
 
       {/* Right — brand panel */}
-      <div className="mkb-hide-mobile" style={{ flex: 1, backgroundImage: 'var(--grad-brand-vivid)', display: 'flex', flexDirection: 'column', justifyContent: 'center', padding: 64, position: 'relative', overflow: 'hidden' }}>
-        <div className="mkb-blob" style={{ position: 'absolute', top: -90, right: -70, width: 320, height: 320, background: 'rgba(255,255,255,.12)', borderRadius: '50%', filter: 'blur(20px)' }} />
-        <div className="mkb-blob" style={{ position: 'absolute', bottom: -60, left: -50, width: 240, height: 240, background: 'rgba(255,255,255,.10)', borderRadius: '50%', filter: 'blur(20px)', animationDelay: '3s' }} />
+      <div className="mkb-hide-mobile" style={{ flex: 1, background: 'var(--panel-ink)', display: 'flex', flexDirection: 'column', justifyContent: 'center', padding: 64, position: 'relative', overflow: 'hidden' }}>
+        <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', backgroundImage: 'radial-gradient(var(--panel-ink-line) 1px, transparent 1px)', backgroundSize: '24px 24px', opacity: .5 }} />
         <div style={{ position: 'relative', maxWidth: 420 }}>
-          <div style={{ width: 64, height: 64, borderRadius: 18, background: 'rgba(255,255,255,.16)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 30, backdropFilter: 'blur(6px)' }}>
-            <Icon name="school" size={32} fill={1} style={{ color: '#fff' }} />
+          <div style={{ width: 60, height: 60, borderRadius: 14, background: 'rgba(255,255,255,.1)', border: '1px solid var(--panel-ink-line)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 30 }}>
+            <Icon name="bookmark" size={30} fill={1} style={{ color: '#fff' }} />
           </div>
-          <div style={{ fontFamily: 'var(--font-serif)', fontSize: 42, fontWeight: 700, color: '#fff', display: 'block', marginBottom: 16, lineHeight: 1.12, letterSpacing: '-.02em' }}>
-            Tvoja maturita.<br /><span style={{ fontStyle: 'italic', fontWeight: 400, color: 'rgba(255,255,255,.9)' }}>Tvoje pravidlá.</span>
+          <div style={{ fontFamily: 'var(--font-display)', fontSize: 42, fontWeight: 700, color: '#fff', display: 'block', marginBottom: 16, lineHeight: 1.08, letterSpacing: '-.03em' }}>
+            Tvoja maturita.<br /><span style={{ color: 'var(--primary)' }}>Tvoje pravidlá.</span>
           </div>
-          <p style={{ fontSize: 17, lineHeight: 1.7, color: 'rgba(255,255,255,.82)', marginBottom: 40 }}>
+          <p style={{ fontSize: 17, lineHeight: 1.7, color: 'var(--panel-ink-variant)', marginBottom: 40 }}>
             Tvoje okruhy, materiály a poznámky pre maturitu — prehľadne na jednom mieste.
           </p>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
             {features.map(([icon, title, desc]) => (
-              <div key={title} style={{ display: 'flex', gap: 14, alignItems: 'flex-start' }}>
-                <div style={{ width: 40, height: 40, borderRadius: 11, background: 'rgba(255,255,255,.16)', display: 'flex', alignItems: 'center', justifyContent: 'center', flex: 'none' }}>
-                  <Icon name={icon} size={21} fill={1} style={{ color: '#fff' }} />
-                </div>
+              <div key={title} style={{ display: 'flex', gap: 14, alignItems: 'flex-start', padding: '12px 0', borderTop: '1px solid var(--panel-ink-line)' }}>
+                <Icon name={icon} size={22} fill={1} style={{ color: 'var(--primary)', marginTop: 1 }} />
                 <div>
                   <div style={{ fontSize: 15, fontWeight: 700, color: '#fff' }}>{title}</div>
-                  <div style={{ fontSize: 13.5, color: 'rgba(255,255,255,.75)', marginTop: 2 }}>{desc}</div>
+                  <div style={{ fontSize: 13.5, color: 'var(--panel-ink-variant)', marginTop: 2 }}>{desc}</div>
                 </div>
               </div>
             ))}
