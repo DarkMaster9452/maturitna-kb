@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Icon, Button, Card, IconChip, Progress, Ring, Chip, Serif, Eyebrow, Skeleton, StatCard, Avatar, EmptyState } from '@/components/ui';
+import { Counter } from '@/components/motion';
 import { useUser } from '../layout';
 
 export default function DashboardPage() {
@@ -52,9 +53,9 @@ export default function DashboardPage() {
 
       {/* Stats */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 16, marginBottom: 28 }}>
-        <StatCard icon="school" label="Predmety v pláne" value={selected.length} sub={`${pinnedSubjects.length} pripnutých`} tone="primary" />
-        <StatCard icon="trending_up" label="Priemerný pokrok" value={avgProgress + '%'} sub="naprieč predmetmi" tone="tertiary" />
-        <StatCard icon="quiz" label="Dokončené testy" value={results.length} sub={results.length ? `priemer ${avgScore} %` : 'zatiaľ žiadne'} tone="success" />
+        <StatCard icon="school" label="Predmety v pláne" value={<Counter value={selected.length} />} sub={`${pinnedSubjects.length} pripnutých`} tone="primary" />
+        <StatCard icon="trending_up" label="Priemerný pokrok" value={<Counter value={avgProgress} suffix="%" />} sub="naprieč predmetmi" tone="tertiary" />
+        <StatCard icon="quiz" label="Dokončené testy" value={<Counter value={results.length} />} sub={results.length ? `priemer ${avgScore} %` : 'zatiaľ žiadne'} tone="success" />
         <StatCard icon="local_fire_department" label="Pripravenosť" value={avgProgress >= 66 ? 'Vysoká' : avgProgress >= 33 ? 'Stredná' : 'Začiatok'} sub="odhad podľa pokroku" tone="warning" />
       </div>
 

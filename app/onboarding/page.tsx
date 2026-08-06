@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Icon, Button, IconChip, Serif, Eyebrow, ModeToggle } from '@/components/ui';
+import { fireConfetti } from '@/components/motion';
 
 type Subject = { id: string; slug: string; name_sk: string; icon: string; description_sk: string };
 
@@ -22,8 +23,9 @@ export default function OnboardingPage() {
   const handleSave = async () => {
     if (selected.size < 1) return;
     setLoading(true);
+    fireConfetti({ count: 120 });
     await fetch('/api/user/subjects', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ subjectIds: Array.from(selected) }) });
-    router.push('/dashboard');
+    setTimeout(() => router.push('/dashboard'), 600);
   };
 
   return (

@@ -1,6 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
-import { Icon, Button, Card, IconChip, Serif, Eyebrow, Input, useAppearance, type Mode, type Accent } from '@/components/ui';
+import { Icon, Button, Card, IconChip, Serif, Eyebrow, Input, Avatar, useAppearance, type Mode, type Accent } from '@/components/ui';
+import { fireConfetti } from '@/components/motion';
 import { useUser, useToastCtx } from '../layout';
 
 const ACCENTS: { id: Accent; label: string; sub: string; swatch: string }[] = [
@@ -25,12 +26,30 @@ export default function SettingsPage() {
   const [userData, setUserData] = useState<any>(null);
   const [saving, setSaving] = useState(false);
   const [notif, setNotif] = useState({ email: true, push: false, weekly: true, test: true });
+  const [joinCode, setJoinCode] = useState('');
+  const [joining, setJoining] = useState(false);
+  const [teachers, setTeachers] = useState<any[]>([]);
 
   useEffect(() => {
     if (user) { setName(user.name); setEmail(user.email); }
     fetch('/api/subjects').then(r => r.json()).then(d => setAllSubjects(Array.isArray(d) ? d : []));
     fetch('/api/user/subjects').then(r => r.json()).then(setUserData);
+    fetch('/api/join').then(r => r.json()).then(d => setTeachers(Array.isArray(d.teachers) ? d.teachers : [])).catch(() => {});
   }, [user]);
+
+  const joinClass = async () => {
+    if (!joinCode.trim()) return;
+    setJoining(true);
+    try {
+      const res = await fetch('/api/join', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ code: joinCode }) });
+      const d = await res.json();
+      if (!res.ok) { flash(d.error || 'Neplatný kód.'); setJoining(false); return; }
+      setJoinCode(''); fireConfetti();
+      flash(`Pripojil si sa k učiteľovi ${d.teacher}!`);
+      fetch('/api/join').then(r => r.json()).then(x => setTeachers(x.teachers || []));
+    } catch { flash('Sieťová chyba.'); }
+    setJoining(false);
+  };
 
   const saveProfile = async () => {
     setSaving(true);
@@ -175,6 +194,26 @@ export default function SettingsPage() {
         <Row label="Push notifikácie" sub="Upozornenia prehliadača na nové materiály"><Toggle val={notif.push} onChange={v => { setNotif({ ...notif, push: v }); flash(v ? 'Push notifikácie zapnuté' : 'Push notifikácie vypnuté'); }} /></Row>
         <Row label="Týždenný report" sub="Súhrn každý pondelok ráno"><Toggle val={notif.weekly} onChange={v => { setNotif({ ...notif, weekly: v }); flash(v ? 'Týždenný report zapnutý' : 'Týždenný report vypnutý'); }} /></Row>
         <Row label="Pripomienky testov" sub="Upozornenie pred naplánovanými testami"><Toggle val={notif.test} onChange={v => { setNotif({ ...notif, test: v }); flash(v ? 'Pripomienky testov zapnuté' : 'Pripomienky testov vypnuté'); }} /></Row>
+      </Section>
+
+      <Section title="Trieda" desc="Pripoj sa k učiteľovi pomocou pozývacieho kódu, ktorý ti dá.">
+        <div style={{ display: 'flex', gap: 8, alignItems: 'flex-end', flexWrap: 'wrap', marginBottom: teachers.length ? 18 : 0 }}>
+          <div style={{ flex: 1, minWidth: 180 }}>
+            <Input label="Pozývací kód" placeholder="napr. K7M2QP" value={joinCode} onChange={e => setJoinCode(e.target.value.toUpperCase())} icon="vpn_key" onKeyDown={e => e.key === 'Enter' && joinClass()} />
+          </div>
+          <Button icon="group_add" onClick={joinClass} disabled={joining}>{joining ? 'Pripájam…' : 'Pripojiť sa'}</Button>
+        </div>
+        {teachers.length > 0 && (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+            <div className="mkb-eyebrow" style={{ letterSpacing: '.12em' }}>Tvoji učitelia</div>
+            {teachers.map(t => (
+              <div key={t.id} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '10px 12px', borderRadius: 12, border: '1px solid var(--outline-variant)', background: 'var(--surface-container-low)' }}>
+                <Avatar name={t.name} size={36} />
+                <div><div style={{ fontSize: 14, fontWeight: 600 }}>{t.name}</div><div style={{ fontSize: 12, color: 'var(--on-surface-variant)' }}>{t.email}</div></div>
+              </div>
+            ))}
+          </div>
+        )}
       </Section>
 
       <Section title="Bezpečnosť">
