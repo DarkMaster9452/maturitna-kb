@@ -19,8 +19,8 @@ export default function LoginPage() {
       const res = await fetch('/api/auth/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email, password }) });
       const data = await res.json();
       if (!res.ok) { setError(data.error || 'Chyba pri prihlásení.'); setLoading(false); return; }
-      if (!data.user.onboardingDone) router.push('/onboarding');
-      else if (data.user.role === 'admin') router.push('/admin');
+      if (['admin', 'owner'].includes(data.user.role)) router.push('/admin');
+      else if (!data.user.onboardingDone) router.push('/onboarding');
       else router.push('/dashboard');
     } catch { setError('Sieťová chyba.'); setLoading(false); }
   };

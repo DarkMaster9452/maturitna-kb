@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { Button, Serif, Eyebrow, Icon } from '@/components/ui';
 import { Reveal, Counter, Marquee, WordRotate } from '@/components/motion';
+import { useT, subjectName } from '@/components/i18n';
 import { NavCard, FeatureCard, StepCard, HeroPreview } from './_components';
 
 const navCards = [
@@ -36,6 +37,7 @@ const FALLBACK_SUBJECTS = [
 
 export default function HubPage() {
   const [subjects, setSubjects] = useState<any[]>([]);
+  const { t, lang } = useT();
 
   useEffect(() => {
     fetch('/api/subjects').then(r => r.json()).then(d => setSubjects(Array.isArray(d) ? d : [])).catch(() => {});
@@ -55,24 +57,24 @@ export default function HubPage() {
         <div className="mkb-fade-up">
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'var(--surface-container-lowest)', border: '1px solid var(--outline-variant)', color: 'var(--on-surface-variant)', padding: '7px 14px', borderRadius: 9999, marginBottom: 24, fontSize: 13, fontWeight: 600 }}>
             <span className="mkb-pulse" style={{ width: 7, height: 7, borderRadius: '50%', background: 'var(--primary)' }} />
-            Všetko pre tvoju maturitu na jednom mieste
+            {t('Všetko pre tvoju maturitu na jednom mieste')}
           </div>
           <h1 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(36px, 6vw, 60px)', lineHeight: 1.02, letterSpacing: '-.03em', fontWeight: 700, color: 'var(--on-surface)', marginBottom: 22 }}>
-            Tvoja cesta k úspešnej{' '}
-            <span className="mkb-underline-accent" style={{ color: 'var(--primary)' }}>maturite</span>{' '}
-            začína tu.
+            {t('Tvoja cesta k úspešnej')}{' '}
+            <span className="mkb-underline-accent" style={{ color: 'var(--primary)' }}>{t('maturite')}</span>{' '}
+            {t('začína tu.')}
           </h1>
           <p style={{ fontSize: 18, lineHeight: 1.65, color: 'var(--on-surface-variant)', marginBottom: 22, maxWidth: 520 }}>
-            Organizuj si okruhy, materiály a poznámky, precvičuj cvičné testy a sleduj svoj pokrok — prehľadne, moderne a efektívne.
+            {t('Organizuj si okruhy, materiály a poznámky, precvičuj cvičné testy a sleduj svoj pokrok — prehľadne, moderne a efektívne.')}
           </p>
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, marginBottom: 28, padding: '7px 14px', borderRadius: 9999, background: 'var(--primary-fixed)', color: 'var(--on-primary-fixed-variant)', fontSize: 13.5, fontWeight: 600 }}>
             <Icon name="auto_awesome" size={16} fill={1} style={{ color: 'var(--primary)' }} />
-            Pripravíme ťa na{' '}
-            <WordRotate words={['Matematiku', 'Slovenčinu', 'Angličtinu', 'Dejepis', 'Biológiu', 'Informatiku']} style={{ fontWeight: 700, color: 'var(--primary)' }} />
+            {t('Pripravíme ťa na')}{' '}
+            <WordRotate words={lang === 'en' ? ['Maths', 'Slovak', 'English', 'History', 'Biology', 'IT'] : ['Matematiku', 'Slovenčinu', 'Angličtinu', 'Dejepis', 'Biológiu', 'Informatiku']} style={{ fontWeight: 700, color: 'var(--primary)' }} />
           </div>
           <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
-            <Link href="/login"><Button size="lg" iconAfter="arrow_forward">Vstúpiť do databázy</Button></Link>
-            <Link href="/predmety"><Button size="lg" variant="secondary">Preskúmať predmety</Button></Link>
+            <Link href="/login"><Button size="lg" iconAfter="arrow_forward">{t('Vstúpiť do databázy')}</Button></Link>
+            <Link href="/predmety"><Button size="lg" variant="secondary">{t('Preskúmať predmety')}</Button></Link>
           </div>
         </div>
         <div className="mkb-fade-up mkb-hide-mobile" style={{ animationDelay: '.12s' }}>
@@ -87,7 +89,7 @@ export default function HubPage() {
             {marqueeSubjects.map((s: any, i: number) => (
               <div key={i} style={{ display: 'inline-flex', alignItems: 'center', gap: 9, padding: '8px 16px', borderRadius: 9999, border: '1px solid var(--outline-variant)', background: 'var(--surface-container-low)', whiteSpace: 'nowrap' }}>
                 <Icon name={s.icon} size={19} fill={1} style={{ color: 'var(--primary)' }} />
-                <span style={{ fontSize: 14, fontWeight: 600 }}>{s.name_sk}</span>
+                <span style={{ fontSize: 14, fontWeight: 600 }}>{subjectName(s, lang)}</span>
               </div>
             ))}
           </Marquee>
@@ -105,7 +107,7 @@ export default function HubPage() {
               <div style={{ fontFamily: 'var(--font-display)', fontSize: 32, fontWeight: 700, lineHeight: 1, letterSpacing: '-.02em' }}>
                 <Counter value={s.value} suffix={s.suffix || ''} />
               </div>
-              <div style={{ fontSize: 13.5, color: 'var(--on-surface-variant)', marginTop: 4 }}>{s.label}</div>
+              <div style={{ fontSize: 13.5, color: 'var(--on-surface-variant)', marginTop: 4 }}>{t(s.label)}</div>
             </div>
           </div>
         ))}
@@ -114,8 +116,8 @@ export default function HubPage() {
       {/* ── Navigation cards ─────────────────────────────── */}
       <section style={{ marginBottom: 92 }}>
         <Reveal style={{ textAlign: 'center', marginBottom: 36 }}>
-          <Eyebrow>Preskúmaj</Eyebrow>
-          <Serif size={38} weight={600} style={{ display: 'block', marginTop: 12 }}>Kam ďalej?</Serif>
+          <Eyebrow>{t('Preskúmaj')}</Eyebrow>
+          <Serif size={38} weight={600} style={{ display: 'block', marginTop: 12 }}>{t('Kam ďalej?')}</Serif>
         </Reveal>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(230px, 1fr))', gap: 20 }}>
           {navCards.map((s, i) => <Reveal key={s.href} delay={i * 80}><NavCard {...s} /></Reveal>)}
@@ -125,10 +127,10 @@ export default function HubPage() {
       {/* ── Features ─────────────────────────────────────── */}
       <section style={{ marginBottom: 92 }}>
         <Reveal style={{ textAlign: 'center', marginBottom: 36, maxWidth: 620, marginLeft: 'auto', marginRight: 'auto' }}>
-          <Eyebrow>Čo tu nájdeš</Eyebrow>
-          <Serif size={38} weight={600} style={{ display: 'block', margin: '12px 0 12px' }}>Všetko, čo na maturitu potrebuješ</Serif>
+          <Eyebrow>{t('Čo tu nájdeš')}</Eyebrow>
+          <Serif size={38} weight={600} style={{ display: 'block', margin: '12px 0 12px' }}>{t('Všetko, čo na maturitu potrebuješ')}</Serif>
           <p style={{ fontSize: 16, color: 'var(--on-surface-variant)', lineHeight: 1.6 }}>
-            Nástroje navrhnuté tak, aby si sa mohol sústrediť na učenie — nie na organizovanie chaosu v priečinkoch.
+            {t('Nástroje navrhnuté tak, aby si sa mohol sústrediť na učenie — nie na organizovanie chaosu v priečinkoch.')}
           </p>
         </Reveal>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: 18 }}>
@@ -139,8 +141,8 @@ export default function HubPage() {
       {/* ── How it works ─────────────────────────────────── */}
       <section style={{ marginBottom: 92 }}>
         <Reveal style={{ textAlign: 'center', marginBottom: 36 }}>
-          <Eyebrow>Ako to funguje</Eyebrow>
-          <Serif size={38} weight={600} style={{ display: 'block', marginTop: 12 }}>Tri kroky k pripravenosti</Serif>
+          <Eyebrow>{t('Ako to funguje')}</Eyebrow>
+          <Serif size={38} weight={600} style={{ display: 'block', marginTop: 12 }}>{t('Tri kroky k pripravenosti')}</Serif>
         </Reveal>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: 20 }}>
           {steps.map((s, i) => <Reveal key={s.title} delay={i * 100}><StepCard num={i + 1} {...s} /></Reveal>)}
@@ -152,14 +154,14 @@ export default function HubPage() {
         <div style={{ position: 'relative', overflow: 'hidden', borderRadius: 20, padding: 'clamp(40px, 5vw, 72px)', background: 'var(--panel-ink)', textAlign: 'center' }}>
           <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', backgroundImage: 'radial-gradient(var(--panel-ink-line) 1px, transparent 1px)', backgroundSize: '22px 22px', opacity: .5 }} />
           <div style={{ position: 'relative' }}>
-            <span className="mkb-eyebrow" style={{ color: 'var(--panel-ink-variant)' }}>Začni ešte dnes</span>
+            <span className="mkb-eyebrow" style={{ color: 'var(--panel-ink-variant)' }}>{t('Začni ešte dnes')}</span>
             <Serif size={40} weight={700} style={{ display: 'block', color: '#fff', margin: '16px 0 14px', fontSize: 'clamp(30px, 4vw, 46px)' }}>
-              Pripravený začať?
+              {t('Pripravený začať?')}
             </Serif>
             <p style={{ fontSize: 17, color: 'var(--panel-ink-variant)', maxWidth: 520, margin: '0 auto 30px', lineHeight: 1.6 }}>
-              Prihlás sa, vyber si predmety a maj celú prípravu na maturitu pod kontrolou.
+              {t('Prihlás sa, vyber si predmety a maj celú prípravu na maturitu pod kontrolou.')}
             </p>
-            <Link href="/login"><Button size="lg" variant="white" iconAfter="arrow_forward">Prihlásiť sa</Button></Link>
+            <Link href="/login"><Button size="lg" variant="white" iconAfter="arrow_forward">{t('Prihlásiť sa')}</Button></Link>
           </div>
         </div>
       </Reveal>

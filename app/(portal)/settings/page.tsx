@@ -2,7 +2,13 @@
 import { useState, useEffect } from 'react';
 import { Icon, Button, Card, IconChip, Serif, Eyebrow, Input, Avatar, useAppearance, type Mode, type Accent } from '@/components/ui';
 import { fireConfetti } from '@/components/motion';
+import { useLang } from '@/components/i18n';
 import { useUser, useToastCtx } from '../layout';
+
+const LANGS: { id: 'sk' | 'en'; label: string; sub: string; flag: string }[] = [
+  { id: 'sk', label: 'Slovenčina', sub: 'Predvolený', flag: '🇸🇰' },
+  { id: 'en', label: 'Angličtina', sub: 'Druhý jazyk', flag: '🇬🇧' },
+];
 
 const ACCENTS: { id: Accent; label: string; sub: string; swatch: string }[] = [
   { id: '', label: 'Emerald', sub: 'Predvolený akcent', swatch: '#0a7d54' },
@@ -19,6 +25,7 @@ export default function SettingsPage() {
   const { user, refetchPinned } = useUser();
   const { flash } = useToastCtx();
   const { mode, accent, changeMode, changeAccent } = useAppearance();
+  const { lang, setLang } = useLang();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -155,6 +162,24 @@ export default function SettingsPage() {
                 style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8, padding: '16px 10px', borderRadius: 14, border: `2px solid ${active ? 'var(--primary)' : 'var(--outline-variant)'}`, background: active ? 'var(--primary-fixed)' : 'var(--surface-container-lowest)', color: active ? 'var(--primary)' : 'var(--on-surface-variant)' }}>
                 <Icon name={m.icon} size={24} fill={active ? 1 : 0} />
                 <span style={{ fontSize: 13, fontWeight: 700 }}>{m.label}</span>
+              </button>
+            );
+          })}
+        </div>
+
+        <div style={{ fontSize: 12.5, fontWeight: 700, letterSpacing: '.06em', textTransform: 'uppercase', color: 'var(--on-surface-variant)', margin: '24px 0 12px' }}>Jazyk</div>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 12 }}>
+          {LANGS.map(l => {
+            const active = lang === l.id;
+            return (
+              <button key={l.id} onClick={() => { setLang(l.id); flash(l.id === 'en' ? 'Language: English' : 'Jazyk: Slovenčina'); }}
+                style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '14px 16px', borderRadius: 14, border: `2px solid ${active ? 'var(--primary)' : 'var(--outline-variant)'}`, background: active ? 'var(--primary-fixed)' : 'var(--surface-container-lowest)', textAlign: 'left' }}>
+                <span style={{ fontSize: 26, flex: 'none' }}>{l.flag}</span>
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontSize: 14, fontWeight: 700 }}>{l.label}</div>
+                  <div style={{ fontSize: 12, color: 'var(--on-surface-variant)', marginTop: 1 }}>{l.sub}</div>
+                </div>
+                {active && <Icon name="check_circle" size={20} fill={1} style={{ color: 'var(--primary)' }} />}
               </button>
             );
           })}

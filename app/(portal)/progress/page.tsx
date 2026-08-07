@@ -1,6 +1,8 @@
 'use client';
 import { useState, useEffect } from 'react';
-import { Icon, Card, IconChip, Progress, Chip, Serif, Eyebrow } from '@/components/ui';
+import { Icon, Card, IconChip, Progress, Chip, Serif, Eyebrow, Ring } from '@/components/ui';
+import { Counter, Reveal } from '@/components/motion';
+import { computeAchievements } from '@/lib/achievements';
 
 export default function ProgressPage() {
   const [data, setData] = useState<any>(null);
@@ -16,12 +18,14 @@ export default function ProgressPage() {
 
   const maxHours = sessions.length > 0 ? Math.max(...sessions.map((s: any) => Number(s.minutes) / 60)) : 8;
 
-  const achievements = [
-    { icon: 'emoji_events', label: 'Prvý test', bg: 'var(--primary-fixed)', c: 'var(--primary)', earned: Number(testCount) >= 1 },
-    { icon: 'local_fire_department', label: 'Séria štúdia', bg: 'var(--warning-container)', c: 'var(--warning)', earned: sessions.length >= 5 },
-    { icon: 'star', label: 'Skóre 90 %+', bg: 'var(--success-container)', c: 'var(--success)', earned: results.some((r: any) => r.score >= 90) },
-    { icon: 'military_tech', label: '10 testov', bg: 'var(--tertiary-fixed)', c: 'var(--tertiary)', earned: Number(testCount) >= 10 },
-  ];
+  const bestScore = results.length ? Math.max(...results.map((r: any) => Number(r.score) || 0)) : 0;
+  const perfectCount = results.filter((r: any) => Number(r.score) >= 100).length;
+  const totalHours = Number(totals?.total_hours || 0);
+  const achievements = computeAchievements({
+    testCount: Number(testCount) || 0, bestScore, avgProgress,
+    subjectsCount: progress.length, sessionsCount: sessions.length, totalHours, perfectCount,
+  });
+  const earnedCount = achievements.filter(a => a.earned).length;
 
   return (
     <div>
@@ -75,25 +79,52 @@ export default function ProgressPage() {
           )}
         </Card>
 
-        {/* Achievements */}
-        <Card pad={24} radius={12}>
-          <Serif size={20} weight={600} style={{ display: 'block', marginBottom: 20 }}>Odznaky</Serif>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-            {achievements.map(a => (
-              <div key={a.label} style={{ display: 'flex', alignItems: 'center', gap: 12, opacity: a.earned ? 1 : 0.4 }}>
-                <div style={{ width: 36, height: 36, borderRadius: 10, background: a.bg, display: 'flex', alignItems: 'center', justifyContent: 'center', flex: 'none' }}>
-                  <Icon name={a.icon} size={18} fill={1} style={{ color: a.c }} />
-                </div>
-                <div style={{ flex: 1 }}>
-                  <div style={{ fontSize: 13, fontWeight: 600 }}>{a.label}</div>
-                  <div style={{ fontSize: 11, color: 'var(--on-surface-variant)' }}>{a.earned ? 'Získané' : 'Zatiaľ nezískaný'}</div>
-                </div>
-                {a.earned && <Icon name="check_circle" size={16} fill={1} style={{ color: 'var(--success)' }} />}
-              </div>
-            ))}
-          </div>
+        {/* Achievements summary */}
+        <Card pad={24} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', justifyContent: 'center' }}>
+          <Serif size={20} weight={600} style={{ display: 'block', marginBottom: 18, alignSelf: 'flex-start' }}>Odznaky</Serif>
+          <Ring value={(earnedCount / achievements.length) * 100} size={128} stroke={11}>
+            <div style={{ textAlign: 'center' }}>
+              <div style={{ fontFamily: 'var(--font-display)', fontSize: 30, fontWeight: 700, lineHeight: 1 }}><Counter value={earnedCount} /></div>
+              <div style={{ fontSize: 12, color: 'var(--on-surface-variant)' }}>z {achievements.length}</div>
+            </div>
+          </Ring>
+          <div style={{ fontSize: 13.5, color: 'var(--on-surface-variant)', marginTop: 16 }}>odomknutých odznakov</div>
         </Card>
       </div>
+
+      {/* Achievements grid */}
+      <Card pad={24} style={{ marginBottom: 24 }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20, flexWrap: 'wrap', gap: 8 }}>
+          <Serif size={20} weight={600}>Achievementy</Serif>
+          <Chip tone="trend" icon="military_tech">{earnedCount} / {achievements.length}</Chip>
+        </div>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: 12 }}>
+          {achievements.map((a, i) => (
+            <Reveal key={a.id} delay={Math.min(i * 25, 300)}>
+              <div style={{ display: 'flex', gap: 12, alignItems: 'flex-start', padding: 14, borderRadius: 14, border: `1px solid ${a.earned ? 'var(--primary)' : 'var(--outline-variant)'}`, background: a.earned ? 'var(--primary-fixed)' : 'var(--surface-container-low)', height: '100%' }}>
+                <div style={{ width: 40, height: 40, borderRadius: 11, flex: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', background: a.earned ? 'var(--primary)' : 'var(--surface-container-high)', color: a.earned ? 'var(--on-primary)' : 'var(--on-surface-variant)' }}>
+                  <Icon name={a.icon} size={22} fill={a.earned ? 1 : 0} />
+                </div>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                    <span style={{ fontSize: 14, fontWeight: 700, color: a.earned ? 'var(--on-primary-fixed)' : 'var(--on-surface)' }}>{a.title}</span>
+                    {a.earned && <Icon name="check_circle" size={15} fill={1} style={{ color: 'var(--primary)' }} />}
+                  </div>
+                  <div style={{ fontSize: 12.5, color: 'var(--on-surface-variant)', marginTop: 3, lineHeight: 1.4 }}>{a.desc}</div>
+                  {!a.earned && a.need > 1 && (
+                    <div style={{ marginTop: 8 }}>
+                      <div style={{ height: 5, borderRadius: 9999, background: 'var(--surface-container-high)', overflow: 'hidden' }}>
+                        <div style={{ height: '100%', width: `${(a.have / a.need) * 100}%`, background: 'var(--primary)', borderRadius: 9999 }} />
+                      </div>
+                      <div className="mkb-mono" style={{ fontSize: 10.5, color: 'var(--on-surface-variant)', marginTop: 4 }}>{a.have} / {a.need}</div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </Reveal>
+          ))}
+        </div>
+      </Card>
 
       {/* Subject breakdown */}
       <Card pad={24} radius={12} style={{ marginBottom: 24 }}>

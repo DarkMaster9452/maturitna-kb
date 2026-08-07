@@ -46,30 +46,43 @@ export function Counter({ value, duration = 1400, decimals = 0, prefix = '', suf
 }) {
   const ref = useRef<HTMLSpanElement>(null);
   const [display, setDisplay] = useState(0);
-  const started = useRef(false);
+  const fromRef = useRef(0);
+  const inView = useRef(false);
+  const rafRef = useRef<number>();
+
+  const animate = (to: number) => {
+    if (rafRef.current) cancelAnimationFrame(rafRef.current);
+    const from = fromRef.current;
+    const start = performance.now();
+    const step = (now: number) => {
+      const p = Math.min((now - start) / duration, 1);
+      const eased = 1 - Math.pow(1 - p, 3);
+      const cur = from + (to - from) * eased;
+      fromRef.current = cur;
+      setDisplay(cur);
+      if (p < 1) rafRef.current = requestAnimationFrame(step);
+      else { fromRef.current = to; setDisplay(to); }
+    };
+    rafRef.current = requestAnimationFrame(step);
+  };
+
+  // set up the in-view trigger once
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
-    const run = () => {
-      if (started.current) return;
-      started.current = true;
-      const start = performance.now();
-      const tick = (now: number) => {
-        const p = Math.min((now - start) / duration, 1);
-        const eased = 1 - Math.pow(1 - p, 3);
-        setDisplay(value * eased);
-        if (p < 1) requestAnimationFrame(tick);
-        else setDisplay(value);
-      };
-      requestAnimationFrame(tick);
-    };
-    if (typeof IntersectionObserver === 'undefined') { run(); return; }
+    const trigger = () => { if (!inView.current) { inView.current = true; animate(value); } };
+    if (typeof IntersectionObserver === 'undefined') { trigger(); return; }
     const io = new IntersectionObserver((entries) => {
-      entries.forEach(e => { if (e.isIntersecting) { run(); io.disconnect(); } });
+      entries.forEach(e => { if (e.isIntersecting) trigger(); });
     }, { threshold: 0.4 });
     io.observe(el);
-    return () => io.disconnect();
-  }, [value, duration]);
+    return () => { io.disconnect(); if (rafRef.current) cancelAnimationFrame(rafRef.current); };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // re-animate whenever the target value changes (async-loaded data)
+  useEffect(() => { if (inView.current) animate(value); /* eslint-disable-next-line */ }, [value]);
+
   const shown = display.toLocaleString('sk-SK', { minimumFractionDigits: decimals, maximumFractionDigits: decimals });
   return <span ref={ref} className={className} style={style}>{prefix}{shown}{suffix}</span>;
 }

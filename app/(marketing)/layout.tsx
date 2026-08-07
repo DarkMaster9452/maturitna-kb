@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Button, Logo, Icon, ModeToggle } from '@/components/ui';
+import { useT, LangToggle } from '@/components/i18n';
 
 const navLinks = [
   { href: '/', label: 'Domov' },
@@ -15,6 +16,7 @@ export default function MarketingLayout({ children }: { children: React.ReactNod
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const pathname = usePathname();
+  const { t } = useT();
 
   useEffect(() => {
     const h = () => setScrolled(window.scrollY > 8);
@@ -45,14 +47,15 @@ export default function MarketingLayout({ children }: { children: React.ReactNod
                   color: active ? 'var(--on-primary-fixed-variant)' : 'var(--on-surface-variant)',
                   background: active ? 'var(--primary-fixed)' : 'transparent',
                   padding: '8px 16px', borderRadius: 9999, transition: 'background .2s, color .2s',
-                }}>{l.label}</Link>
+                }}>{t(l.label)}</Link>
               );
             })}
           </div>
 
           <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
+            <LangToggle />
             <ModeToggle />
-            <div className="mkb-hide-mobile"><Link href="/login"><Button icon="login">Prihlásiť sa</Button></Link></div>
+            <div className="mkb-hide-mobile"><Link href="/login"><Button icon="login">{t('Prihlásiť sa')}</Button></Link></div>
             <button className="mkb-tap" onClick={() => setMenuOpen(o => !o)} aria-label="Menu" data-mobile-menu
               style={{ display: 'none', width: 40, height: 40, borderRadius: 12, border: '1px solid var(--outline-variant)', background: 'var(--surface-container-lowest)', color: 'var(--on-surface)', alignItems: 'center', justifyContent: 'center' }}>
               <Icon name={menuOpen ? 'close' : 'menu'} size={22} />
@@ -63,9 +66,9 @@ export default function MarketingLayout({ children }: { children: React.ReactNod
         {menuOpen && (
           <div className="mkb-fade-up" style={{ maxWidth: 1200, margin: '12px auto 0', display: 'flex', flexDirection: 'column', gap: 4, background: 'var(--surface-container-lowest)', border: '1px solid var(--outline-variant)', borderRadius: 16, padding: 10, boxShadow: 'var(--shadow-card)' }}>
             {navLinks.map(l => (
-              <Link key={l.href} href={l.href} style={{ padding: '12px 14px', borderRadius: 10, fontWeight: 600, fontSize: 15, color: pathname === l.href ? 'var(--primary)' : 'var(--on-surface)', background: pathname === l.href ? 'var(--primary-fixed)' : 'transparent' }}>{l.label}</Link>
+              <Link key={l.href} href={l.href} style={{ padding: '12px 14px', borderRadius: 10, fontWeight: 600, fontSize: 15, color: pathname === l.href ? 'var(--primary)' : 'var(--on-surface)', background: pathname === l.href ? 'var(--primary-fixed)' : 'transparent' }}>{t(l.label)}</Link>
             ))}
-            <Link href="/login" style={{ marginTop: 6 }}><Button full icon="login">Prihlásiť sa</Button></Link>
+            <Link href="/login" style={{ marginTop: 6 }}><Button full icon="login">{t('Prihlásiť sa')}</Button></Link>
           </div>
         )}
       </nav>
@@ -90,7 +93,7 @@ export default function MarketingLayout({ children }: { children: React.ReactNod
             <div>
               <div style={{ fontSize: 12.5, fontWeight: 700, letterSpacing: '.1em', textTransform: 'uppercase', color: 'var(--on-surface-variant)', marginBottom: 14 }}>Platforma</div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-                {navLinks.map(l => <Link key={l.href} href={l.href} style={{ fontSize: 14, color: 'var(--on-surface-variant)' }}>{l.label}</Link>)}
+                {navLinks.map(l => <Link key={l.href} href={l.href} style={{ fontSize: 14, color: 'var(--on-surface-variant)' }}>{t(l.label)}</Link>)}
               </div>
             </div>
             <div>
