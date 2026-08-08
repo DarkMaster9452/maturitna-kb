@@ -52,6 +52,10 @@ const EN: Record<string, string> = {
   'Hodiny štúdia': 'Study hours', 'Zvládnutie predmetov': 'Subject mastery',
   'Zatiaľ žiadne výsledky': 'No results yet', 'Žiadne sessions': 'No sessions', 'Žiadne dáta o pokroku': 'No progress data',
   'Achievementy': 'Achievements', 'odomknutých odznakov': 'badges unlocked', 'Posledné výsledky testov': 'Recent test results',
+  // materials / topics
+  'Databáza vedomostí': 'Knowledge base', 'Študijné okruhy a podtémy — od hlavných tém k detailom.': 'Study topics and subtopics — from main themes to details.',
+  'Hľadať tému alebo podtému…': 'Search a topic or subtopic…', 'Všetky': 'All', 'tém': 'topics', 'podtém': 'subtopics',
+  'Nič sa nenašlo': 'Nothing found', 'Skús iný výraz alebo predmet.': 'Try another term or subject.', 'Otvoriť predmet': 'Open subject',
 };
 
 type Ctx = { lang: Lang; setLang: (l: Lang) => void; t: (s: string) => string };
