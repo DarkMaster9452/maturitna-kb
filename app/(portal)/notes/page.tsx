@@ -66,7 +66,7 @@ export default function NotesPage() {
         </div>
         <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
           {FILTERS.map(f => (
-            <button key={f.id} onClick={() => setFilter(f.id)} style={{ fontFamily: 'var(--font-sans)', fontSize: 13, fontWeight: 600, cursor: 'pointer', borderRadius: 9999, padding: '8px 16px', background: filter === f.id ? 'var(--primary)' : 'var(--surface-container-lowest)', color: filter === f.id ? '#fff' : 'var(--on-surface-variant)', border: `1px solid ${filter === f.id ? 'var(--primary)' : 'var(--outline-variant)'}` }}>{f.label}</button>
+            <button key={f.id} onClick={() => setFilter(f.id)} style={{ fontFamily: 'var(--font-sans)', fontSize: 13, fontWeight: 600, cursor: 'pointer', borderRadius: 9999, padding: '8px 16px', background: filter === f.id ? 'var(--primary-fixed)' : 'var(--surface-container-lowest)', color: filter === f.id ? 'var(--on-primary-fixed-variant)' : 'var(--on-surface-variant)', border: `1px solid ${filter === f.id ? 'var(--primary)' : 'var(--outline-variant)'}` }}>{f.label}</button>
           ))}
         </div>
       </div>

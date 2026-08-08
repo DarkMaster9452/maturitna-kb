@@ -81,18 +81,18 @@ export default function SubjectDetailPage() {
 
   const typeColor: Record<string, any> = {
     PDF: { bg: 'var(--primary-fixed)', c: 'var(--primary)' },
-    Video: { bg: '#dcedf5', c: '#1a6b8a' },
+    Video: { bg: 'var(--secondary-fixed)', c: 'var(--secondary)' },
     Web: { bg: 'var(--tertiary-fixed)', c: 'var(--tertiary)' },
     Audio: { bg: 'var(--secondary-container)', c: 'var(--secondary)' },
     Notes: { bg: 'var(--primary-fixed)', c: 'var(--primary)' },
-    Test: { bg: '#ffdad6', c: 'var(--error)' },
+    Test: { bg: 'var(--error-container)', c: 'var(--error)' },
     Reading: { bg: 'var(--tertiary-fixed)', c: 'var(--tertiary)' },
     Guide: { bg: 'var(--secondary-container)', c: 'var(--secondary)' },
   };
   const diffColor: Record<string, any> = {
-    Easy: { bg: '#dcf0d4', c: 'var(--success)' },
+    Easy: { bg: 'var(--success-container)', c: 'var(--success)' },
     Medium: { bg: 'var(--primary-fixed)', c: 'var(--primary)' },
-    Hard: { bg: '#ffdad6', c: 'var(--error)' },
+    Hard: { bg: 'var(--error-container)', c: 'var(--error)' },
   };
 
   return (

@@ -16,9 +16,9 @@ export default function TestsPage() {
   const filtered = filter === 'all' ? tests : tests.filter((t: any) => t.subject_id === filter);
 
   const diffColor: Record<string, any> = {
-    Easy: { bg: '#dcf0d4', c: 'var(--success)' },
+    Easy: { bg: 'var(--success-container)', c: 'var(--success)' },
     Medium: { bg: 'var(--primary-fixed)', c: 'var(--primary)' },
-    Hard: { bg: '#ffdad6', c: 'var(--error)' },
+    Hard: { bg: 'var(--error-container)', c: 'var(--error)' },
   };
 
   const bestScore = tests.length > 0 ? Math.max(...tests.filter(t => t.best_score).map(t => Number(t.best_score))) : 0;
@@ -26,10 +26,10 @@ export default function TestsPage() {
 
   return (
     <div>
-      <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'end', marginBottom: 32 }}>
+      <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'end', marginBottom: 28, gap: 16, flexWrap: 'wrap' }}>
         <div>
-          <Eyebrow>Precvičovanie</Eyebrow>
-          <Serif size={52} weight={700} style={{ letterSpacing: '-.02em', display: 'block', margin: '8px 0' }}>Testy</Serif>
+          <Eyebrow icon="quiz">Precvičovanie</Eyebrow>
+          <Serif size={52} weight={700} style={{ display: 'block', margin: '10px 0', fontSize: 'clamp(30px, 6vw, 48px)' }}>Testy</Serif>
           <div style={{ fontSize: 18, color: 'var(--on-surface-variant)' }}>Cvičné testy pre každý maturitný predmet.</div>
         </div>
         <div style={{ display: 'flex', gap: 16 }}>
@@ -45,13 +45,13 @@ export default function TestsPage() {
       </header>
 
       <div style={{ display: 'flex', gap: 10, marginBottom: 32, flexWrap: 'wrap' }}>
-        <button onClick={() => setFilter('all')} style={{ fontFamily: 'var(--font-sans)', fontSize: 13, fontWeight: 600, cursor: 'pointer', borderRadius: 9999, padding: '7px 16px', background: filter === 'all' ? 'var(--primary)' : 'var(--surface-container-lowest)', color: filter === 'all' ? '#fff' : 'var(--on-surface-variant)', border: `1px solid ${filter === 'all' ? 'var(--primary)' : 'var(--outline-variant)'}` }}>Všetky</button>
+        <button onClick={() => setFilter('all')} style={{ fontFamily: 'var(--font-sans)', fontSize: 13, fontWeight: 600, cursor: 'pointer', borderRadius: 9999, padding: '7px 16px', background: filter === 'all' ? 'var(--primary-fixed)' : 'var(--surface-container-lowest)', color: filter === 'all' ? 'var(--on-primary-fixed-variant)' : 'var(--on-surface-variant)', border: `1px solid ${filter === 'all' ? 'var(--primary)' : 'var(--outline-variant)'}` }}>Všetky</button>
         {subjects.map(s => (
-          <button key={s.id} onClick={() => setFilter(s.id)} style={{ fontFamily: 'var(--font-sans)', fontSize: 13, fontWeight: 600, cursor: 'pointer', borderRadius: 9999, padding: '7px 16px', background: filter === s.id ? 'var(--primary)' : 'var(--surface-container-lowest)', color: filter === s.id ? '#fff' : 'var(--on-surface-variant)', border: `1px solid ${filter === s.id ? 'var(--primary)' : 'var(--outline-variant)'}` }}>{s.name_sk}</button>
+          <button key={s.id} onClick={() => setFilter(s.id)} style={{ fontFamily: 'var(--font-sans)', fontSize: 13, fontWeight: 600, cursor: 'pointer', borderRadius: 9999, padding: '7px 16px', background: filter === s.id ? 'var(--primary-fixed)' : 'var(--surface-container-lowest)', color: filter === s.id ? 'var(--on-primary-fixed-variant)' : 'var(--on-surface-variant)', border: `1px solid ${filter === s.id ? 'var(--primary)' : 'var(--outline-variant)'}` }}>{s.name_sk}</button>
         ))}
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 20 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 20 }}>
         {filtered.map((t: any) => (
           <Card key={t.id} hover pad={24} radius={12}>
             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 16 }}>

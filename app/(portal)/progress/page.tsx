@@ -1,136 +1,134 @@
 'use client';
 import { useState, useEffect } from 'react';
-import { Icon, Card, IconChip, Progress, Chip, Serif, Eyebrow } from '@/components/ui';
+import { Icon, Card, IconChip, Serif, Eyebrow, Ring, Chip, StatCard, EmptyState } from '@/components/ui';
+import { Counter, Reveal } from '@/components/motion';
+import { LineArea, Bars, HBars } from '@/components/charts';
+import { computeAchievements } from '@/lib/achievements';
+import { useT, subjectName } from '@/components/i18n';
 
 export default function ProgressPage() {
   const [data, setData] = useState<any>(null);
+  const { t, lang } = useT();
 
-  useEffect(() => {
-    fetch('/api/progress').then(r => r.json()).then(setData);
-  }, []);
+  useEffect(() => { fetch('/api/progress').then(r => r.json()).then(setData); }, []);
 
-  if (!data) return <div style={{ padding: 48, color: 'var(--on-surface-variant)' }}>Načítavam…</div>;
+  if (!data) return (
+    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(190px,1fr))', gap: 16 }}>
+      {[0, 1, 2, 3].map(i => <div key={i} className="mkb-skeleton" style={{ height: 110, borderRadius: 14 }} />)}
+    </div>
+  );
 
   const { progress, results, sessions, totals, testCount } = data;
   const avgProgress = progress.length > 0 ? Math.round(progress.reduce((s: number, p: any) => s + p.progress_pct, 0) / progress.length) : 0;
+  const bestScore = results.length ? Math.max(...results.map((r: any) => Number(r.score) || 0)) : 0;
+  const perfectCount = results.filter((r: any) => Number(r.score) >= 100).length;
+  const totalHours = Number(totals?.total_hours || 0);
+  const achievements = computeAchievements({ testCount: Number(testCount) || 0, bestScore, avgProgress, subjectsCount: progress.length, sessionsCount: sessions.length, totalHours, perfectCount });
+  const earnedCount = achievements.filter(a => a.earned).length;
 
-  const maxHours = sessions.length > 0 ? Math.max(...sessions.map((s: any) => Number(s.minutes) / 60)) : 8;
+  const scoreSeries = [...results].reverse().map((r: any) => ({ label: new Date(r.created_at).toLocaleDateString('sk-SK', { day: '2-digit', month: '2-digit' }), value: Number(r.score) }));
+  const hoursSeries = [...sessions].reverse().map((s: any) => ({ label: new Date(s.day).toLocaleDateString('sk-SK', { day: '2-digit', month: '2-digit' }), value: Math.round((Number(s.minutes) / 60) * 10) / 10 }));
+  const mastery = progress.map((p: any) => ({ label: subjectName(p, lang), value: p.progress_pct }));
 
-  const achievements = [
-    { icon: 'emoji_events', label: 'Prvý test', date: 'Oct 5', bg: 'var(--primary-fixed)', c: 'var(--primary)', earned: Number(testCount) >= 1 },
-    { icon: 'local_fire_department', label: '7-dňová séria', date: 'Oct 12', bg: '#ffe0cc', c: '#c45f00', earned: true },
-    { icon: 'star', label: 'Skóre 90%+', date: 'Oct 18', bg: '#fff3c4', c: '#a07000', earned: results.some((r: any) => r.score >= 90) },
-    { icon: 'military_tech', label: '10 testov', date: 'Oct 24', bg: 'var(--tertiary-fixed)', c: 'var(--tertiary)', earned: Number(testCount) >= 10 },
-  ];
+  // group achievements
+  const groups: Record<string, typeof achievements> = {};
+  achievements.forEach(a => { (groups[a.group] = groups[a.group] || []).push(a); });
 
   return (
     <div>
-      <header style={{ marginBottom: 32 }}>
-        <Eyebrow>Analytika</Eyebrow>
-        <Serif size={52} weight={700} style={{ letterSpacing: '-.02em', display: 'block', margin: '8px 0' }}>Môj pokrok</Serif>
-        <div style={{ fontSize: 18, color: 'var(--on-surface-variant)' }}>Sleduj hodiny štúdia, výsledky testov a zvládnutie predmetov.</div>
+      <header style={{ marginBottom: 28 }}>
+        <Eyebrow icon="insights">{t('Analytika')}</Eyebrow>
+        <Serif size={52} weight={700} style={{ display: 'block', margin: '10px 0', fontSize: 'clamp(30px, 6vw, 48px)' }}>{t('Môj pokrok')}</Serif>
+        <div style={{ fontSize: 18, color: 'var(--on-surface-variant)' }}>{t('Sleduj hodiny štúdia, výsledky testov a zvládnutie predmetov.')}</div>
       </header>
 
-      {/* Stats row */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 20, marginBottom: 32 }}>
-        {[
-          ['trending_up', 'Celkový pokrok', `${avgProgress}%`, 'priemerný vo všetkých predmetoch'],
-          ['schedule', 'Celkové hodiny', `${totals.total_hours}h`, 'tento semester'],
-          ['quiz', 'Dokončené testy', String(testCount), `z ${results.length + 5} naplánovaných`],
-          ['school', 'Aktívne predmety', String(progress.length), 'predmetov v pláne'],
-        ].map(([icon, label, val, sub]) => (
-          <Card key={label as string} pad={20} radius={12} style={{ boxShadow: 'var(--shadow-card)' }}>
-            <IconChip name={icon as string} size={40} radius={10} />
-            <div style={{ fontSize: 13, color: 'var(--on-surface-variant)', marginTop: 12, marginBottom: 4 }}>{label}</div>
-            <Serif size={28} weight={700} style={{ display: 'block' }}>{val}</Serif>
-            <div style={{ fontSize: 12, color: 'var(--on-surface-variant)', marginTop: 4 }}>{sub}</div>
-          </Card>
-        ))}
+      {/* Stats */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(190px, 1fr))', gap: 16, marginBottom: 24 }}>
+        <StatCard icon="trending_up" label={t('Celkový pokrok')} value={<Counter value={avgProgress} suffix="%" />} tone="primary" />
+        <StatCard icon="schedule" label={t('Celkové hodiny')} value={<Counter value={totalHours} suffix="h" />} tone="tertiary" />
+        <StatCard icon="quiz" label={t('Dokončené testy')} value={<Counter value={Number(testCount)} />} tone="success" />
+        <StatCard icon="workspace_premium" label={t('Odznaky')} value={<Counter value={earnedCount} />} sub={`z ${achievements.length}`} tone="warning" />
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: 24, marginBottom: 24 }}>
-        {/* Bar chart */}
-        <Card pad={24} radius={12}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
-            <Serif size={20} weight={600}>Hodiny štúdia (posledné sessions)</Serif>
-            <Chip tone="soft">Posledné záznamy</Chip>
+      {/* Charts */}
+      <div className="mkb-split" style={{ display: 'grid', gridTemplateColumns: '1.4fr 1fr', gap: 20, marginBottom: 20 }}>
+        <Card>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 18 }}>
+            <Serif size={19} weight={600}>{t('Skóre v čase')}</Serif>
+            {bestScore > 0 && <Chip tone="success">max {bestScore}%</Chip>}
           </div>
-          {sessions.length > 0 ? (
-            <div style={{ display: 'flex', gap: 8, alignItems: 'flex-end', height: 140 }}>
-              {sessions.map((s: any, i: number) => {
-                const hrs = Number(s.minutes) / 60;
-                return (
-                  <div key={i} style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6 }}>
-                    <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--primary)' }}>{hrs.toFixed(1)}h</div>
-                    <div style={{ width: '100%', borderRadius: '4px 4px 0 0', background: i === 0 ? 'var(--primary)' : 'var(--primary-fixed)', height: Math.max((hrs / maxHours) * 110, 4) }} />
-                    <div style={{ fontSize: 10, color: 'var(--on-surface-variant)', fontWeight: 600 }}>{new Date(s.day).toLocaleDateString('sk-SK', { day: '2-digit', month: '2-digit' })}</div>
-                  </div>
-                );
-              })}
-            </div>
-          ) : (
-            <div style={{ height: 140, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--on-surface-variant)', fontSize: 15 }}>
-              Zatiaľ žiadne zaznamenané sessions.
-            </div>
-          )}
+          {scoreSeries.length > 0 ? <LineArea data={scoreSeries} height={170} suffix="%" /> : <EmptyState icon="show_chart" title={t('Zatiaľ žiadne výsledky')} />}
         </Card>
-
-        {/* Achievements */}
-        <Card pad={24} radius={12}>
-          <Serif size={20} weight={600} style={{ display: 'block', marginBottom: 20 }}>Odznaky</Serif>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-            {achievements.map(a => (
-              <div key={a.label} style={{ display: 'flex', alignItems: 'center', gap: 12, opacity: a.earned ? 1 : 0.4 }}>
-                <div style={{ width: 36, height: 36, borderRadius: 10, background: a.bg, display: 'flex', alignItems: 'center', justifyContent: 'center', flex: 'none' }}>
-                  <Icon name={a.icon} size={18} fill={1} style={{ color: a.c }} />
-                </div>
-                <div style={{ flex: 1 }}>
-                  <div style={{ fontSize: 13, fontWeight: 600 }}>{a.label}</div>
-                  <div style={{ fontSize: 11, color: 'var(--on-surface-variant)' }}>{a.earned ? a.date : 'Zatiaľ nezískaný'}</div>
-                </div>
-                {a.earned && <Icon name="check_circle" size={16} fill={1} style={{ color: 'var(--success)' }} />}
-              </div>
-            ))}
-          </div>
+        <Card>
+          <Serif size={19} weight={600} style={{ display: 'block', marginBottom: 18 }}>{t('Hodiny štúdia')}</Serif>
+          {hoursSeries.length > 0 ? <Bars data={hoursSeries} height={170} unit="h" /> : <EmptyState icon="bar_chart" title={t('Žiadne sessions')} />}
         </Card>
       </div>
 
-      {/* Subject breakdown */}
-      <Card pad={24} radius={12} style={{ marginBottom: 24 }}>
-        <Serif size={20} weight={600} style={{ display: 'block', marginBottom: 24 }}>Prehľad predmetov</Serif>
-        {progress.length > 0 ? (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
-            {progress.map((p: any) => (
-              <div key={p.subject_id} style={{ display: 'grid', gridTemplateColumns: '200px 1fr 60px 80px', gap: 16, alignItems: 'center' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                  <IconChip name={p.icon} size={32} radius={8} />
-                  <span style={{ fontSize: 14, fontWeight: 600 }}>{p.name_sk}</span>
-                </div>
-                <Progress value={p.progress_pct} height={8} />
-                <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--primary)', textAlign: 'center' }}>{p.progress_pct}%</div>
-                <div style={{ fontSize: 12, color: 'var(--on-surface-variant)', textAlign: 'right' }}>{p.study_hours}h štúdia</div>
-              </div>
-            ))}
-          </div>
-        ) : (
-          <div style={{ textAlign: 'center', padding: 32, color: 'var(--on-surface-variant)' }}>Zatiaľ žiadne dáta o pokroku.</div>
-        )}
+      {/* Subject mastery */}
+      <Card style={{ marginBottom: 24 }}>
+        <Serif size={19} weight={600} style={{ display: 'block', marginBottom: 20 }}>{t('Zvládnutie predmetov')}</Serif>
+        {mastery.length > 0 ? <HBars data={mastery} /> : <EmptyState icon="school" title={t('Žiadne dáta o pokroku')} />}
       </Card>
 
-      {/* Recent test results */}
+      {/* Achievements */}
+      <Card style={{ marginBottom: 24 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 20, marginBottom: 22, flexWrap: 'wrap' }}>
+          <Ring value={(earnedCount / achievements.length) * 100} size={92} stroke={9}>
+            <div style={{ textAlign: 'center' }}>
+              <div style={{ fontFamily: 'var(--font-display)', fontSize: 22, fontWeight: 700, lineHeight: 1 }}><Counter value={earnedCount} /></div>
+              <div style={{ fontSize: 10.5, color: 'var(--on-surface-variant)' }}>z {achievements.length}</div>
+            </div>
+          </Ring>
+          <div>
+            <Serif size={22} weight={600} style={{ display: 'block' }}>{t('Achievementy')}</Serif>
+            <div style={{ fontSize: 14, color: 'var(--on-surface-variant)', marginTop: 4 }}>{t('odomknutých odznakov')}</div>
+          </div>
+        </div>
+
+        {Object.entries(groups).map(([group, items]) => (
+          <div key={group} style={{ marginTop: 20 }}>
+            <div className="mkb-eyebrow" style={{ letterSpacing: '.12em', marginBottom: 12, display: 'block' }}>{group} · {items.filter(a => a.earned).length}/{items.length}</div>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(210px, 1fr))', gap: 10 }}>
+              {items.map((a, i) => (
+                <Reveal key={a.id} delay={Math.min(i * 18, 200)}>
+                  <div style={{ display: 'flex', gap: 11, alignItems: 'flex-start', padding: 12, borderRadius: 12, border: `1px solid ${a.earned ? 'var(--primary)' : 'var(--outline-variant)'}`, background: a.earned ? 'var(--primary-fixed)' : 'var(--surface-container-low)', height: '100%' }}>
+                    <div style={{ width: 34, height: 34, borderRadius: 9, flex: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', background: a.earned ? 'var(--primary)' : 'var(--surface-container-high)', color: a.earned ? 'var(--on-primary)' : 'var(--on-surface-variant)' }}>
+                      <Icon name={a.icon} size={19} fill={a.earned ? 1 : 0} />
+                    </div>
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div style={{ fontSize: 13, fontWeight: 700, color: a.earned ? 'var(--on-primary-fixed)' : 'var(--on-surface)' }}>{a.title}</div>
+                      <div style={{ fontSize: 11.5, color: 'var(--on-surface-variant)', marginTop: 2, lineHeight: 1.35 }}>{a.desc}</div>
+                      {!a.earned && a.need > 1 && (
+                        <div style={{ marginTop: 7 }}>
+                          <div style={{ height: 4, borderRadius: 9999, background: 'var(--surface-container-high)', overflow: 'hidden' }}>
+                            <div style={{ height: '100%', width: `${(a.have / a.need) * 100}%`, background: 'var(--primary)', borderRadius: 9999 }} />
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </Reveal>
+              ))}
+            </div>
+          </div>
+        ))}
+      </Card>
+
+      {/* Recent results */}
       {results.length > 0 && (
-        <Card pad={24} radius={12}>
-          <Serif size={20} weight={600} style={{ display: 'block', marginBottom: 20 }}>Posledné výsledky testov</Serif>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
+        <Card>
+          <Serif size={19} weight={600} style={{ display: 'block', marginBottom: 16 }}>{t('Posledné výsledky testov')}</Serif>
+          <div>
             {results.slice(0, 8).map((r: any, i: number) => (
               <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 0', borderBottom: i < Math.min(results.length, 8) - 1 ? '1px solid var(--outline-variant)' : 'none' }}>
                 <div>
                   <div style={{ fontSize: 14, fontWeight: 600 }}>{r.title}</div>
-                  <div style={{ fontSize: 13, color: 'var(--on-surface-variant)' }}>{r.name_sk}</div>
+                  <div style={{ fontSize: 13, color: 'var(--on-surface-variant)' }}>{subjectName(r, lang)}</div>
                 </div>
-                <div style={{ display: 'flex', gap: 16, alignItems: 'center' }}>
+                <div style={{ display: 'flex', gap: 14, alignItems: 'center' }}>
                   <span style={{ fontSize: 12, color: 'var(--on-surface-variant)' }}>{new Date(r.created_at).toLocaleDateString('sk-SK')}</span>
-                  <span style={{ fontSize: 16, fontWeight: 700, color: r.score >= 70 ? 'var(--success)' : 'var(--error)', minWidth: 48, textAlign: 'right' }}>{r.score}%</span>
+                  <Chip tone={r.score >= 80 ? 'success' : r.score >= 50 ? 'warning' : 'error'}>{r.score}%</Chip>
                 </div>
               </div>
             ))}

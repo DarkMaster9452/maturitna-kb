@@ -20,9 +20,9 @@ export default function ZdrojePage() {
 
   const typeColor: Record<string, any> = {
     PDF: { bg: 'var(--primary-fixed)', c: 'var(--primary)' },
-    Video: { bg: '#dcedf5', c: '#1a6b8a' },
+    Video: { bg: 'var(--error-container)', c: 'var(--error)' },
     Web: { bg: 'var(--tertiary-fixed)', c: 'var(--tertiary)' },
-    Audio: { bg: 'var(--secondary-container)', c: 'var(--secondary)' },
+    Audio: { bg: 'var(--warning-container)', c: 'var(--warning)' },
   };
   const shown = filter === 'all' ? resources : resources.filter(r => r.subject_id === filter);
 
@@ -35,9 +35,9 @@ export default function ZdrojePage() {
         <div style={{ fontSize: 18, color: 'var(--on-surface-variant)' }}>Externé materiály a odporúčané zdroje pre prípravu na maturitu.</div>
       </header>
       <div style={{ display: 'flex', gap: 10, marginBottom: 32, flexWrap: 'wrap' }}>
-        <button onClick={() => setFilter('all')} style={{ fontFamily: 'var(--font-sans)', fontSize: 13, fontWeight: 600, cursor: 'pointer', borderRadius: 9999, padding: '7px 16px', background: filter === 'all' ? 'var(--primary)' : 'var(--surface-container-lowest)', color: filter === 'all' ? '#fff' : 'var(--on-surface-variant)', border: `1px solid ${filter === 'all' ? 'var(--primary)' : 'var(--outline-variant)'}` }}>Všetky</button>
+        <button onClick={() => setFilter('all')} style={{ fontFamily: 'var(--font-sans)', fontSize: 13, fontWeight: 600, cursor: 'pointer', borderRadius: 9999, padding: '7px 16px', background: filter === 'all' ? 'var(--primary-fixed)' : 'var(--surface-container-lowest)', color: filter === 'all' ? 'var(--on-primary-fixed-variant)' : 'var(--on-surface-variant)', border: `1px solid ${filter === 'all' ? 'var(--primary)' : 'var(--outline-variant)'}` }}>Všetky</button>
         {subjects.map(s => (
-          <button key={s.id} onClick={() => setFilter(s.id)} style={{ fontFamily: 'var(--font-sans)', fontSize: 13, fontWeight: 600, cursor: 'pointer', borderRadius: 9999, padding: '7px 16px', background: filter === s.id ? 'var(--primary)' : 'var(--surface-container-lowest)', color: filter === s.id ? '#fff' : 'var(--on-surface-variant)', border: `1px solid ${filter === s.id ? 'var(--primary)' : 'var(--outline-variant)'}` }}>{s.name_sk}</button>
+          <button key={s.id} onClick={() => setFilter(s.id)} style={{ fontFamily: 'var(--font-sans)', fontSize: 13, fontWeight: 600, cursor: 'pointer', borderRadius: 9999, padding: '7px 16px', background: filter === s.id ? 'var(--primary-fixed)' : 'var(--surface-container-lowest)', color: filter === s.id ? 'var(--on-primary-fixed-variant)' : 'var(--on-surface-variant)', border: `1px solid ${filter === s.id ? 'var(--primary)' : 'var(--outline-variant)'}` }}>{s.name_sk}</button>
         ))}
       </div>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 20 }}>
