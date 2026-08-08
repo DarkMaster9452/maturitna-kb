@@ -4,10 +4,12 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Icon, Button, Card, IconChip, Progress, Ring, Chip, Serif, Eyebrow, Skeleton, StatCard, Avatar, EmptyState } from '@/components/ui';
 import { Counter } from '@/components/motion';
+import { useT, subjectName } from '@/components/i18n';
 import { useUser } from '../layout';
 
 export default function DashboardPage() {
   const { user, pinnedSubjects, userData } = useUser();
+  const { t, lang } = useT();
   const [results, setResults] = useState<any[]>([]);
   const [activityLoading, setActivityLoading] = useState(true);
   const router = useRouter();
@@ -20,9 +22,9 @@ export default function DashboardPage() {
       .finally(() => setActivityLoading(false));
   }, []);
 
-  const today = new Date().toLocaleDateString('sk-SK', { weekday: 'long', day: 'numeric', month: 'long' });
+  const today = new Date().toLocaleDateString(lang === 'en' ? 'en-GB' : 'sk-SK', { weekday: 'long', day: 'numeric', month: 'long' });
   const hour = new Date().getHours();
-  const greeting = hour < 10 ? 'Dobré ráno' : hour < 18 ? 'Ahoj' : 'Dobrý večer';
+  const greeting = hour < 10 ? t('Dobré ráno') : hour < 18 ? t('Ahoj') : t('Dobrý večer');
 
   const selected = userData?.selected || [];
   const progressList = userData?.progress || [];
@@ -34,9 +36,7 @@ export default function DashboardPage() {
   const recentResults = results.slice(0, 4);
   const avgScore = results.length ? Math.round(results.reduce((a, r) => a + (r.score || 0), 0) / results.length) : 0;
 
-  const subtitle = selected.length > 0
-    ? `Máš ${selected.length} ${selected.length === 1 ? 'predmet' : selected.length < 5 ? 'predmety' : 'predmetov'} vo svojom pláne. Pokračuj tam, kde si skončil.`
-    : 'Začni výberom predmetov, ktoré maturuješ.';
+  const subtitle = selected.length > 0 ? t('Pokračuj tam, kde si skončil.') : t('Začni výberom predmetov, ktoré maturuješ.');
 
   return (
     <div>
@@ -53,10 +53,10 @@ export default function DashboardPage() {
 
       {/* Stats */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 16, marginBottom: 28 }}>
-        <StatCard icon="school" label="Predmety v pláne" value={<Counter value={selected.length} />} sub={`${pinnedSubjects.length} pripnutých`} tone="primary" />
-        <StatCard icon="trending_up" label="Priemerný pokrok" value={<Counter value={avgProgress} suffix="%" />} sub="naprieč predmetmi" tone="tertiary" />
-        <StatCard icon="quiz" label="Dokončené testy" value={<Counter value={results.length} />} sub={results.length ? `priemer ${avgScore} %` : 'zatiaľ žiadne'} tone="success" />
-        <StatCard icon="local_fire_department" label="Pripravenosť" value={avgProgress >= 66 ? 'Vysoká' : avgProgress >= 33 ? 'Stredná' : 'Začiatok'} sub="odhad podľa pokroku" tone="warning" />
+        <StatCard icon="school" label={t('Predmety v pláne')} value={<Counter value={selected.length} />} sub={`${pinnedSubjects.length} ${t('pripnutých')}`} tone="primary" />
+        <StatCard icon="trending_up" label={t('Priemerný pokrok')} value={<Counter value={avgProgress} suffix="%" />} sub={t('naprieč predmetmi')} tone="tertiary" />
+        <StatCard icon="quiz" label={t('Dokončené testy')} value={<Counter value={results.length} />} sub={results.length ? `${t('priemer')} ${avgScore} %` : t('zatiaľ žiadne')} tone="success" />
+        <StatCard icon="local_fire_department" label={t('Pripravenosť')} value={avgProgress >= 66 ? t('Vysoká') : avgProgress >= 33 ? t('Stredná') : t('Začiatok')} sub={t('odhad podľa pokroku')} tone="warning" />
       </div>
 
       <div className="mkb-split" style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: 24, alignItems: 'start' }}>
@@ -68,27 +68,27 @@ export default function DashboardPage() {
             <div style={{ position: 'relative', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 16, flexWrap: 'wrap' }}>
               <div style={{ minWidth: 0 }}>
                 <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6, color: 'var(--primary)', fontFamily: 'var(--font-mono)', fontSize: 11, fontWeight: 500, letterSpacing: '.12em', textTransform: 'uppercase' }}>
-                  <Icon name={resume ? 'bookmark' : 'rocket_launch'} size={15} fill={1} />{resume ? 'Pokračuj v štúdiu' : 'Začni tu'}
+                  <Icon name={resume ? 'bookmark' : 'rocket_launch'} size={15} fill={1} />{resume ? t('Pokračuj v štúdiu') : t('Začni tu')}
                 </span>
-                <Serif size={30} weight={700} style={{ display: 'block', margin: '12px 0 6px', color: '#fff' }}>{resume ? resume.name_sk : 'Vyber si predmety'}</Serif>
-                <div style={{ fontSize: 15.5, color: 'var(--panel-ink-variant)', maxWidth: 420 }}>{resume ? (resume.description_sk || 'Otvor si okruhy a materiály tohto predmetu.') : 'Pridaj predmety, ktoré maturuješ, a pripni si ich do menu.'}</div>
+                <Serif size={30} weight={700} style={{ display: 'block', margin: '12px 0 6px', color: '#fff' }}>{resume ? subjectName(resume, lang) : t('Vyber si predmety')}</Serif>
+                <div style={{ fontSize: 15.5, color: 'var(--panel-ink-variant)', maxWidth: 420 }}>{resume ? ((lang === 'en' ? resume.description_en : resume.description_sk) || t('Otvor si okruhy a materiály tohto predmetu.')) : t('Pridaj predmety, ktoré maturuješ, a pripni si ich do menu.')}</div>
               </div>
               <Button variant="white" iconAfter="arrow_forward" onClick={() => router.push(resume ? `/subjects/${resume.slug}` : '/subjects')}>
-                {resume ? 'Pokračovať' : 'Vybrať predmety'}
+                {resume ? t('Pokračovať') : t('Vybrať predmety')}
               </Button>
             </div>
           </div>
 
           {/* Pinned subjects */}
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <Serif size={22} weight={600}>{pinnedSubjects.length > 0 ? 'Pripnuté predmety' : 'Tvoje predmety'}</Serif>
+            <Serif size={22} weight={600}>{pinnedSubjects.length > 0 ? t('Pripnuté predmety') : t('Tvoje predmety')}</Serif>
             <Link href="/subjects" style={{ display: 'flex', alignItems: 'center', gap: 4, color: 'var(--primary)', fontWeight: 600, fontSize: 14 }}>
-              Všetky <Icon name="arrow_forward" size={16} />
+              {t('Všetky')} <Icon name="arrow_forward" size={16} />
             </Link>
           </div>
 
           {resumeList.length === 0 ? (
-            <Card><EmptyState icon="school" title="Zatiaľ žiadne predmety" desc="Vyber si predmety, ktoré maturuješ, a začni si organizovať okruhy." action={<Link href="/subjects"><Button icon="add">Vybrať predmety</Button></Link>} /></Card>
+            <Card><EmptyState icon="school" title={t('Zatiaľ žiadne predmety')} desc={t('Vyber si predmety, ktoré maturuješ, a začni si organizovať okruhy.')} action={<Link href="/subjects"><Button icon="add">{t('Vybrať predmety')}</Button></Link>} /></Card>
           ) : (
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(230px, 1fr))', gap: 18 }}>
               {resumeList.slice(0, 4).map((s: any) => {
@@ -101,8 +101,8 @@ export default function DashboardPage() {
                         <IconChip name={s.icon} size={44} grad={pct >= 66} />
                         <Ring value={pct} size={46} stroke={5} />
                       </div>
-                      <Serif size={19} weight={600} style={{ display: 'block', marginBottom: 4 }}>{s.name_sk}</Serif>
-                      <div style={{ fontSize: 14, color: 'var(--on-surface-variant)', lineHeight: 1.45, flex: 1, overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}>{s.description_sk}</div>
+                      <Serif size={19} weight={600} style={{ display: 'block', marginBottom: 4 }}>{subjectName(s, lang)}</Serif>
+                      <div style={{ fontSize: 14, color: 'var(--on-surface-variant)', lineHeight: 1.45, flex: 1, overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}>{(lang === 'en' ? s.description_en : s.description_sk) || s.description_sk}</div>
                     </Card>
                   </Link>
                 );
@@ -112,7 +112,7 @@ export default function DashboardPage() {
                   onMouseEnter={e => { e.currentTarget.style.background = 'var(--surface-container-high)'; e.currentTarget.style.borderColor = 'var(--primary)'; }}
                   onMouseLeave={e => { e.currentTarget.style.background = 'var(--surface-container)'; e.currentTarget.style.borderColor = 'var(--outline-variant)'; }}>
                   <div style={{ width: 48, height: 48, borderRadius: 9999, background: 'var(--surface-container-lowest)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Icon name="add" /></div>
-                  <span style={{ fontSize: 14, fontWeight: 600 }}>Pridať predmet</span>
+                  <span style={{ fontSize: 14, fontWeight: 600 }}>{t('Pridať predmet')}</span>
                 </button>
               </Link>
             </div>
@@ -122,7 +122,7 @@ export default function DashboardPage() {
         {/* Right */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
           <Card glow>
-            <Serif size={19} weight={600} style={{ display: 'block', marginBottom: 20 }}>Nedávna aktivita</Serif>
+            <Serif size={19} weight={600} style={{ display: 'block', marginBottom: 20 }}>{t('Nedávna aktivita')}</Serif>
             {activityLoading ? (
               <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>{[0, 1, 2].map(i => <Skeleton key={i} height={40} />)}</div>
             ) : recentResults.length > 0 ? (
@@ -133,25 +133,25 @@ export default function DashboardPage() {
                     <div style={{ fontSize: 14, fontWeight: 700, marginBottom: 3 }}>{r.title}</div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 3 }}>
                       <Chip tone={r.score >= 80 ? 'success' : r.score >= 50 ? 'warning' : 'error'}>{r.score}%</Chip>
-                      <span style={{ fontSize: 13, color: 'var(--on-surface-variant)' }}>{r.name_sk}</span>
+                      <span style={{ fontSize: 13, color: 'var(--on-surface-variant)' }}>{subjectName(r, lang)}</span>
                     </div>
-                    <div style={{ fontSize: 12, color: 'var(--on-surface-variant)' }}>{new Date(r.created_at).toLocaleDateString('sk-SK')}</div>
+                    <div style={{ fontSize: 12, color: 'var(--on-surface-variant)' }}>{new Date(r.created_at).toLocaleDateString(lang === 'en' ? 'en-GB' : 'sk-SK')}</div>
                   </div>
                 ))}
               </div>
             ) : (
               <div style={{ textAlign: 'center', padding: '20px 12px', color: 'var(--on-surface-variant)' }}>
                 <Icon name="history" size={34} style={{ opacity: .4, display: 'block', margin: '0 auto 10px' }} />
-                <div style={{ fontSize: 14 }}>Zatiaľ žiadna aktivita.</div>
+                <div style={{ fontSize: 14 }}>{t('Zatiaľ žiadna aktivita.')}</div>
               </div>
             )}
-            <Link href="/progress"><Button variant="secondary" full style={{ marginTop: 22 }}>Zobraziť celú históriu</Button></Link>
+            <Link href="/progress"><Button variant="secondary" full style={{ marginTop: 22 }}>{t('Zobraziť celú históriu')}</Button></Link>
           </Card>
 
           <div style={{ position: 'relative', overflow: 'hidden', borderRadius: 14, padding: 22, background: 'var(--panel-ink)' }}>
-            <Serif size={18} weight={600} style={{ color: '#fff', display: 'block', marginBottom: 8 }}>Otestuj sa</Serif>
-            <div style={{ fontSize: 14, color: 'var(--panel-ink-variant)', marginBottom: 18, lineHeight: 1.5 }}>Precvič si témy cvičnými testami a over si, čo už vieš.</div>
-            <Link href="/tests"><Button variant="white" full icon="quiz">Spustiť test</Button></Link>
+            <Serif size={18} weight={600} style={{ color: '#fff', display: 'block', marginBottom: 8 }}>{t('Otestuj sa')}</Serif>
+            <div style={{ fontSize: 14, color: 'var(--panel-ink-variant)', marginBottom: 18, lineHeight: 1.5 }}>{t('Precvič si témy cvičnými testami a over si, čo už vieš.')}</div>
+            <Link href="/tests"><Button variant="white" full icon="quiz">{t('Spustiť test')}</Button></Link>
           </div>
         </div>
       </div>
