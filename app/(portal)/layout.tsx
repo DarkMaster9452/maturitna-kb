@@ -2,9 +2,9 @@
 import { useState, useEffect, createContext, useContext } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import Link from 'next/link';
-import { Icon, Button, Serif, Toast, Avatar, ModeToggle, useMediaQuery } from '@/components/ui';
+import { Icon, Button, Serif, Toast, Avatar, useMediaQuery } from '@/components/ui';
 import { SessionProvider, useSession } from '@/components/session';
-import { useT, subjectName, LangToggle } from '@/components/i18n';
+import { useT, subjectName } from '@/components/i18n';
 
 type User = { id: string; name: string; email: string; role: string };
 type ToastCtx = { flash: (msg: string) => void };
@@ -95,7 +95,6 @@ export default function PortalLayout({ children }: { children: React.ReactNode }
                 <Icon name="menu" size={24} />
               </button>
               <Serif size={18} weight={700} style={{ color: 'var(--on-surface)' }}>Maturita<span style={{ color: 'var(--primary)' }}>KB</span></Serif>
-              <div style={{ marginLeft: 'auto', display: 'flex', gap: 8 }}><LangToggle compact /><ModeToggle compact /></div>
             </div>
 
             {/* Drawer overlay */}
@@ -159,9 +158,7 @@ export default function PortalLayout({ children }: { children: React.ReactNode }
                       <div style={{ fontSize: 11, color: 'var(--on-surface-variant)' }}>{t(ROLE_LABELS[role] || role || 'Používateľ')}</div>
                     </div>
                   </Link>
-                  <LangToggle compact />
-                  <ModeToggle compact />
-                  <button onClick={logout} className="mkb-tap" style={{ color: 'var(--on-surface-variant)', padding: 6, display: 'flex', borderRadius: 8 }} title="Odhlásiť sa"
+                  <button onClick={logout} className="mkb-tap" style={{ color: 'var(--on-surface-variant)', padding: 6, display: 'flex', borderRadius: 8 }} title={t('Odhlásiť sa')}
                     onMouseEnter={e => { e.currentTarget.style.color = 'var(--error)'; e.currentTarget.style.background = 'var(--surface-container-high)'; }}
                     onMouseLeave={e => { e.currentTarget.style.color = 'var(--on-surface-variant)'; e.currentTarget.style.background = 'transparent'; }}>
                     <Icon name="logout" size={18} />

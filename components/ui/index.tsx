@@ -5,7 +5,7 @@ import { useState, useEffect, ReactNode, CSSProperties } from 'react';
    Appearance (accent + light/dark/system)
    ══════════════════════════════════════════════════════════════ */
 export type Mode = 'light' | 'dark' | 'system';
-export type Accent = '' | 'spsit';
+export type Accent = '' | 'spsit' | 'amber' | 'rose';
 
 const prefersDark = () =>
   typeof window !== 'undefined' && window.matchMedia('(prefers-color-scheme: dark)').matches;

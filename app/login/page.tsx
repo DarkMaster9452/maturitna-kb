@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { Icon, Button, Logo, Input, ModeToggle } from '@/components/ui';
+import { Icon, Button, Logo, Input } from '@/components/ui';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
@@ -41,7 +41,6 @@ export default function LoginPage() {
     <div style={{ minHeight: '100vh', display: 'flex', background: 'var(--background)' }}>
       {/* Left — form */}
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', padding: 'clamp(24px, 5vw, 48px)', position: 'relative' }}>
-        <div style={{ position: 'absolute', top: 20, right: 20 }}><ModeToggle /></div>
         <div style={{ width: '100%', maxWidth: 400 }} className="mkb-fade-up">
           <Link href="/" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, color: 'var(--on-surface-variant)', fontSize: 14, fontWeight: 600, marginBottom: 36 }}>
             <Icon name="arrow_back" size={18} /> Späť na úvodnú stránku

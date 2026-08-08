@@ -9,13 +9,24 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
   const session = await getSession();
   if (!session || !['admin', 'owner'].includes(session.role)) return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
 
-  const { role } = await req.json();
-  if (!ROLES.includes(role)) return NextResponse.json({ error: 'Neplatná rola.' }, { status: 400 });
-  if (params.id === session.userId) return NextResponse.json({ error: 'Nemôžeš zmeniť vlastnú rolu.' }, { status: 400 });
-  // only an owner may grant the owner role
-  if (role === 'owner' && session.role !== 'owner') return NextResponse.json({ error: 'Len vlastník môže prideliť rolu vlastník.' }, { status: 403 });
+  const body = await req.json();
+  const { name, email, role } = body;
 
-  await sql`UPDATE users SET role = ${role} WHERE id = ${params.id}`;
+  if (role !== undefined) {
+    if (!ROLES.includes(role)) return NextResponse.json({ error: 'Neplatná rola.' }, { status: 400 });
+    if (params.id === session.userId) return NextResponse.json({ error: 'Nemôžeš zmeniť vlastnú rolu.' }, { status: 400 });
+    if (role === 'owner' && session.role !== 'owner') return NextResponse.json({ error: 'Len vlastník môže prideliť rolu vlastník.' }, { status: 403 });
+    await sql`UPDATE users SET role = ${role} WHERE id = ${params.id}`;
+  }
+  if (typeof name === 'string' && name.trim()) {
+    await sql`UPDATE users SET name = ${name.trim()} WHERE id = ${params.id}`;
+  }
+  if (typeof email === 'string' && email.trim()) {
+    const dupe = await sql`SELECT id FROM users WHERE lower(email) = lower(${email.trim()}) AND id <> ${params.id}`;
+    if (dupe.length) return NextResponse.json({ error: 'E-mail už používa iný účet.' }, { status: 400 });
+    await sql`UPDATE users SET email = ${email.trim()} WHERE id = ${params.id}`;
+  }
+
   return NextResponse.json({ ok: true });
 }
 

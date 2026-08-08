@@ -103,6 +103,32 @@
   --ring: 0 0 0 3px rgba(20,102,200,.26);
 }
 
+/* ── Amber accent (light) ─────────────────────────────────── */
+[data-theme="amber"] {
+  --primary: #b45309;
+  --on-primary: #ffffff;
+  --primary-container: #fbe3bf;
+  --primary-fixed: #fbeacf;
+  --primary-fixed-dim: #f4d199;
+  --on-primary-fixed: #6b3505;
+  --on-primary-fixed-variant: #92400e;
+  --secondary: #b45309;
+  --ring: 0 0 0 3px rgba(180,83,9,.26);
+}
+
+/* ── Rose accent (light) ──────────────────────────────────── */
+[data-theme="rose"] {
+  --primary: #be123c;
+  --on-primary: #ffffff;
+  --primary-container: #fbd4dc;
+  --primary-fixed: #fce0e6;
+  --primary-fixed-dim: #f6b6c3;
+  --on-primary-fixed: #7f1030;
+  --on-primary-fixed-variant: #9f1239;
+  --secondary: #be123c;
+  --ring: 0 0 0 3px rgba(190,18,60,.24);
+}
+
 /* ── Dark (ink) ───────────────────────────────────────────── */
 :root[data-mode="dark"] {
   color-scheme: dark;
@@ -162,6 +188,32 @@
   --shadow-card: none;
   --shadow-card-hover: 0 12px 34px -18px rgba(0,0,0,.75);
   --shadow-lg: 0 30px 70px -24px rgba(0,0,0,.82);
+}
+
+/* ── Dark (Amber) ─────────────────────────────────────────── */
+:root[data-mode="dark"][data-theme="amber"] {
+  --primary: #f6b93b;
+  --on-primary: #241706;
+  --primary-container: #7a4e10;
+  --primary-fixed: #2a2009;
+  --primary-fixed-dim: #3d2f0e;
+  --on-primary-fixed: #fbe4b0;
+  --on-primary-fixed-variant: #fcd34d;
+  --secondary: #f6b93b;
+  --ring: 0 0 0 3px rgba(246,185,59,.30);
+}
+
+/* ── Dark (Rose) ──────────────────────────────────────────── */
+:root[data-mode="dark"][data-theme="rose"] {
+  --primary: #fb7185;
+  --on-primary: #2a0710;
+  --primary-container: #7d1533;
+  --primary-fixed: #2c1116;
+  --primary-fixed-dim: #431a22;
+  --on-primary-fixed: #fdd3da;
+  --on-primary-fixed-variant: #fda4af;
+  --secondary: #fb7185;
+  --ring: 0 0 0 3px rgba(251,113,133,.30);
 }
 
 /* ── Dark (SPSIT) ─────────────────────────────────────────── */

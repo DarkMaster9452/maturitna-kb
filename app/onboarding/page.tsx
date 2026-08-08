@@ -1,7 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { Icon, Button, IconChip, Serif, Eyebrow, ModeToggle } from '@/components/ui';
+import { Icon, Button, IconChip, Serif, Eyebrow } from '@/components/ui';
 import { fireConfetti } from '@/components/motion';
 
 type Subject = { id: string; slug: string; name_sk: string; icon: string; description_sk: string };
@@ -33,7 +33,6 @@ export default function OnboardingPage() {
       minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
       padding: 'clamp(24px, 5vw, 56px)', position: 'relative', background: 'var(--background)',
     }}>
-      <div style={{ position: 'absolute', top: 20, right: 20 }}><ModeToggle /></div>
       <div style={{ width: '100%', maxWidth: 820 }} className="mkb-fade-up">
         <div style={{ textAlign: 'center', marginBottom: 40 }}>
           <div style={{ width: 64, height: 64, borderRadius: 16, background: 'var(--panel-ink)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 22px' }}>

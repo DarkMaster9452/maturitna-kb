@@ -44,6 +44,14 @@ const EN: Record<string, string> = {
   'Prihlás sa, vyber si predmety a maj celú prípravu na maturitu pod kontrolou.':
     'Sign in, pick your subjects and keep your whole matura prep under control.',
   'Maturitných predmetov': 'Matura subjects', 'Typov okruhov': 'Topic types', 'Zdarma pre študentov': 'Free for students',
+  // progress
+  'Analytika': 'Analytics', 'Môj pokrok': 'My progress',
+  'Sleduj hodiny štúdia, výsledky testov a zvládnutie predmetov.': 'Track study hours, test results and subject mastery.',
+  'Celkový pokrok': 'Overall progress', 'Celkové hodiny': 'Total hours', 'Dokončené testy': 'Completed tests',
+  'Odznaky': 'Badges', 'Aktívne predmety': 'Active subjects', 'Skóre v čase': 'Score over time',
+  'Hodiny štúdia': 'Study hours', 'Zvládnutie predmetov': 'Subject mastery',
+  'Zatiaľ žiadne výsledky': 'No results yet', 'Žiadne sessions': 'No sessions', 'Žiadne dáta o pokroku': 'No progress data',
+  'Achievementy': 'Achievements', 'odomknutých odznakov': 'badges unlocked', 'Posledné výsledky testov': 'Recent test results',
 };
 
 type Ctx = { lang: Lang; setLang: (l: Lang) => void; t: (s: string) => string };

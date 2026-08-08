@@ -13,6 +13,8 @@ const LANGS: { id: 'sk' | 'en'; label: string; sub: string; flag: string }[] = [
 const ACCENTS: { id: Accent; label: string; sub: string; swatch: string }[] = [
   { id: '', label: 'Emerald', sub: 'Predvolený akcent', swatch: '#0a7d54' },
   { id: 'spsit', label: 'SPSIT', sub: 'Modrý akcent — SPŠ IT', swatch: '#1466c8' },
+  { id: 'amber', label: 'Amber', sub: 'Teplý oranžový', swatch: '#b45309' },
+  { id: 'rose', label: 'Rose', sub: 'Sýta ružová', swatch: '#be123c' },
 ];
 
 const MODES: { id: Mode; label: string; icon: string }[] = [
