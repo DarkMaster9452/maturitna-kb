@@ -86,7 +86,7 @@ export default function TestRunPage() {
         <div style={{ fontSize: 16, color: 'var(--on-surface-variant)', marginBottom: 40 }}>
           {score}/{questions.length} správnych odpovedí · {passed ? '🎉 Vynikajúce!' : 'Nevzdávaj sa, skús znova!'}
         </div>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 40 }}>
+        <div className="mkb-2up" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 40 }}>
           {questions.map((q, i) => {
             const userAnswer = answers[i];
             const correct = userAnswer === q.correct;

@@ -87,14 +87,14 @@ export default function TeacherPage() {
       </header>
 
       {/* Stats */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 16, marginBottom: 28 }}>
+      <div className="mkb-statgrid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 16, marginBottom: 28 }}>
         <StatCard icon="group" label="Študenti" value={<Counter value={students.length} />} sub="v tvojej triede" tone="primary" />
         <StatCard icon="trending_up" label="Priemer triedy" value={<Counter value={avgClass} suffix="%" />} sub="priemerný pokrok" tone="success" />
         <StatCard icon="quiz" label="Testy spolu" value={<Counter value={totalTests} />} sub="absolvované študentmi" tone="tertiary" />
       </div>
 
       {/* Tabs */}
-      <div style={{ display: 'flex', gap: 4, borderBottom: '1px solid var(--outline-variant)', marginBottom: 28, overflowX: 'auto' }}>
+      <div className="mkb-rail" style={{ gap: 4, borderBottom: '1px solid var(--outline-variant)', marginBottom: 28 }}>
         {[['students', 'Študenti'], ['materials', 'Materiály'], ['tests', 'Testy'], ['subjects', 'Predmety']].map(([id, label]) => (
           <button key={id} onClick={() => setTab(id)} style={{ fontFamily: 'var(--font-sans)', fontSize: 14, fontWeight: 600, padding: '10px 18px', background: 'none', border: 'none', cursor: 'pointer', whiteSpace: 'nowrap', color: tab === id ? 'var(--primary)' : 'var(--on-surface-variant)', borderBottom: tab === id ? '2px solid var(--primary)' : '2px solid transparent', marginBottom: -1 }}>{label}</button>
         ))}
@@ -191,7 +191,7 @@ export default function TeacherPage() {
           {materials.length === 0 ? (
             <EmptyState icon="upload_file" title="Žiadne materiály" desc="Nahraj prvý materiál pre svojich študentov." />
           ) : (
-            <div style={{ overflowX: 'auto' }}>
+            <div className="mkb-tablewrap">
               <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: 460 }}>
                 <thead><tr style={{ borderBottom: '1px solid var(--outline-variant)' }}>{['Názov', 'Predmet', 'Typ', 'Dátum', ''].map(h => <th key={h} style={{ fontSize: 13, fontWeight: 600, color: 'var(--on-surface-variant)', padding: '0 0 10px', textAlign: 'left' }}>{h}</th>)}</tr></thead>
                 <tbody>

@@ -55,7 +55,7 @@ export default function HubPage() {
       {/* ── Hero ─────────────────────────────────────────── */}
       <section style={{ display: 'grid', gridTemplateColumns: '1.05fr .95fr', gap: 48, alignItems: 'center', paddingTop: 'clamp(40px, 6vw, 80px)', paddingBottom: 56 }} className="mkb-herogrid">
         <div className="mkb-fade-up">
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'var(--surface-container-lowest)', border: '1px solid var(--outline-variant)', color: 'var(--on-surface-variant)', padding: '7px 14px', borderRadius: 9999, marginBottom: 24, fontSize: 13, fontWeight: 600 }}>
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, maxWidth: '100%', background: 'var(--surface-container-lowest)', border: '1px solid var(--outline-variant)', color: 'var(--on-surface-variant)', padding: '7px 14px', borderRadius: 9999, marginBottom: 24, fontSize: 13, fontWeight: 600 }}>
             <span className="mkb-pulse" style={{ width: 7, height: 7, borderRadius: '50%', background: 'var(--primary)' }} />
             {t('Všetko pre tvoju maturitu na jednom mieste')}
           </div>
@@ -67,7 +67,7 @@ export default function HubPage() {
           <p style={{ fontSize: 18, lineHeight: 1.65, color: 'var(--on-surface-variant)', marginBottom: 22, maxWidth: 520 }}>
             {t('Organizuj si okruhy, materiály a poznámky, precvičuj cvičné testy a sleduj svoj pokrok — prehľadne, moderne a efektívne.')}
           </p>
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, marginBottom: 28, padding: '7px 14px', borderRadius: 9999, background: 'var(--primary-fixed)', color: 'var(--on-primary-fixed-variant)', fontSize: 13.5, fontWeight: 600 }}>
+          <div style={{ display: 'inline-flex', alignItems: 'center', flexWrap: 'wrap', gap: 8, maxWidth: '100%', marginBottom: 28, padding: '7px 14px', borderRadius: 9999, background: 'var(--primary-fixed)', color: 'var(--on-primary-fixed-variant)', fontSize: 13.5, fontWeight: 600 }}>
             <Icon name="auto_awesome" size={16} fill={1} style={{ color: 'var(--primary)' }} />
             {t('Pripravíme ťa na')}{' '}
             <WordRotate words={lang === 'en' ? ['Maths', 'Slovak', 'English', 'History', 'Biology', 'IT'] : ['Matematiku', 'Slovenčinu', 'Angličtinu', 'Dejepis', 'Biológiu', 'Informatiku']} style={{ fontWeight: 700, color: 'var(--primary)' }} />
@@ -83,7 +83,7 @@ export default function HubPage() {
       </section>
 
       {/* ── Subject marquee ──────────────────────────────── */}
-      <Reveal style={{ marginBottom: 72 }}>
+      <Reveal className="mkb-sect" style={{ marginBottom: 72 }}>
         <div style={{ border: '1px solid var(--outline-variant)', borderRadius: 16, background: 'var(--surface-container-lowest)', padding: '16px 0' }}>
           <Marquee duration={38}>
             {marqueeSubjects.map((s: any, i: number) => (
@@ -97,7 +97,7 @@ export default function HubPage() {
       </Reveal>
 
       {/* ── Stats strip ──────────────────────────────────── */}
-      <Reveal as="section" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16, marginBottom: 84 } as any} className="mkb-statgrid">
+      <Reveal as="section" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16, marginBottom: 84 } as any} className="mkb-3up">
         {stats.map(s => (
           <div key={s.label} style={{ display: 'flex', alignItems: 'center', gap: 16, background: 'var(--surface-container-lowest)', border: '1px solid var(--outline-variant)', borderRadius: 16, padding: '20px 22px' }}>
             <div style={{ width: 46, height: 46, borderRadius: 12, background: 'var(--primary-fixed)', color: 'var(--primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', flex: 'none' }}>
@@ -114,7 +114,7 @@ export default function HubPage() {
       </Reveal>
 
       {/* ── Navigation cards ─────────────────────────────── */}
-      <section style={{ marginBottom: 92 }}>
+      <section className="mkb-sect" style={{ marginBottom: 92 }}>
         <Reveal style={{ textAlign: 'center', marginBottom: 36 }}>
           <Eyebrow>{t('Preskúmaj')}</Eyebrow>
           <Serif size={38} weight={600} style={{ display: 'block', marginTop: 12 }}>{t('Kam ďalej?')}</Serif>
@@ -125,7 +125,7 @@ export default function HubPage() {
       </section>
 
       {/* ── Features ─────────────────────────────────────── */}
-      <section style={{ marginBottom: 92 }}>
+      <section className="mkb-sect" style={{ marginBottom: 92 }}>
         <Reveal style={{ textAlign: 'center', marginBottom: 36, maxWidth: 620, marginLeft: 'auto', marginRight: 'auto' }}>
           <Eyebrow>{t('Čo tu nájdeš')}</Eyebrow>
           <Serif size={38} weight={600} style={{ display: 'block', margin: '12px 0 12px' }}>{t('Všetko, čo na maturitu potrebuješ')}</Serif>
@@ -139,7 +139,7 @@ export default function HubPage() {
       </section>
 
       {/* ── How it works ─────────────────────────────────── */}
-      <section style={{ marginBottom: 92 }}>
+      <section className="mkb-sect" style={{ marginBottom: 92 }}>
         <Reveal style={{ textAlign: 'center', marginBottom: 36 }}>
           <Eyebrow>{t('Ako to funguje')}</Eyebrow>
           <Serif size={38} weight={600} style={{ display: 'block', marginTop: 12 }}>{t('Tri kroky k pripravenosti')}</Serif>
@@ -150,7 +150,7 @@ export default function HubPage() {
       </section>
 
       {/* ── CTA band ─────────────────────────────────────── */}
-      <Reveal as="section" style={{ marginBottom: 92 } as any}>
+      <Reveal as="section" className="mkb-sect" style={{ marginBottom: 92 } as any}>
         <div style={{ position: 'relative', overflow: 'hidden', borderRadius: 20, padding: 'clamp(40px, 5vw, 72px)', background: 'var(--panel-ink)', textAlign: 'center' }}>
           <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', backgroundImage: 'radial-gradient(var(--panel-ink-line) 1px, transparent 1px)', backgroundSize: '22px 22px', opacity: .5 }} />
           <div style={{ position: 'relative' }}>
@@ -166,7 +166,15 @@ export default function HubPage() {
         </div>
       </Reveal>
 
-      <style>{`@media (max-width: 900px){ .mkb-herogrid{ grid-template-columns:1fr !important; gap:32px !important; } .mkb-statgrid{ grid-template-columns:1fr !important; } }`}</style>
+      <style>{`
+        @media (max-width: 900px){
+          .mkb-herogrid{ grid-template-columns:minmax(0, 1fr) !important; gap:28px !important; padding-bottom:36px !important; }
+        }
+        /* Section rhythm tightens on phones so the page does not feel endless */
+        @media (max-width: 640px){
+          .mkb-sect{ margin-bottom:56px !important; }
+        }
+      `}</style>
     </div>
   );
 }

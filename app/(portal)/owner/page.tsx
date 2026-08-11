@@ -56,7 +56,7 @@ export default function OwnerPage() {
       </header>
 
       {/* Role stats */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 16, marginBottom: 32 }}>
+      <div className="mkb-statgrid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 16, marginBottom: 32 }}>
         {(['owner', 'admin', 'teacher', 'student'] as const).map(role => (
           <Card key={role} pad={20} radius={12}>
             <div style={{ fontSize: 32, fontWeight: 700, fontFamily: 'var(--font-serif)', color: 'var(--primary)' }}>
@@ -78,11 +78,12 @@ export default function OwnerPage() {
 
       {tab === 'users' && (
         <Card pad={24} radius={12}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12, flexWrap: 'wrap', marginBottom: 24 }}>
             <Serif size={20} weight={600}>Všetci používatelia</Serif>
             <Button icon="person_add" onClick={() => flash('Pozývanie používateľov – čoskoro')}>Pozvať</Button>
           </div>
-          <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+          <div className="mkb-tablewrap">
+          <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: 560 }}>
             <thead>
               <tr style={{ borderBottom: '1px solid var(--outline-variant)' }}>
                 {['Meno', 'E-mail', 'Rola', 'Registrovaný', ''].map(h => (
@@ -129,11 +130,12 @@ export default function OwnerPage() {
               })}
             </tbody>
           </table>
+          </div>
         </Card>
       )}
 
       {tab === 'system' && (
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 }}>
+        <div className="mkb-split" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 }}>
           <Card pad={24} radius={12}>
             <Serif size={18} weight={600} style={{ display: 'block', marginBottom: 16 }}>Nastavenia systému</Serif>
             {[

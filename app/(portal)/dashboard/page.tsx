@@ -52,7 +52,7 @@ export default function DashboardPage() {
       </header>
 
       {/* Stats */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 16, marginBottom: 28 }}>
+      <div className="mkb-statgrid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 16, marginBottom: 28 }}>
         <StatCard icon="school" label={t('Predmety v pláne')} value={<Counter value={selected.length} />} sub={`${pinnedSubjects.length} ${t('pripnutých')}`} tone="primary" />
         <StatCard icon="trending_up" label={t('Priemerný pokrok')} value={<Counter value={avgProgress} suffix="%" />} sub={t('naprieč predmetmi')} tone="tertiary" />
         <StatCard icon="quiz" label={t('Dokončené testy')} value={<Counter value={results.length} />} sub={results.length ? `${t('priemer')} ${avgScore} %` : t('zatiaľ žiadne')} tone="success" />

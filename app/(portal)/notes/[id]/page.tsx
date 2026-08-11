@@ -109,8 +109,8 @@ export default function NoteEditorPage() {
         <Link href="/notes" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 14, fontWeight: 600, color: 'var(--on-surface-variant)' }}>
           <Icon name="arrow_back" size={18} /> Poznámky
         </Link>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
-          <span style={{ fontSize: 12.5, color: 'var(--on-surface-variant)', display: 'inline-flex', alignItems: 'center', gap: 5 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap' }}>
+          <span style={{ fontSize: 12.5, color: 'var(--on-surface-variant)', display: 'inline-flex', alignItems: 'center', gap: 5, marginRight: 2 }}>
             <Icon name={saveState === 'saving' ? 'sync' : 'cloud_done'} size={15} /> {saveLabel}
           </span>
           <button onClick={toggleFav} title="Obľúbené" className="mkb-tap" style={{ background: 'none', border: 'none', cursor: 'pointer', color: isFav ? '#f59e0b' : 'var(--on-surface-variant)', padding: 6, display: 'flex' }}><Icon name="star" size={20} fill={isFav ? 1 : 0} /></button>
@@ -121,7 +121,8 @@ export default function NoteEditorPage() {
       </div>
 
       {/* Title */}
-      <input value={title} onChange={e => setTitle(e.target.value)} placeholder="Názov poznámky"
+      {/* `mkb-bigtext` opts out of the global 16px mobile input floor */}
+      <input value={title} onChange={e => setTitle(e.target.value)} placeholder="Názov poznámky" className="mkb-bigtext"
         style={{ width: '100%', fontFamily: 'var(--font-serif)', fontSize: 'clamp(26px, 5vw, 36px)', fontWeight: 700, color: 'var(--on-surface)', background: 'none', border: 'none', outline: 'none', marginBottom: 12 }} />
 
       {/* Tags */}

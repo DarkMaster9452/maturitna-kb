@@ -53,27 +53,43 @@ export function SessionProvider({ children, subjects = [], onFlash }: {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [running]);
 
+  // Lock the page behind the dialog so only the sheet scrolls.
+  useEffect(() => {
+    document.body.classList.toggle('mkb-locked', isOpen);
+    return () => document.body.classList.remove('mkb-locked');
+  }, [isOpen]);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') close(); };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isOpen]);
+
   const mm = String(Math.floor(remaining / 60)).padStart(2, '0');
   const ss = String(remaining % 60).padStart(2, '0');
   const total = minutes * 60;
   const frac = total ? (total - remaining) / total : 0;
+  // Ring geometry stays in a fixed viewBox; the wrapper scales it to fit narrow screens.
   const size = 220, stroke = 12, r = (size - stroke) / 2, c = 2 * Math.PI * r;
 
   return (
     <Ctx.Provider value={{ open }}>
       {children}
       {isOpen && (
-        <div onClick={close} style={{ position: 'fixed', inset: 0, zIndex: 600, background: 'rgba(6,6,8,.55)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 16, animation: 'mkb-fade-in .2s ease' }}>
-          <div onClick={e => e.stopPropagation()} className="mkb-fade-up" style={{ width: '100%', maxWidth: 420, background: 'var(--surface-container-lowest)', border: '1px solid var(--outline-variant)', borderRadius: 20, padding: 28, boxShadow: 'var(--shadow-lg)' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
+        <div onClick={close} className="mkb-scrim" role="dialog" aria-modal="true" aria-label="Študijná session">
+          <div onClick={e => e.stopPropagation()} className="mkb-sheet" style={{ maxWidth: 420, padding: 28 }}>
+            <div className="mkb-sheet-grip" />
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12, marginBottom: 8 }}>
               <span className="mkb-eyebrow">Študijná session</span>
-              <button onClick={close} className="mkb-tap" style={{ width: 34, height: 34, borderRadius: 9, border: '1px solid var(--outline-variant)', background: 'var(--surface-container-lowest)', color: 'var(--on-surface-variant)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Icon name="close" size={19} /></button>
+              <button onClick={close} aria-label="Zavrieť" className="mkb-tap" style={{ width: 34, height: 34, borderRadius: 9, border: '1px solid var(--outline-variant)', background: 'var(--surface-container-lowest)', color: 'var(--on-surface-variant)', display: 'flex', alignItems: 'center', justifyContent: 'center', flex: 'none' }}><Icon name="close" size={19} /></button>
             </div>
 
-            {/* Timer ring */}
+            {/* Timer ring — shrinks with the sheet on narrow screens */}
             <div style={{ display: 'flex', justifyContent: 'center', margin: '14px 0 20px' }}>
-              <div style={{ position: 'relative', width: size, height: size }}>
-                <svg width={size} height={size} style={{ transform: 'rotate(-90deg)' }}>
+              <div style={{ position: 'relative', width: 'min(220px, 62vw)', aspectRatio: '1' }}>
+                <svg viewBox={`0 0 ${size} ${size}`} width="100%" height="100%" style={{ transform: 'rotate(-90deg)', display: 'block' }}>
                   <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke="var(--surface-container-high)" strokeWidth={stroke} />
                   <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke={done ? 'var(--success)' : 'var(--primary)'} strokeWidth={stroke} strokeLinecap="round"
                     strokeDasharray={c} strokeDashoffset={c - frac * c} style={{ transition: 'stroke-dashoffset 1s linear' }} />
@@ -86,7 +102,7 @@ export function SessionProvider({ children, subjects = [], onFlash }: {
                     </>
                   ) : (
                     <>
-                      <div className="mkb-mono" style={{ fontSize: 46, fontWeight: 700, letterSpacing: '.02em', lineHeight: 1 }}>{mm}:{ss}</div>
+                      <div className="mkb-mono" style={{ fontSize: 'clamp(34px, 13vw, 46px)', fontWeight: 700, letterSpacing: '.02em', lineHeight: 1 }}>{mm}:{ss}</div>
                       <div style={{ fontSize: 13, color: 'var(--on-surface-variant)', marginTop: 6 }}>{running ? 'Sústreď sa…' : 'Pripravený?'}</div>
                     </>
                   )}
@@ -99,7 +115,7 @@ export function SessionProvider({ children, subjects = [], onFlash }: {
               <div style={{ display: 'flex', gap: 8, justifyContent: 'center', marginBottom: 16 }}>
                 {PRESETS.map(m => (
                   <button key={m} onClick={() => pickPreset(m)} disabled={running}
-                    style={{ padding: '7px 16px', borderRadius: 9999, fontSize: 13.5, fontWeight: 600, cursor: running ? 'not-allowed' : 'pointer', border: `1px solid ${minutes === m ? 'var(--primary)' : 'var(--outline-variant)'}`, background: minutes === m ? 'var(--primary-fixed)' : 'var(--surface-container-lowest)', color: minutes === m ? 'var(--on-primary-fixed-variant)' : 'var(--on-surface-variant)', opacity: running ? .5 : 1 }}>
+                    style={{ flex: '1 1 0', minHeight: 42, padding: '7px 12px', borderRadius: 9999, fontSize: 13.5, fontWeight: 600, cursor: running ? 'not-allowed' : 'pointer', border: `1px solid ${minutes === m ? 'var(--primary)' : 'var(--outline-variant)'}`, background: minutes === m ? 'var(--primary-fixed)' : 'var(--surface-container-lowest)', color: minutes === m ? 'var(--on-primary-fixed-variant)' : 'var(--on-surface-variant)', opacity: running ? .5 : 1 }}>
                     {m} min
                   </button>
                 ))}

@@ -230,10 +230,30 @@
 }
 
 /* ══════════════════════════════════════════════════════════════
+   Layout metrics + safe areas (shared by the responsive shell)
+   ══════════════════════════════════════════════════════════════ */
+:root {
+  --sat: env(safe-area-inset-top, 0px);
+  --sar: env(safe-area-inset-right, 0px);
+  --sab: env(safe-area-inset-bottom, 0px);
+  --sal: env(safe-area-inset-left, 0px);
+
+  --pad-x: clamp(20px, 4vw, 56px);   /* page gutter — shrinks to 16px on phones */
+  --topbar-h: 56px;                   /* mobile top bar (without notch inset) */
+  --bottomnav-h: 62px;                /* mobile bottom nav (without home bar)  */
+  --tap: 44px;                        /* minimum comfortable touch target      */
+}
+
+/* ══════════════════════════════════════════════════════════════
    Base
    ══════════════════════════════════════════════════════════════ */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html, body { height: 100%; }
+html {
+  -webkit-text-size-adjust: 100%;   /* stop iOS inflating text in landscape */
+  text-size-adjust: 100%;
+  scroll-behavior: smooth;
+}
 body {
   font-family: var(--font-sans);
   background: var(--background);
@@ -241,6 +261,8 @@ body {
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
   transition: background-color .3s ease, color .3s ease;
+  overflow-x: clip;                 /* `clip` (not hidden) keeps position:sticky alive */
+  overscroll-behavior-y: none;      /* no rubber-band bounce behind fixed chrome */
 }
 ::selection { background: var(--on-surface); color: var(--background); }
 ::-webkit-scrollbar { width: 11px; height: 11px; }
@@ -250,6 +272,16 @@ body {
 a { color: inherit; text-decoration: none; }
 button { cursor: pointer; border: none; background: none; font-family: var(--font-sans); color: inherit; }
 input, textarea, select { font-family: var(--font-sans); color: inherit; }
+img, svg, video, canvas { max-width: 100%; }
+
+/* Touch behaviour: no blue flash, no 300ms delay, no accidental text selection on controls */
+a, button, [role="button"], label, summary, input, select, textarea {
+  -webkit-tap-highlight-color: transparent;
+}
+a, button, [role="button"], summary { touch-action: manipulation; }
+
+/* Scroll lock while a drawer / sheet owns the screen */
+body.mkb-locked { overflow: hidden; touch-action: none; }
 
 /* ══════════════════════════════════════════════════════════════
    Utilities
@@ -313,48 +345,238 @@ input, textarea, select { font-family: var(--font-sans); color: inherit; }
 }
 
 /* ══════════════════════════════════════════════════════════════
-   Responsive layout helpers (portal shell)
+   RESPONSIVE SHELL
+   The app is styled almost entirely with inline styles, so the
+   mobile layer overrides them with `!important` at each breakpoint.
+   Breakpoints: 1100 (tablet) · 900 (phone shell) · 640 · 420
    ══════════════════════════════════════════════════════════════ */
-.mkb-main { padding: 40px clamp(20px, 4vw, 56px) 96px; }
+
+/* ── App frame ────────────────────────────────────────────── */
+.mkb-shell { min-height: 100vh; min-height: 100dvh; }
+.mkb-main { padding: 40px var(--pad-x) 96px; }
 
 .mkb-mobilebar { display: none; }
 .mkb-drawer-overlay { display: none; }
+.mkb-bottomnav { display: none; }
+.mkb-only-mobile { display: none !important; }
 
+/* ── Visibility helpers ───────────────────────────────────── */
 @media (max-width: 900px) {
-  input, textarea, select { font-size: 16px !important; } /* stop iOS zoom */
-  .mkb-main { padding: 78px 16px 96px !important; }
   .mkb-hide-mobile { display: none !important; }
+  .mkb-only-mobile { display: revert !important; }
+  .mkb-only-mobile-flex { display: flex !important; }
+}
 
+/* ── Column collapsers ────────────────────────────────────── */
+@media (max-width: 1100px) {
+  .mkb-4up { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+}
+@media (max-width: 900px) {
+  .mkb-split { grid-template-columns: minmax(0, 1fr) !important; }
+  .mkb-3up,
+  .mkb-4up  { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+  .mkb-stack {
+    flex-direction: column !important;
+    align-items: stretch !important;
+  }
+  .mkb-stack > * { width: 100%; }
+}
+@media (max-width: 640px) {
+  .mkb-2up,
+  .mkb-3up  { grid-template-columns: minmax(0, 1fr) !important; }
+  .mkb-gap  { gap: 14px !important; }
+}
+@media (max-width: 420px) {
+  .mkb-4up { grid-template-columns: minmax(0, 1fr) !important; }
+}
+
+/* ── Horizontal rail (tab bars, filter chips) ─────────────────
+   Scrolls edge-to-edge on phones so nothing is clipped mid-word. */
+.mkb-rail {
+  display: flex;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.mkb-rail::-webkit-scrollbar { display: none; }
+/* Wraps into rows where there is room, scrolls as one line on phones. */
+.mkb-rail-wrap { flex-wrap: wrap; overflow-x: visible; }
+@media (max-width: 900px) {
+  .mkb-rail-wrap { flex-wrap: nowrap; overflow-x: auto; }
+}
+@media (max-width: 900px) {
+  .mkb-rail {
+    margin-left: calc(-1 * var(--pad-x));
+    margin-right: calc(-1 * var(--pad-x));
+    padding-left: var(--pad-x);
+    padding-right: var(--pad-x);
+    scroll-padding-inline: var(--pad-x);
+    scroll-snap-type: x proximity;
+  }
+  .mkb-rail > * { scroll-snap-align: start; flex: none; }
+}
+
+/* ── Wide content that must scroll rather than squash ─────── */
+.mkb-tablewrap {
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  -webkit-overflow-scrolling: touch;
+}
+@media (max-width: 900px) {
+  .mkb-tablewrap {
+    margin-left: calc(-1 * var(--pad-x));
+    margin-right: calc(-1 * var(--pad-x));
+    padding-left: var(--pad-x);
+    padding-right: var(--pad-x);
+  }
+  /* inside a Card the wrapper is already inset — keep it flush instead */
+  .mkb-card .mkb-tablewrap { margin: 0; padding: 0; }
+}
+
+/* ── Stat / KPI tile rows ─────────────────────────────────────
+   `auto-fit` alone drops to a single column well before it needs
+   to, which turns a four-tile row into a very tall stack. Pin them
+   two-up on phones instead, one-up only on the narrowest devices. */
+@media (max-width: 900px) {
+  .mkb-statgrid { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; gap: 12px !important; }
+}
+@media (max-width: 380px) {
+  .mkb-statgrid { grid-template-columns: minmax(0, 1fr) !important; }
+}
+
+/* ── Comfortable density on small screens ─────────────────── */
+@media (max-width: 640px) {
+  .mkb-card-pad { padding: 18px !important; }
+  .mkb-statcard { padding: 16px !important; }
+  .mkb-statcard-value { font-size: 27px !important; }
+}
+
+/* ── Touch targets ────────────────────────────────────────── */
+@media (pointer: coarse) {
+  .mkb-tap { min-width: var(--tap) !important; min-height: var(--tap) !important; }
+  .mkb-btn { min-height: var(--tap); }
+  .mkb-btn-sm { min-height: 38px; }
+}
+
+/* ── Forms ────────────────────────────────────────────────── */
+@media (max-width: 900px) {
+  /* 16px is the threshold below which iOS Safari zooms on focus.
+     `.mkb-bigtext` opts out (title fields that are meant to be large). */
+  input:not(.mkb-bigtext), textarea:not(.mkb-bigtext), select { font-size: 16px !important; }
+  select { max-width: 100%; }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   Portal shell — top bar, drawer, bottom navigation
+   ══════════════════════════════════════════════════════════════ */
+@media (max-width: 900px) {
+  :root { --pad-x: 16px; }
+
+  .mkb-main {
+    padding:
+      calc(var(--topbar-h) + var(--sat) + 20px)
+      calc(var(--pad-x) + var(--sar))
+      calc(var(--bottomnav-h) + var(--sab) + 32px)
+      calc(var(--pad-x) + var(--sal)) !important;
+  }
+
+  /* Top bar */
+  .mkb-mobilebar {
+    display: flex; align-items: center; gap: 8px;
+    position: fixed; top: 0; left: 0; right: 0; z-index: 150;
+    height: calc(var(--topbar-h) + var(--sat));
+    padding: var(--sat) max(10px, var(--sar)) 0 max(10px, var(--sal));
+  }
+
+  /* Slide-in drawer */
   .mkb-sidebar {
     position: fixed !important;
-    top: 0; left: 0;
+    top: 0; left: 0; bottom: 0;
+    height: 100dvh !important;
+    width: min(86vw, 320px) !important;
+    max-width: 320px;
     transform: translateX(-100%);
-    transition: transform .26s cubic-bezier(.16,.84,.44,1);
+    visibility: hidden;
+    transition: transform .34s cubic-bezier(.22,.9,.3,1), visibility 0s linear .34s;
     z-index: 200;
     box-shadow: var(--shadow-lg);
+    padding-top: calc(14px + var(--sat)) !important;
+    padding-bottom: calc(14px + var(--sab)) !important;
+    padding-left: max(14px, var(--sal)) !important;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
   }
-  .mkb-sidebar.open { transform: translateX(0); }
+  .mkb-sidebar.open {
+    transform: translateX(0);
+    visibility: visible;
+    transition: transform .34s cubic-bezier(.22,.9,.3,1), visibility 0s;
+  }
 
-  .mkb-mobilebar {
-    display: flex; align-items: center; gap: 12px;
-    position: fixed; top: 0; left: 0; right: 0; height: 58px; z-index: 150;
-  }
   .mkb-drawer-overlay.open {
     display: block;
     position: fixed; inset: 0; z-index: 190;
     background: rgba(6,6,8,.5);
-    animation: mkb-fade-in .2s ease;
+    animation: mkb-fade-in .22s ease;
   }
-  .mkb-split { grid-template-columns: 1fr !important; }
-  .mkb-tap { min-width: 44px !important; min-height: 44px !important; }
-}
 
-/* ── Mobile bottom navigation ─────────────────────────────── */
-.mkb-bottomnav { display: none; }
-@media (max-width: 900px) {
+  /* Bottom navigation */
   .mkb-bottomnav {
     display: flex; position: fixed; left: 0; right: 0; bottom: 0; z-index: 140;
-    padding-bottom: env(safe-area-inset-bottom, 0);
+    height: calc(var(--bottomnav-h) + var(--sab));
+    padding: 0 max(4px, var(--sar)) var(--sab) max(4px, var(--sal));
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   Dialogs — centred on desktop, bottom sheet on phones
+   ══════════════════════════════════════════════════════════════ */
+.mkb-scrim {
+  position: fixed; inset: 0; z-index: 600;
+  background: rgba(6,6,8,.55);
+  display: flex; align-items: center; justify-content: center;
+  padding: 16px;
+  animation: mkb-fade-in .2s ease;
+}
+.mkb-sheet {
+  width: 100%;
+  background: var(--surface-container-lowest);
+  border: 1px solid var(--outline-variant);
+  border-radius: 20px;
+  box-shadow: var(--shadow-lg);
+  max-height: calc(100dvh - 32px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+.mkb-sheet-grip { display: none; }
+
+@media (max-width: 640px) {
+  .mkb-scrim { align-items: flex-end; padding: 0; }
+  .mkb-sheet {
+    max-width: none !important;
+    border-radius: 22px 22px 0 0;
+    border-bottom: none;
+    max-height: 92dvh;
+    padding-bottom: calc(22px + var(--sab)) !important;
+    animation: mkb-sheet-up .34s cubic-bezier(.22,.9,.3,1) both;
+  }
+  .mkb-sheet-grip {
+    display: block;
+    width: 38px; height: 4px; border-radius: 9999px;
+    background: var(--outline-variant);
+    margin: -6px auto 12px;
+  }
+}
+@keyframes mkb-sheet-up { from { transform: translateY(100%); } to { transform: none; } }
+
+/* Toast sits above the bottom navigation */
+.mkb-toast { bottom: 28px; }
+@media (max-width: 900px) {
+  .mkb-toast {
+    bottom: calc(var(--bottomnav-h) + var(--sab) + 14px) !important;
+    white-space: normal !important;
+    text-align: center;
+    max-width: calc(100vw - 28px) !important;
   }
 }
 
@@ -371,4 +593,11 @@ input, textarea, select { font-family: var(--font-sans); color: inherit; }
   direction: ltr;
   -webkit-font-feature-settings: 'liga';
   -webkit-font-smoothing: antialiased;
+  /* Icons are ligatures, so until the font arrives the raw name
+     ("arrow_forward") would render as text and blow the layout out
+     sideways. Reserve exactly one em and clip whatever spills. */
+  width: 1em;
+  height: 1em;
+  overflow: hidden;
+  flex: none;
 }

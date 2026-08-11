@@ -68,7 +68,7 @@ export default function MaterialsPage() {
         </div>
         <span style={{ fontSize: 13, color: 'var(--on-surface-variant)' }} className="mkb-hide-mobile">{totalTopics} {t('tém')} · {totalSubs} {t('podtém')}</span>
       </div>
-      <div style={{ display: 'flex', gap: 8, marginBottom: 24, flexWrap: 'wrap' }}>
+      <div className="mkb-rail mkb-rail-wrap" style={{ gap: 8, marginBottom: 24 }}>
         <button onClick={() => setSubject('all')} style={chip(subject === 'all')}>{t('Všetky')}</button>
         {subjects.map(s => (
           <button key={s.subject_slug} onClick={() => setSubject(s.subject_slug)} style={chip(subject === s.subject_slug)}>
@@ -107,11 +107,12 @@ export default function MaterialsPage() {
                             <div style={{ fontSize: 15, fontWeight: 700 }}>{m.title}</div>
                             {m.description && <div style={{ fontSize: 13, color: 'var(--on-surface-variant)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{m.description}</div>}
                           </div>
-                          <Chip tone="soft">{subs.length} {podtemy(subs.length)}</Chip>
+                          <span className="mkb-hide-mobile" style={{ flex: 'none' }}><Chip tone="soft">{subs.length} {podtemy(subs.length)}</Chip></span>
+                          <span className="mkb-only-mobile" style={{ flex: 'none' }}><Chip tone="soft">{subs.length}</Chip></span>
                           <Icon name={expanded ? 'expand_less' : 'expand_more'} size={22} style={{ color: 'var(--on-surface-variant)', flex: 'none' }} />
                         </button>
                         {expanded && subs.length > 0 && (
-                          <div style={{ padding: '4px 16px 14px 70px', display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: 8 }}>
+                          <div style={{ padding: '4px 16px 14px', paddingLeft: 'clamp(16px, 8vw, 70px)', display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))', gap: 8 }}>
                             {subs.map(su => (
                               <div key={su.id} style={{ display: 'flex', alignItems: 'center', gap: 9, padding: '9px 12px', borderRadius: 10, background: 'var(--surface-container-low)', border: '1px solid var(--outline-variant)' }}>
                                 <Icon name="subdirectory_arrow_right" size={16} style={{ color: 'var(--primary)', flex: 'none' }} />

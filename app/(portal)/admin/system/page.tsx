@@ -88,7 +88,7 @@ export default function AdminSystemPage() {
         </Card>
         <Card>
           <span className="mkb-eyebrow">Databáza — počet záznamov</span>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: 12, marginTop: 16 }}>
+          <div className="mkb-statgrid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: 12, marginTop: 16 }}>
             {rows.map(([label, val, icon]) => (
               <div key={label} style={{ display: 'flex', alignItems: 'center', gap: 11, padding: 12, borderRadius: 12, border: '1px solid var(--outline-variant)' }}>
                 <IconChip name={icon} size={34} radius={9} />

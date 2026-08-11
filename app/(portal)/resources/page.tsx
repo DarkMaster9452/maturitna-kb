@@ -49,7 +49,7 @@ export default function ResourcesPage() {
         ))}
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 }}>
+      <div className="mkb-2up" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 }}>
         {filtered.map((r: any) => (
           <Link key={r.id} href={`/resources/${r.id}`} style={{ textDecoration: 'none' }}>
             <Card hover pad={20} radius={12} style={{ display: 'flex', gap: 16, alignItems: 'flex-start', cursor: 'pointer' }}>
