@@ -55,7 +55,7 @@ export default function AdminContentPage() {
         action={<Chip tone="soft" icon="school">{s?.subjects || 0} predmetov</Chip>} />
 
       {/* Summary numbers */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: 14, marginBottom: 22 }}>
+      <div className="mkb-statgrid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: 14, marginBottom: 22 }}>
         <StatCard icon="school" label="Predmety" value={<Counter value={Number(s?.subjects || 0)} />} tone="primary" />
         <StatCard icon="category" label="Okruhy" value={<Counter value={totalMain} />} tone="tertiary" />
         <StatCard icon="account_tree" label="Podokruhy" value={<Counter value={totalSub} />} tone="tertiary" />
@@ -84,7 +84,7 @@ export default function AdminContentPage() {
           <Serif size={20} weight={600}>Predmety a obsah</Serif>
           <Chip tone="soft">{data?.subjectStats?.length || 0} predmetov</Chip>
         </div>
-        <div style={{ overflowX: 'auto' }}>
+        <div className="mkb-tablewrap">
           <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: 520 }}>
             <thead><tr style={{ borderBottom: '1px solid var(--outline-variant)' }}>{['Predmet', 'Študenti', 'Materiály', 'Testy', ''].map(h => <th key={h} style={{ fontSize: 12.5, fontWeight: 600, color: 'var(--on-surface-variant)', padding: '12px 22px', textAlign: 'left' }}>{h}</th>)}</tr></thead>
             <tbody>

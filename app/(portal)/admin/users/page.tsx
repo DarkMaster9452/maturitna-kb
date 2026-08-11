@@ -63,7 +63,7 @@ export default function AdminUsersPage() {
         action={<Chip tone="soft" icon="group">{users.length} spolu</Chip>} />
 
       {/* Role summary tiles */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: 14, marginBottom: 22 }}>
+      <div className="mkb-statgrid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: 14, marginBottom: 22 }}>
         <StatCard icon="person" label="Študenti" value={<Counter value={counts.student} />} tone="tertiary" />
         <StatCard icon="co_present" label="Učitelia" value={<Counter value={counts.teacher} />} tone="success" />
         <StatCard icon="shield_person" label="Administrátori" value={<Counter value={counts.admin} />} tone="primary" />
@@ -87,7 +87,7 @@ export default function AdminUsersPage() {
 
       <Card pad={0} style={{ overflow: 'hidden' }}>
         {loading ? <div style={{ padding: 40 }}><div className="mkb-skeleton" style={{ height: 200, borderRadius: 12 }} /></div> : (
-          <div style={{ overflowX: 'auto' }}>
+          <div className="mkb-tablewrap">
             <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: 760 }}>
               <thead><tr style={{ borderBottom: '1px solid var(--outline-variant)' }}>{['Používateľ', 'Rola', 'Predmety', 'Testy', 'Pokrok', 'Registrácia', ''].map(h => <th key={h} style={{ fontSize: 12.5, fontWeight: 600, color: 'var(--on-surface-variant)', padding: '12px 20px', textAlign: 'left' }}>{h}</th>)}</tr></thead>
               <tbody>
@@ -130,8 +130,9 @@ export default function AdminUsersPage() {
 
       {/* Edit modal */}
       {edit && (
-        <div onClick={() => setEdit(null)} style={{ position: 'fixed', inset: 0, zIndex: 600, background: 'rgba(6,6,8,.55)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 16, animation: 'mkb-fade-in .2s ease' }}>
-          <div onClick={e => e.stopPropagation()} className="mkb-fade-up" style={{ width: '100%', maxWidth: 440, background: 'var(--surface-container-lowest)', border: '1px solid var(--outline-variant)', borderRadius: 18, padding: 26, boxShadow: 'var(--shadow-lg)' }}>
+        <div onClick={() => setEdit(null)} className="mkb-scrim" role="dialog" aria-modal="true" aria-label="Upraviť používateľa">
+          <div onClick={e => e.stopPropagation()} className="mkb-sheet" style={{ maxWidth: 440, padding: 26 }}>
+            <div className="mkb-sheet-grip" />
             <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 20 }}>
               <Avatar name={edit.name} size={44} />
               <div><Serif size={20} weight={600} style={{ display: 'block' }}>Upraviť používateľa</Serif></div>

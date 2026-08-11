@@ -14,7 +14,7 @@ export default function AnalyticsPage() {
   if (!d || !d.kpis) return (
     <div>
       <AdminHeader eyebrow="Analytika" title="Analytika" desc="Detailné čísla a trendy naprieč platformou." />
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px,1fr))', gap: 16 }}>{[0, 1, 2, 3].map(i => <div key={i} className="mkb-skeleton" style={{ height: 120, borderRadius: 16 }} />)}</div>
+      <div className="mkb-statgrid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px,1fr))', gap: 16 }}>{[0, 1, 2, 3].map(i => <div key={i} className="mkb-skeleton" style={{ height: 120, borderRadius: 16 }} />)}</div>
     </div>
   );
 
@@ -33,7 +33,7 @@ export default function AnalyticsPage() {
         action={<Chip tone="soft" icon="calendar_month">Posledných 14 dní</Chip>} />
 
       {/* KPI tiles */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(210px, 1fr))', gap: 16, marginBottom: 22 }}>
+      <div className="mkb-statgrid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(210px, 1fr))', gap: 16, marginBottom: 22 }}>
         <KpiTile label="Testy (7 dní)" value={d.kpis.tests.last} delta={d.kpis.tests.delta} spark={d.kpis.tests.spark} icon="fact_check" tone="primary" />
         <KpiTile label="Aktívni používatelia" value={d.kpis.active.last} delta={d.kpis.active.delta} spark={d.kpis.active.spark} icon="bolt" tone="success" />
         <KpiTile label="Noví používatelia" value={d.kpis.newUsers.last} delta={d.kpis.newUsers.delta} spark={d.kpis.newUsers.spark} icon="person_add" tone="tertiary" />

@@ -27,7 +27,7 @@ export default function RozvrhPage() {
         <Button icon="add">Pridať blok</Button>
       </header>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16, marginBottom: 24 }} className="mkb-split">
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16, marginBottom: 24 }} className="mkb-3up">
         {[['event', `${sessions.length}`, 'Blokov tento týždeň'], ['schedule', `${Math.round(totalMin / 60)} h`, 'Naplánovaný čas'], ['flag', `${exams.length}`, 'Nadchádzajúce skúšky']].map(([ic, v, l]) => (
           <Card key={l as string} pad={20} glow>
             <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>

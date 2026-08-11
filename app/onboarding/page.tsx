@@ -29,9 +29,10 @@ export default function OnboardingPage() {
   };
 
   return (
-    <div style={{
-      minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
-      padding: 'clamp(24px, 5vw, 56px)', position: 'relative', background: 'var(--background)',
+    <div className="mkb-shell" style={{
+      display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+      position: 'relative', background: 'var(--background)',
+      padding: 'calc(clamp(24px, 5vw, 56px) + var(--sat)) max(clamp(16px, 5vw, 56px), var(--sar)) calc(clamp(24px, 5vw, 56px) + var(--sab)) max(clamp(16px, 5vw, 56px), var(--sal))',
     }}>
       <div style={{ width: '100%', maxWidth: 820 }} className="mkb-fade-up">
         <div style={{ textAlign: 'center', marginBottom: 40 }}>
@@ -45,7 +46,7 @@ export default function OnboardingPage() {
           </p>
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(210px, 1fr))', gap: 14, marginBottom: 32 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))', gap: 12, marginBottom: 32 }}>
           {subjects.map(s => {
             const on = selected.has(s.id);
             return (
@@ -68,7 +69,7 @@ export default function OnboardingPage() {
           })}
         </div>
 
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 16, flexWrap: 'wrap', position: 'sticky', bottom: 20, background: 'var(--surface-container-lowest)', border: '1px solid var(--outline-variant)', borderRadius: 16, padding: '14px 20px', boxShadow: 'var(--shadow-card)' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 16, flexWrap: 'wrap', position: 'sticky', bottom: 'calc(16px + var(--sab))', background: 'var(--surface-container-lowest)', border: '1px solid var(--outline-variant)', borderRadius: 16, padding: '14px 20px', boxShadow: 'var(--shadow-card)' }}>
           <div style={{ fontSize: 15, color: 'var(--on-surface-variant)' }}>
             Vybrané: <strong style={{ color: 'var(--primary)' }}>{selected.size}</strong> {selected.size === 1 ? 'predmet' : selected.size < 5 ? 'predmety' : 'predmetov'}
           </div>

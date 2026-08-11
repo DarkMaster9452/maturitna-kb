@@ -47,10 +47,10 @@ export function Bars({ data, height = 150, unit = '', color = 'var(--primary)' }
   return (
     <div style={{ display: 'flex', gap: 6, alignItems: 'flex-end', height }}>
       {data.map((d, i) => (
-        <div key={i} style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 5, height: '100%', justifyContent: 'flex-end' }} title={`${d.label}: ${d.value}${unit}`}>
+        <div key={i} style={{ flex: '1 1 0', minWidth: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 5, height: '100%', justifyContent: 'flex-end' }} title={`${d.label}: ${d.value}${unit}`}>
           <div style={{ fontSize: 10.5, fontWeight: 700, color: 'var(--on-surface)' }}>{d.value ? d.value + unit : ''}</div>
           <div style={{ width: '100%', maxWidth: 34, borderRadius: '6px 6px 0 0', background: i === data.length - 1 ? color : 'var(--primary-fixed)', height: `${Math.max((d.value / max) * (height - 34), 3)}px`, transition: 'height .6s cubic-bezier(.16,.84,.44,1)' }} />
-          <div style={{ fontSize: 10, color: 'var(--on-surface-variant)', fontWeight: 600, whiteSpace: 'nowrap' }}>{d.label}</div>
+          <div style={{ fontSize: 10, color: 'var(--on-surface-variant)', fontWeight: 600, whiteSpace: 'nowrap', maxWidth: '100%', overflow: 'hidden', textOverflow: 'ellipsis' }}>{d.label}</div>
         </div>
       ))}
     </div>
@@ -63,12 +63,12 @@ export function HBars({ data, color = 'var(--primary)', suffix = '' }: { data: (
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
       {data.map((d, i) => (
-        <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-          <span style={{ fontSize: 13, fontWeight: 600, width: 130, flex: 'none', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{d.label}</span>
-          <div style={{ flex: 1, height: 10, borderRadius: 9999, background: 'var(--surface-container-high)', overflow: 'hidden' }}>
+        <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          <span style={{ fontSize: 13, fontWeight: 600, width: 'clamp(78px, 26vw, 130px)', flex: 'none', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{d.label}</span>
+          <div style={{ flex: 1, minWidth: 40, height: 10, borderRadius: 9999, background: 'var(--surface-container-high)', overflow: 'hidden' }}>
             <div style={{ height: '100%', width: `${(d.value / max) * 100}%`, background: d.color || color, borderRadius: 9999, transition: 'width .7s cubic-bezier(.16,.84,.44,1)' }} />
           </div>
-          <span className="mkb-mono" style={{ fontSize: 12, fontWeight: 700, width: 48, textAlign: 'right' }}>{d.value}{suffix}</span>
+          <span className="mkb-mono" style={{ fontSize: 12, fontWeight: 700, width: 46, flex: 'none', textAlign: 'right' }}>{d.value}{suffix}</span>
         </div>
       ))}
     </div>
@@ -82,9 +82,9 @@ export function Donut({ data, size = 168, thickness = 24, center }: { data: (Pt 
   const c = 2 * Math.PI * r;
   let acc = 0;
   return (
-    <div style={{ display: 'flex', alignItems: 'center', gap: 22, flexWrap: 'wrap' }}>
-      <div style={{ position: 'relative', width: size, height: size, flex: 'none' }}>
-        <svg width={size} height={size} style={{ transform: 'rotate(-90deg)' }}>
+    <div style={{ display: 'flex', alignItems: 'center', gap: 22, flexWrap: 'wrap', justifyContent: 'center' }}>
+      <div style={{ position: 'relative', width: `min(${size}px, 100%)`, aspectRatio: '1', flex: 'none' }}>
+        <svg viewBox={`0 0 ${size} ${size}`} width="100%" height="100%" style={{ transform: 'rotate(-90deg)', display: 'block' }}>
           <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke="var(--surface-container-high)" strokeWidth={thickness} />
           {data.map((d, i) => {
             const frac = d.value / total;

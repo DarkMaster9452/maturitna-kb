@@ -106,15 +106,15 @@ export default function SubjectDetailPage() {
 
       {/* Header */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start', marginBottom: 32, gap: 16, flexWrap: 'wrap' }}>
-        <div style={{ display: 'flex', gap: 20, alignItems: 'center' }}>
+        <div style={{ display: 'flex', gap: 16, alignItems: 'center', minWidth: 0, flex: '1 1 260px' }}>
           <IconChip name={subject.icon} size={64} radius={16} />
-          <div>
+          <div style={{ minWidth: 0 }}>
             <Eyebrow>Maturitný predmet</Eyebrow>
             <Serif size={44} weight={700} style={{ display: 'block', margin: '8px 0 4px' }}>{subject.name_sk}</Serif>
             <div style={{ fontSize: 16, color: 'var(--on-surface-variant)' }}>{subject.description_sk}</div>
           </div>
         </div>
-        <div style={{ display: 'flex', gap: 12 }}>
+        <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
           <Button variant="secondary" icon={isPinned ? 'push_pin' : 'push_pin'} onClick={togglePin}
             style={{ background: isPinned ? 'var(--primary-fixed)' : undefined, color: isPinned ? 'var(--primary)' : undefined, borderColor: isPinned ? 'var(--primary)' : undefined }}>
             {isPinned ? 'Odopnúť' : 'Pripnúť'}
@@ -142,7 +142,7 @@ export default function SubjectDetailPage() {
       )}
 
       {/* Tabs */}
-      <div style={{ display: 'flex', gap: 4, borderBottom: '1px solid var(--outline-variant)', marginBottom: 28, overflowX: 'auto' }}>
+      <div className="mkb-rail" style={{ gap: 4, borderBottom: '1px solid var(--outline-variant)', marginBottom: 28 }}>
         {(['materials', 'tests', 'resources', 'okruhy'] as const).map(t => (
           <button key={t} onClick={() => setActiveTab(t)} style={{ fontFamily: 'var(--font-sans)', fontSize: 14, fontWeight: 600, padding: '10px 20px', background: 'none', border: 'none', cursor: 'pointer', whiteSpace: 'nowrap', color: activeTab === t ? 'var(--primary)' : 'var(--on-surface-variant)', borderBottom: activeTab === t ? '2px solid var(--primary)' : '2px solid transparent', marginBottom: -1 }}>
             {t === 'materials' ? `Materiály (${subject.materials?.length || 0})` : t === 'tests' ? `Testy (${subject.tests?.length || 0})` : t === 'resources' ? `Zdroje (${subject.resources?.length || 0})` : `Okruhy (${okruhy.length})`}
@@ -247,12 +247,12 @@ export default function SubjectDetailPage() {
                   style={{ display: 'flex', alignItems: 'center', gap: 16, padding: '16px 20px', cursor: 'pointer' }}
                 >
                   {(() => { const c = categoryById(okruh.category); return <IconChip name={okruh.icon || c.icon} size={40} radius={10} bg={(okruh.color || c.color) + '22'} color={okruh.color || c.color} />; })()}
-                  <div style={{ flex: 1 }}>
+                  <div style={{ flex: 1, minWidth: 0 }}>
                     <div style={{ fontWeight: 600, fontSize: 16 }}>{okruh.title}</div>
                     {okruh.description && <div style={{ fontSize: 13, color: 'var(--on-surface-variant)', marginTop: 2 }}>{okruh.description}</div>}
                   </div>
-                  <span style={{ fontSize: 13, color: 'var(--on-surface-variant)', marginRight: 8 }}>{okruh.files?.length || 0} súborov</span>
-                  <Icon name={expandedOkruh === okruh.id ? 'expand_less' : 'expand_more'} />
+                  <Chip tone="soft" icon="attach_file">{okruh.files?.length || 0}</Chip>
+                  <Icon name={expandedOkruh === okruh.id ? 'expand_less' : 'expand_more'} style={{ flex: 'none' }} />
                 </div>
 
                 {/* Expanded: files + upload */}
@@ -266,12 +266,12 @@ export default function SubjectDetailPage() {
                           <div style={{ fontSize: 14, fontWeight: 500, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{f.filename}</div>
                           <div style={{ fontSize: 12, color: 'var(--on-surface-variant)' }}>{(f.size_bytes / 1024 / 1024).toFixed(2)} MB</div>
                         </div>
-                        <a href={`/api/okruh-files/${f.id}`} download={f.filename}
-                          style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 13, color: 'var(--primary)', textDecoration: 'none', padding: '6px 12px', borderRadius: 8, background: 'var(--primary-fixed)', fontWeight: 600 }}>
-                          <Icon name="download" size={16} /> Stiahnuť
+                        <a href={`/api/okruh-files/${f.id}`} download={f.filename} title="Stiahnuť" className="mkb-tap"
+                          style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 4, fontSize: 13, color: 'var(--primary)', textDecoration: 'none', padding: '6px 12px', borderRadius: 8, background: 'var(--primary-fixed)', fontWeight: 600, flex: 'none' }}>
+                          <Icon name="download" size={16} /> <span className="mkb-hide-mobile">Stiahnuť</span>
                         </a>
-                        <button onClick={() => deleteFile(f.id)}
-                          style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--error)', padding: 6, borderRadius: 8, display: 'flex', alignItems: 'center' }}>
+                        <button onClick={() => deleteFile(f.id)} aria-label="Zmazať súbor" className="mkb-tap"
+                          style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--error)', padding: 6, borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', flex: 'none' }}>
                           <Icon name="delete" size={18} />
                         </button>
                       </div>

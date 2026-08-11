@@ -38,7 +38,7 @@ export default function AdminLogsPage() {
       <AdminHeader eyebrow="Systém" title="Logy aktivity" desc="Chronológia všetkého, čo sa deje na platforme. Filtruj podľa typu alebo hľadaj."
         action={<Chip tone="soft" icon="receipt_long">{logs.length} záznamov</Chip>} />
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: 12, marginBottom: 22 }}>
+      <div className="mkb-statgrid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: 12, marginBottom: 22 }}>
         {summary.map(([label, n, icon]) => (
           <div key={label} style={{ display: 'flex', alignItems: 'center', gap: 11, padding: 14, borderRadius: 14, border: '1px solid var(--outline-variant)', background: 'var(--surface-container-lowest)' }}>
             <IconChip name={icon} size={38} radius={10} />

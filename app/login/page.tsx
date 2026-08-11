@@ -38,11 +38,11 @@ export default function LoginPage() {
   ];
 
   return (
-    <div style={{ minHeight: '100vh', display: 'flex', background: 'var(--background)' }}>
+    <div className="mkb-shell" style={{ display: 'flex', background: 'var(--background)' }}>
       {/* Left — form */}
-      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', padding: 'clamp(24px, 5vw, 48px)', position: 'relative' }}>
+      <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', position: 'relative', padding: 'calc(clamp(24px, 5vw, 48px) + var(--sat)) max(clamp(20px, 5vw, 48px), var(--sar)) calc(clamp(24px, 5vw, 48px) + var(--sab)) max(clamp(20px, 5vw, 48px), var(--sal))' }}>
         <div style={{ width: '100%', maxWidth: 400 }} className="mkb-fade-up">
-          <Link href="/" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, color: 'var(--on-surface-variant)', fontSize: 14, fontWeight: 600, marginBottom: 36 }}>
+          <Link href="/" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, minHeight: 44, color: 'var(--on-surface-variant)', fontSize: 14, fontWeight: 600, marginBottom: 'clamp(18px, 4vw, 36px)' }}>
             <Icon name="arrow_back" size={18} /> Späť na úvodnú stránku
           </Link>
           <Logo size={26} />
@@ -69,9 +69,9 @@ export default function LoginPage() {
 
             {error && <div style={{ fontSize: 14, color: 'var(--error)', display: 'flex', alignItems: 'center', gap: 6, background: 'var(--error-container)', padding: '10px 12px', borderRadius: 'var(--radius)' }}><Icon name="error" size={16} fill={1} />{error}</div>}
 
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <label style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer', fontSize: 14, color: 'var(--on-surface-variant)' }}>
-                <input type="checkbox" defaultChecked style={{ accentColor: 'var(--primary)', width: 16, height: 16 }} /> Zapamätať si ma
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
+              <label style={{ display: 'flex', alignItems: 'center', gap: 8, minHeight: 32, cursor: 'pointer', fontSize: 14, color: 'var(--on-surface-variant)' }}>
+                <input type="checkbox" defaultChecked style={{ accentColor: 'var(--primary)', width: 18, height: 18, flex: 'none' }} /> Zapamätať si ma
               </label>
               <span style={{ fontSize: 14, fontWeight: 600, color: 'var(--primary)', cursor: 'pointer' }}>Zabudnuté heslo?</span>
             </div>
@@ -87,10 +87,10 @@ export default function LoginPage() {
               <Icon name="bolt" size={16} fill={1} style={{ color: 'var(--primary)' }} /> DEMO PRÍSTUP
             </div>
             <div style={{ display: 'flex', gap: 8 }}>
-              <button onClick={() => fillDemo('student')} style={{ flex: 1, padding: '9px 12px', borderRadius: 10, border: '1px solid var(--outline-variant)', background: 'var(--surface-container-lowest)', fontSize: 13, fontWeight: 600, color: 'var(--on-surface)', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}>
+              <button onClick={() => fillDemo('student')} style={{ flex: '1 1 0', minWidth: 0, overflow: 'hidden', minHeight: 42, padding: '9px 12px', borderRadius: 10, border: '1px solid var(--outline-variant)', background: 'var(--surface-container-lowest)', fontSize: 13, fontWeight: 600, color: 'var(--on-surface)', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 6, whiteSpace: 'nowrap' }}>
                 <Icon name="person" size={16} /> Študent
               </button>
-              <button onClick={() => fillDemo('admin')} style={{ flex: 1, padding: '9px 12px', borderRadius: 10, border: '1px solid var(--outline-variant)', background: 'var(--surface-container-lowest)', fontSize: 13, fontWeight: 600, color: 'var(--on-surface)', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}>
+              <button onClick={() => fillDemo('admin')} style={{ flex: '1 1 0', minWidth: 0, overflow: 'hidden', minHeight: 42, padding: '9px 12px', borderRadius: 10, border: '1px solid var(--outline-variant)', background: 'var(--surface-container-lowest)', fontSize: 13, fontWeight: 600, color: 'var(--on-surface)', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 6, whiteSpace: 'nowrap' }}>
                 <Icon name="admin_panel_settings" size={16} /> Administrátor
               </button>
             </div>

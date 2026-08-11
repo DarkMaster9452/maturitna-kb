@@ -53,7 +53,7 @@ export default function SupportPage() {
       </header>
 
       {/* Quick actions */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 14, marginBottom: 32 }}>
+      <div className="mkb-statgrid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 14, marginBottom: 32 }}>
         {[
           { icon: 'menu_book', label: 'Sprievodcovia', sub: 'Nauč sa portál za 2 minúty.', onClick: () => document.getElementById('sprievodcovia')?.scrollIntoView({ behavior: 'smooth' }) },
           { icon: 'forum', label: 'Napíš nám', sub: 'Pošli správu podpore.', onClick: () => scrollToForm() },

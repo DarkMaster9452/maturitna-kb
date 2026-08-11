@@ -20,7 +20,7 @@ export default function AdminOverviewPage() {
   if (!data) return (
     <div>
       <AdminHeader eyebrow="Administrácia" title="Prehľad" desc="Živý stav celej platformy MaturitaKB na jednom mieste." />
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px,1fr))', gap: 16 }}>
+      <div className="mkb-statgrid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px,1fr))', gap: 16 }}>
         {[0, 1, 2, 3, 4, 5, 6, 7].map(i => <div key={i} className="mkb-skeleton" style={{ height: 110, borderRadius: 14 }} />)}
       </div>
     </div>
@@ -43,7 +43,7 @@ export default function AdminOverviewPage() {
       <AdminHeader eyebrow="Administrácia" title="Prehľad" desc="Živý stav celej platformy MaturitaKB na jednom mieste."
         action={<Link href="/admin/analytics"><Chip tone="trend" icon="monitoring">Detailná analytika</Chip></Link>} />
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 16, marginBottom: 24 }}>
+      <div className="mkb-statgrid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 16, marginBottom: 24 }}>
         {stat.map(x => <StatCard key={x.label} icon={x.icon} label={x.label} value={<Counter value={Number(x.value)} />} tone={x.tone} />)}
       </div>
 
@@ -68,7 +68,7 @@ export default function AdminOverviewPage() {
           <Serif size={20} weight={600}>Posledné výsledky testov</Serif>
           <Link href="/admin/logs" style={{ color: 'var(--primary)', fontWeight: 600, fontSize: 13 }}>Všetky logy →</Link>
         </div>
-        <div style={{ overflowX: 'auto' }}>
+        <div className="mkb-tablewrap">
           <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: 480 }}>
             <thead><tr style={{ borderBottom: '1px solid var(--outline-variant)' }}>{['Používateľ', 'Test', 'Predmet', 'Skóre', 'Čas'].map(h => <th key={h} style={{ fontSize: 12.5, fontWeight: 600, color: 'var(--on-surface-variant)', padding: '12px 22px', textAlign: 'left' }}>{h}</th>)}</tr></thead>
             <tbody>

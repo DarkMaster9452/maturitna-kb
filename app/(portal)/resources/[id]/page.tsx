@@ -31,7 +31,7 @@ export default function ResourceDetailPage() {
         <span>{resource.title}</span>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 300px', gap: 32, alignItems: 'start' }}>
+      <div className="mkb-split" style={{ display: 'grid', gridTemplateColumns: '1fr 300px', gap: 32, alignItems: 'start' }}>
         <div>
           <div style={{ display: 'flex', gap: 20, alignItems: 'center', marginBottom: 32 }}>
             <div style={{ width: 72, height: 72, borderRadius: 16, background: typeColor[resource.type]?.bg || 'var(--primary-fixed)', color: typeColor[resource.type]?.c || 'var(--primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', flex: 'none' }}>

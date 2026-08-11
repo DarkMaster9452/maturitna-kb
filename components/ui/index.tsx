@@ -51,6 +51,26 @@ export function useAppearance() {
 }
 
 /* ══════════════════════════════════════════════════════════════
+   Pointer capability
+   Touch browsers fire mouseenter on tap and never fire mouseleave,
+   which leaves hover styles stuck on. Gate hover state behind a
+   real pointer. (SSR returns true so markup matches the desktop
+   first paint; it is only ever read inside event handlers.)
+   ══════════════════════════════════════════════════════════════ */
+export const canHover = () =>
+  typeof window === 'undefined' || window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+
+/* Fluid type: scale a design size down on narrow screens.
+   Interpolates linearly between a 380px and a 1200px viewport. */
+export function fluid(size: number, ratio = 0.66): string | number {
+  if (size < 26) return size;
+  const min = Math.round(size * ratio);
+  const slope = (size - min) / (1200 - 380);
+  const intercept = min - slope * 380;
+  return `clamp(${min}px, ${(slope * 100).toFixed(2)}vw + ${intercept.toFixed(1)}px, ${size}px)`;
+}
+
+/* ══════════════════════════════════════════════════════════════
    Icon
    ══════════════════════════════════════════════════════════════ */
 export const Icon = ({ name, fill = 0, weight = 400, size = 24, style = {}, className = '' }: {
@@ -94,10 +114,12 @@ export const Button = ({ variant = 'primary', size = 'md', icon, iconAfter, chil
     danger: { background: 'var(--error)', color: '#fff' },
   };
   return (
-    <button type={type} style={{ ...base, ...variants[variant] }} onClick={onClick} disabled={disabled}
-      onMouseEnter={() => setH(true)} onMouseLeave={() => setH(false)}
-      onMouseDown={e => { if (!disabled) (e.currentTarget as HTMLButtonElement).style.transform = 'scale(.98)'; }}
-      onMouseUp={e => { (e.currentTarget as HTMLButtonElement).style.transform = h ? 'translateY(-1px)' : 'none'; }}>
+    <button type={type} className={'mkb-btn' + (size === 'sm' ? ' mkb-btn-sm' : '')}
+      style={{ ...base, ...variants[variant] }} onClick={onClick} disabled={disabled}
+      onMouseEnter={() => { if (canHover()) setH(true); }} onMouseLeave={() => setH(false)}
+      onPointerDown={e => { if (!disabled) (e.currentTarget as HTMLButtonElement).style.transform = 'scale(.97)'; }}
+      onPointerUp={e => { (e.currentTarget as HTMLButtonElement).style.transform = h ? 'translateY(-1px)' : 'none'; }}
+      onPointerCancel={e => { (e.currentTarget as HTMLButtonElement).style.transform = 'none'; }}>
       {icon && <Icon name={icon} size={size === 'sm' ? 17 : 18} />}{children}{iconAfter && <Icon name={iconAfter} size={size === 'sm' ? 17 : 18} />}
     </button>
   );
@@ -112,7 +134,8 @@ export const Card = ({ children, pad = 24, radius = 14, hover, glow, style = {},
   const [h, setH] = useState(false);
   return (
     <div onClick={onClick}
-      onMouseEnter={() => setH(true)} onMouseLeave={() => setH(false)}
+      className={'mkb-card' + (pad >= 20 ? ' mkb-card-pad' : '')}
+      onMouseEnter={() => { if (canHover()) setH(true); }} onMouseLeave={() => setH(false)}
       style={{
         background: 'var(--surface-container-lowest)',
         border: '1px solid ' + (hover && h ? 'var(--outline)' : 'var(--outline-variant)'),
@@ -214,10 +237,13 @@ export const Chip = ({ children, tone = 'subject', icon }: { children: ReactNode
 /* ══════════════════════════════════════════════════════════════
    Typography helpers
    ══════════════════════════════════════════════════════════════ */
+/* Display type. Sizes from 26px up scale fluidly with the viewport,
+   so headings never overflow a phone. An explicit `style.fontSize`
+   still wins — pages that already declare their own clamp keep it. */
 export const Serif = ({ size = 24, weight = 600, children, style = {} }: {
   size?: number; weight?: number; children: ReactNode; style?: CSSProperties;
 }) => (
-  <span style={{ fontFamily: 'var(--font-display)', fontSize: size, fontWeight: weight, lineHeight: 1.1, color: 'var(--on-surface)', letterSpacing: '-.02em', ...style }}>
+  <span style={{ fontFamily: 'var(--font-display)', fontSize: fluid(size), fontWeight: weight, lineHeight: 1.12, color: 'var(--on-surface)', letterSpacing: '-.02em', overflowWrap: 'break-word', ...style }}>
     {children}
   </span>
 );
@@ -256,14 +282,14 @@ export const StatCard = ({ icon, label, value, sub, tone = 'primary' }: {
   };
   const t = toneMap[tone];
   return (
-    <div style={{ background: 'var(--surface-container-lowest)', border: '1px solid var(--outline-variant)', borderRadius: 14, padding: 20 }}>
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 18 }}>
-        <span className="mkb-eyebrow" style={{ letterSpacing: '.12em' }}>{label}</span>
+    <div className="mkb-statcard" style={{ background: 'var(--surface-container-lowest)', border: '1px solid var(--outline-variant)', borderRadius: 14, padding: 20, minWidth: 0 }}>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10, marginBottom: 18 }}>
+        <span className="mkb-eyebrow" style={{ letterSpacing: '.1em', minWidth: 0, overflowWrap: 'break-word' }}>{label}</span>
         <div style={{ width: 34, height: 34, borderRadius: 9, background: t.bg, color: t.c, display: 'flex', alignItems: 'center', justifyContent: 'center', flex: 'none' }}>
           <Icon name={icon} size={19} fill={1} />
         </div>
       </div>
-      <div style={{ fontFamily: 'var(--font-display)', fontSize: 34, fontWeight: 600, lineHeight: 1, color: 'var(--on-surface)', letterSpacing: '-.02em' }}>{value}</div>
+      <div className="mkb-statcard-value" style={{ fontFamily: 'var(--font-display)', fontSize: 34, fontWeight: 600, lineHeight: 1.05, color: 'var(--on-surface)', letterSpacing: '-.02em', overflowWrap: 'break-word' }}>{value}</div>
       {sub && <div style={{ fontSize: 12.5, color: 'var(--on-surface-variant)', marginTop: 7 }}>{sub}</div>}
     </div>
   );
@@ -293,8 +319,8 @@ export const Input = ({ label, type = 'text', placeholder, value, onChange, icon
    Toast
    ══════════════════════════════════════════════════════════════ */
 export const Toast = ({ msg, onDismiss }: { msg: string; onDismiss?: () => void }) => (
-  <div onClick={onDismiss} className="mkb-fade-up" style={{ position: 'fixed', bottom: 28, left: '50%', transform: 'translateX(-50%)', background: 'var(--inverse-surface)', color: 'var(--inverse-on-surface)', padding: '12px 20px', borderRadius: 'var(--radius)', fontSize: 14, fontWeight: 600, boxShadow: 'var(--shadow-lg)', display: 'flex', alignItems: 'center', gap: 8, zIndex: 500, whiteSpace: 'nowrap', cursor: 'pointer', maxWidth: 'calc(100vw - 32px)' }}>
-    <Icon name="check" size={18} style={{ color: 'var(--primary)' }} />{msg}
+  <div onClick={onDismiss} className="mkb-fade-up mkb-toast" style={{ position: 'fixed', left: '50%', transform: 'translateX(-50%)', background: 'var(--inverse-surface)', color: 'var(--inverse-on-surface)', padding: '12px 20px', borderRadius: 'var(--radius)', fontSize: 14, fontWeight: 600, boxShadow: 'var(--shadow-lg)', display: 'flex', alignItems: 'center', gap: 8, zIndex: 500, whiteSpace: 'nowrap', cursor: 'pointer', maxWidth: 'calc(100vw - 32px)' }}>
+    <Icon name="check" size={18} style={{ color: 'var(--primary)', flex: 'none' }} />{msg}
   </div>
 );
 

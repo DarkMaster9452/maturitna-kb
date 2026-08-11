@@ -13,7 +13,7 @@ export default function ProgressPage() {
   useEffect(() => { fetch('/api/progress').then(r => r.json()).then(setData); }, []);
 
   if (!data) return (
-    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(190px,1fr))', gap: 16 }}>
+    <div className="mkb-statgrid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(190px,1fr))', gap: 16 }}>
       {[0, 1, 2, 3].map(i => <div key={i} className="mkb-skeleton" style={{ height: 110, borderRadius: 14 }} />)}
     </div>
   );
@@ -43,7 +43,7 @@ export default function ProgressPage() {
       </header>
 
       {/* Stats */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(190px, 1fr))', gap: 16, marginBottom: 24 }}>
+      <div className="mkb-statgrid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(190px, 1fr))', gap: 16, marginBottom: 24 }}>
         <StatCard icon="trending_up" label={t('Celkový pokrok')} value={<Counter value={avgProgress} suffix="%" />} tone="primary" />
         <StatCard icon="schedule" label={t('Celkové hodiny')} value={<Counter value={totalHours} suffix="h" />} tone="tertiary" />
         <StatCard icon="quiz" label={t('Dokončené testy')} value={<Counter value={Number(testCount)} />} tone="success" />
