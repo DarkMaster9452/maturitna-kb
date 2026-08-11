@@ -14,6 +14,10 @@ const EN: Record<string, string> = {
   'Pripnuté predmety': 'Pinned subjects', 'Hlavné': 'Main', 'Správa': 'Manage',
   'Študentský portál': 'Student portal', 'Administrácia': 'Administration',
   'Odhlásiť sa': 'Log out', 'Domov': 'Home', 'Predmety': 'Subjects',
+  // admin nav groups
+  'Prehľad': 'Overview', 'Analytika': 'Analytics', 'Používatelia': 'Users',
+  'Obsah a učenie': 'Content & learning', 'Logy': 'Logs', 'Stav systému': 'System status',
+  'Systém': 'System', 'Ľudia': 'People',
   // roles
   'Študent': 'Student', 'Učiteľ': 'Teacher', 'Administrátor': 'Administrator', 'Používateľ': 'User',
   // settings
