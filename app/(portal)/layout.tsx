@@ -49,19 +49,33 @@ export default function PortalLayout({ children }: { children: React.ReactNode }
   const role = user?.role || '';
   const staffOnly = role === 'admin' || role === 'owner';
 
-  const navItems = staffOnly
-    ? [
-        { href: '/admin', icon: 'admin_panel_settings', label: t('Admin panel') },
-        ...(role === 'owner' ? [{ href: '/owner', icon: 'manage_accounts', label: t('Vlastník') }] : []),
-      ]
-    : [
-        { href: '/dashboard', icon: 'dashboard', label: t('Dashboard') },
-        { href: '/materials', icon: 'menu_book', label: t('Materiály') },
-        { href: '/notes', icon: 'edit_note', label: t('Poznámky') },
-        { href: '/tests', icon: 'quiz', label: t('Testy') },
-        { href: '/progress', icon: 'trending_up', label: t('Môj pokrok') },
-        ...(role === 'teacher' ? [{ href: '/teacher', icon: 'co_present', label: t('Moja trieda') }] : []),
-      ];
+  // Grouped admin navigation (staff) — clear sections in the left panel
+  const adminGroups = [
+    { title: t('Prehľad'), items: [
+      { href: '/admin', icon: 'space_dashboard', label: t('Prehľad'), exact: true },
+      { href: '/admin/analytics', icon: 'monitoring', label: t('Analytika') },
+    ] },
+    { title: t('Správa'), items: [
+      { href: '/admin/users', icon: 'group', label: t('Používatelia') },
+      { href: '/admin/content', icon: 'library_books', label: t('Obsah a učenie') },
+    ] },
+    { title: t('Systém'), items: [
+      { href: '/admin/logs', icon: 'receipt_long', label: t('Logy') },
+      { href: '/admin/system', icon: 'monitor_heart', label: t('Stav systému') },
+    ] },
+    ...(role === 'owner' ? [{ title: t('Vlastník'), items: [
+      { href: '/owner', icon: 'manage_accounts', label: t('Vlastník'), exact: true },
+    ] }] : []),
+  ];
+
+  const navItems = [
+    { href: '/dashboard', icon: 'dashboard', label: t('Dashboard') },
+    { href: '/materials', icon: 'menu_book', label: t('Materiály') },
+    { href: '/notes', icon: 'edit_note', label: t('Poznámky') },
+    { href: '/tests', icon: 'quiz', label: t('Testy') },
+    { href: '/progress', icon: 'trending_up', label: t('Môj pokrok') },
+    ...(role === 'teacher' ? [{ href: '/teacher', icon: 'co_present', label: t('Moja trieda') }] : []),
+  ];
 
   const footerItems = [
     { href: '/settings', icon: 'settings', label: t('Nastavenia') },
@@ -70,9 +84,10 @@ export default function PortalLayout({ children }: { children: React.ReactNode }
 
   const bottomNav = staffOnly
     ? [
-        { href: '/admin', icon: 'admin_panel_settings', label: t('Admin panel') },
-        { href: '/settings', icon: 'settings', label: t('Nastavenia') },
-        { href: '/support', icon: 'help', label: t('Podpora') },
+        { href: '/admin', icon: 'space_dashboard', label: t('Prehľad'), exact: true },
+        { href: '/admin/analytics', icon: 'monitoring', label: t('Analytika') },
+        { href: '/admin/users', icon: 'group', label: t('Ľudia') },
+        { href: '/admin/system', icon: 'monitor_heart', label: t('Systém') },
       ]
     : [
         { href: '/dashboard', icon: 'dashboard', label: t('Domov') },
@@ -82,7 +97,7 @@ export default function PortalLayout({ children }: { children: React.ReactNode }
       ];
 
   const logout = async () => { await fetch('/api/auth/logout', { method: 'POST' }); router.push('/login'); };
-  const isActive = (href: string) => pathname === href || pathname.startsWith(href + '/');
+  const isActive = (href: string, exact?: boolean) => exact ? pathname === href : (pathname === href || pathname.startsWith(href + '/'));
 
   return (
     <UserContext.Provider value={{ user, pinnedSubjects, userData, refetchPinned: fetchUserData, refetchUserData: fetchUserData }}>
@@ -119,8 +134,17 @@ export default function PortalLayout({ children }: { children: React.ReactNode }
 
               {/* Main nav */}
               <div style={{ flex: 1 }}>
-                <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: '.1em', textTransform: 'uppercase', color: 'var(--on-surface-variant)', padding: '0 14px', marginBottom: 8 }}>{staffOnly ? t('Správa') : t('Hlavné')}</div>
-                {navItems.map(it => <NavItem key={it.href} {...it} active={isActive(it.href)} />)}
+                {staffOnly ? (
+                  adminGroups.map(group => (
+                    <div key={group.title} style={{ marginBottom: 14 }}>
+                      <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: '.1em', textTransform: 'uppercase', color: 'var(--on-surface-variant)', padding: '0 14px', marginBottom: 8 }}>{group.title}</div>
+                      {group.items.map(it => <NavItem key={it.href} href={it.href} icon={it.icon} label={it.label} active={isActive(it.href, (it as any).exact)} />)}
+                    </div>
+                  ))
+                ) : (
+                  <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: '.1em', textTransform: 'uppercase', color: 'var(--on-surface-variant)', padding: '0 14px', marginBottom: 8 }}>{t('Hlavné')}</div>
+                )}
+                {!staffOnly && navItems.map(it => <NavItem key={it.href} {...it} active={isActive(it.href)} />)}
 
                 {!staffOnly && pinnedSubjects.length > 0 && (
                   <>
@@ -175,7 +199,7 @@ export default function PortalLayout({ children }: { children: React.ReactNode }
             {/* Mobile bottom navigation */}
             <nav className="mkb-bottomnav" style={{ background: 'var(--surface-container-low)', borderTop: '1px solid var(--outline-variant)' }}>
               {bottomNav.map(it => {
-                const on = isActive(it.href);
+                const on = isActive(it.href, (it as any).exact);
                 return (
                   <Link key={it.href} href={it.href} style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3, padding: '9px 0', color: on ? 'var(--primary)' : 'var(--on-surface-variant)' }}>
                     <div style={{ width: 40, height: 26, borderRadius: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center', background: on ? 'var(--primary-fixed)' : 'transparent', transition: 'background .2s' }}>
