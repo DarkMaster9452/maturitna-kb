@@ -2,7 +2,8 @@ export const dynamic = 'force-dynamic';
 import { NextRequest, NextResponse } from 'next/server';
 import sql from '@/lib/db';
 
-export async function GET(_: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(_: NextRequest, props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   const rows = await sql`
     SELECT m.*, s.name_sk, s.name_en, s.icon as subject_icon, s.slug as subject_slug FROM materials m
     JOIN subjects s ON s.id = m.subject_id

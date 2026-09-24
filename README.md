@@ -6,7 +6,7 @@
 > Obsah, účty, štatistiky aj „achievementy" sú **ukážkové**. Aplikácia nie je určená na
 > produkčné nasadenie, nie je bezpečnostne auditovaná a funkcie môžu byť nedokončené alebo sa môžu zmeniť.
 
-Postavené na Next.js 14 + NeonDB (PostgreSQL).
+Postavené na Next.js 15 + NeonDB (PostgreSQL).
 
 ## Stav konceptu
 
@@ -62,7 +62,7 @@ prepínanie v hlavičke alebo v **Nastavenia → Vzhľad**.
 
 ## Stack
 
-- Next.js 14 (App Router)
+- Next.js 15 (App Router), React 19
 - NeonDB PostgreSQL (`@neondatabase/serverless`)
 - JWT auth (`jose`)
 - Inline CSS + CSS custom properties (dizajnový systém „Editorial / Ink": Emerald / SPSIT, light / dark)
@@ -75,7 +75,13 @@ cp .env.example .env.local   # doplň DATABASE_URL a JWT_SECRET
 npm run dev
 ```
 
+`JWT_SECRET` je **povinný** — v kóde nie je žiadna náhradná hodnota. Vygeneruj ho napr. cez
+`openssl rand -base64 32` a nastav ho v `.env.local` aj v premenných prostredia na hostingu (Vercel).
+Žiadne kľúče ani heslá do repozitára necommituj.
+
 ## Licencia a použitie
+
+Kód je dostupný pod licenciou [MIT](LICENSE).
 
 Ide o študentský koncept na ukážku nápadu. Nepoužívaj ho so skutočnými osobnými údajmi
 ani ako produkčnú aplikáciu.
