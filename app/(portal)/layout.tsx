@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { Icon, Button, Serif, Toast, Avatar, useMediaQuery } from '@/components/ui';
 import { SessionProvider, useSession } from '@/components/session';
 import { useT, subjectName } from '@/components/i18n';
+import { ConceptBadge, ConceptNote } from '@/components/concept';
 
 type User = { id: string; name: string; email: string; role: string };
 type ToastCtx = { flash: (msg: string) => void };
@@ -110,6 +111,7 @@ export default function PortalLayout({ children }: { children: React.ReactNode }
                 <Icon name="menu" size={24} />
               </button>
               <Serif size={18} weight={700} style={{ color: 'var(--on-surface)' }}>Maturita<span style={{ color: 'var(--primary)' }}>KB</span></Serif>
+              <ConceptBadge style={{ marginLeft: 'auto', marginRight: 12 }} />
             </div>
 
             {/* Drawer overlay */}
@@ -126,7 +128,7 @@ export default function PortalLayout({ children }: { children: React.ReactNode }
                   <Serif size={20} weight={700} style={{ display: 'block', lineHeight: 1.1 }}>
                     Maturita<span style={{ color: 'var(--primary)' }}>KB</span>
                   </Serif>
-                  <div style={{ fontSize: 11, color: 'var(--on-surface-variant)', marginTop: 1, fontWeight: 500 }}>{staffOnly ? t('Administrácia') : t('Študentský portál')}</div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 11, color: 'var(--on-surface-variant)', marginTop: 3, fontWeight: 500 }}>{staffOnly ? t('Administrácia') : t('Študentský portál')}<ConceptBadge style={{ fontSize: 9, padding: '3px 5px' }} /></div>
                 </div>
               </div>
 
@@ -193,7 +195,7 @@ export default function PortalLayout({ children }: { children: React.ReactNode }
 
             {/* Main content */}
             <main className="mkb-main" style={{ flex: 1, minWidth: 0, overflowX: 'hidden' }}>
-              <div className="mkb-fade-in">{children}</div>
+              <div className="mkb-fade-in"><ConceptNote />{children}</div>
             </main>
 
             {/* Mobile bottom navigation */}

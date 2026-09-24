@@ -1,6 +1,7 @@
 {
   "name": "maturitna-kb",
-  "version": "0.1.0",
+  "version": "0.1.0-concept",
+  "description": "MaturitaKB — koncept (prototyp) aplikácie na prípravu na maturitu. Nie je to hotový produkt.",
   "private": true,
   "scripts": {
     "dev": "next dev",

@@ -1,5 +1,11 @@
 # MaturitaKB — pracovné pokyny
 
+## Projekt je KONCEPT
+- MaturitaKB je **koncept / prototyp**, nie hotový produkt. Všetky texty (UI, README, metadáta)
+  majú smerovať k tomu, že ide o ukážku nápadu s ukážkovými dátami.
+- Nové stránky/obrazovky označ štítkom `ConceptBadge` alebo poznámkou `ConceptNote`
+  (`components/concept.tsx`); nesľubuj produkčné vlastnosti.
+
 ## Dizajn UI — DÔLEŽITÁ preferencia autora
 
 - **NIKDY nepoužívaj „základné"/predvolené vizuálne vzory od modelu.** Konkrétne zakázané:

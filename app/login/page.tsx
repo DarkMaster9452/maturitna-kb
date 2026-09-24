@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Icon, Button, Logo, Input } from '@/components/ui';
+import { ConceptBadge } from '@/components/concept';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
@@ -45,9 +46,9 @@ export default function LoginPage() {
           <Link href="/" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, color: 'var(--on-surface-variant)', fontSize: 14, fontWeight: 600, marginBottom: 36 }}>
             <Icon name="arrow_back" size={18} /> Späť na úvodnú stránku
           </Link>
-          <Logo size={26} />
-          <div style={{ fontFamily: 'var(--font-serif)', fontSize: 'clamp(30px, 5vw, 38px)', fontWeight: 700, margin: '28px 0 8px', color: 'var(--on-surface)', letterSpacing: '-.02em' }}>Vitaj späť</div>
-          <div style={{ fontSize: 16, color: 'var(--on-surface-variant)', marginBottom: 32 }}>Prihlás sa do svojho študentského portálu.</div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}><Logo size={26} /><ConceptBadge /></div>
+          <div style={{ fontFamily: 'var(--font-serif)', fontSize: 'clamp(30px, 5vw, 38px)', fontWeight: 700, margin: '28px 0 8px', color: 'var(--on-surface)', letterSpacing: '-.02em' }}>Vitaj v koncepte</div>
+          <div style={{ fontSize: 16, color: 'var(--on-surface-variant)', marginBottom: 32 }}>Prihlás sa demo účtom a vyskúšaj návrh portálu.</div>
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
             <Input label="E-mailová adresa" type="email" placeholder="meno@skola.sk" value={email} onChange={e => setEmail(e.target.value)} icon="mail" onKeyDown={e => e.key === 'Enter' && handleLogin()} />
@@ -97,8 +98,8 @@ export default function LoginPage() {
           </div>
 
           <div style={{ marginTop: 20, textAlign: 'center', fontSize: 14, color: 'var(--on-surface-variant)' }}>
-            Nemáš účet?{' '}
-            <span style={{ color: 'var(--primary)', fontWeight: 600, cursor: 'pointer' }}>Požiadaj školu o prístup</span>
+            Toto je koncept — registrácia nie je dostupná,{' '}
+            <span style={{ color: 'var(--on-surface)', fontWeight: 600 }}>použi demo prístup.</span>
           </div>
         </div>
       </div>
@@ -111,10 +112,10 @@ export default function LoginPage() {
             <Icon name="bookmark" size={30} fill={1} style={{ color: '#fff' }} />
           </div>
           <div style={{ fontFamily: 'var(--font-display)', fontSize: 42, fontWeight: 700, color: '#fff', display: 'block', marginBottom: 16, lineHeight: 1.08, letterSpacing: '-.03em' }}>
-            Tvoja maturita.<br /><span style={{ color: 'var(--primary)' }}>Tvoje pravidlá.</span>
+            Koncept.<br /><span style={{ color: 'var(--primary)' }}>Nie hotový produkt.</span>
           </div>
           <p style={{ fontSize: 17, lineHeight: 1.7, color: 'var(--panel-ink-variant)', marginBottom: 40 }}>
-            Tvoje okruhy, materiály a poznámky pre maturitu — prehľadne na jednom mieste.
+            Prototyp, ktorý ukazuje, ako by mohli byť okruhy, materiály a poznámky na maturitu prehľadne na jednom mieste. Dáta sú ukážkové.
           </p>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
             {features.map(([icon, title, desc]) => (

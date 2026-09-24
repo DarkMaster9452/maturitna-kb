@@ -7,7 +7,7 @@ import { useT, subjectName } from '@/components/i18n';
 import { NavCard, FeatureCard, StepCard, HeroPreview } from './_components';
 
 const navCards = [
-  { icon: 'rocket_launch', label: 'Vstúpiť do databázy', desc: 'Prihlás sa a začni študovať — okruhy, materiály, testy a plán na jednom mieste.', cta: 'Prihlásiť sa', href: '/login', highlight: true },
+  { icon: 'rocket_launch', label: 'Vyskúšať koncept', desc: 'Prihlás sa demo účtom a preklikaj si, ako by aplikácia mohla fungovať.', cta: 'Otvoriť demo', href: '/login', highlight: true },
   { icon: 'school', label: 'Predmety', desc: 'Všetky maturitné predmety s okruhmi, materiálmi a cvičnými testami.', cta: 'Zobraziť predmety', href: '/predmety' },
   { icon: 'library_books', label: 'Zdroje', desc: 'Externé materiály, videá a odporúčané zdroje na prípravu.', cta: 'Prehľadať zdroje', href: '/zdroje' },
   { icon: 'calendar_month', label: 'Rozvrh', desc: 'Týždenný plán štúdia s prehľadom termínov a skúšok.', cta: 'Otvoriť rozvrh', href: '/rozvrh' },
@@ -47,7 +47,7 @@ export default function HubPage() {
   const stats = [
     { value: subjects.length || 7, label: 'Maturitných predmetov', icon: 'menu_book' },
     { value: 7, label: 'Typov okruhov', icon: 'category' },
-    { value: 100, suffix: '%', label: 'Zdarma pre študentov', icon: 'volunteer_activism' },
+    { value: 1, suffix: '', label: 'Koncept · verzia 0.1', icon: 'science' },
   ];
 
   return (
@@ -57,7 +57,7 @@ export default function HubPage() {
         <div className="mkb-fade-up">
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'var(--surface-container-lowest)', border: '1px solid var(--outline-variant)', color: 'var(--on-surface-variant)', padding: '7px 14px', borderRadius: 9999, marginBottom: 24, fontSize: 13, fontWeight: 600 }}>
             <span className="mkb-pulse" style={{ width: 7, height: 7, borderRadius: '50%', background: 'var(--primary)' }} />
-            {t('Všetko pre tvoju maturitu na jednom mieste')}
+            {t('Koncept · prototyp aplikácie na maturitu')}
           </div>
           <h1 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(36px, 6vw, 60px)', lineHeight: 1.02, letterSpacing: '-.03em', fontWeight: 700, color: 'var(--on-surface)', marginBottom: 22 }}>
             {t('Tvoja cesta k úspešnej')}{' '}
@@ -65,15 +65,15 @@ export default function HubPage() {
             {t('začína tu.')}
           </h1>
           <p style={{ fontSize: 18, lineHeight: 1.65, color: 'var(--on-surface-variant)', marginBottom: 22, maxWidth: 520 }}>
-            {t('Organizuj si okruhy, materiály a poznámky, precvičuj cvičné testy a sleduj svoj pokrok — prehľadne, moderne a efektívne.')}
+            {t('Návrh, ako by mohla vyzerať príprava na maturitu: okruhy, materiály, poznámky, cvičné testy a sledovanie pokroku na jednom mieste. Ide o koncept — obsah a dáta sú ukážkové.')}
           </p>
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, marginBottom: 28, padding: '7px 14px', borderRadius: 9999, background: 'var(--primary-fixed)', color: 'var(--on-primary-fixed-variant)', fontSize: 13.5, fontWeight: 600 }}>
             <Icon name="auto_awesome" size={16} fill={1} style={{ color: 'var(--primary)' }} />
-            {t('Pripravíme ťa na')}{' '}
+            {t('Koncept pre')}{' '}
             <WordRotate words={lang === 'en' ? ['Maths', 'Slovak', 'English', 'History', 'Biology', 'IT'] : ['Matematiku', 'Slovenčinu', 'Angličtinu', 'Dejepis', 'Biológiu', 'Informatiku']} style={{ fontWeight: 700, color: 'var(--primary)' }} />
           </div>
           <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
-            <Link href="/login"><Button size="lg" iconAfter="arrow_forward">{t('Vstúpiť do databázy')}</Button></Link>
+            <Link href="/login"><Button size="lg" iconAfter="arrow_forward">{t('Vyskúšať koncept')}</Button></Link>
             <Link href="/predmety"><Button size="lg" variant="secondary">{t('Preskúmať predmety')}</Button></Link>
           </div>
         </div>
@@ -127,10 +127,10 @@ export default function HubPage() {
       {/* ── Features ─────────────────────────────────────── */}
       <section style={{ marginBottom: 92 }}>
         <Reveal style={{ textAlign: 'center', marginBottom: 36, maxWidth: 620, marginLeft: 'auto', marginRight: 'auto' }}>
-          <Eyebrow>{t('Čo tu nájdeš')}</Eyebrow>
-          <Serif size={38} weight={600} style={{ display: 'block', margin: '12px 0 12px' }}>{t('Všetko, čo na maturitu potrebuješ')}</Serif>
+          <Eyebrow>{t('Čo koncept ukazuje')}</Eyebrow>
+          <Serif size={38} weight={600} style={{ display: 'block', margin: '12px 0 12px' }}>{t('Navrhované funkcie')}</Serif>
           <p style={{ fontSize: 16, color: 'var(--on-surface-variant)', lineHeight: 1.6 }}>
-            {t('Nástroje navrhnuté tak, aby si sa mohol sústrediť na učenie — nie na organizovanie chaosu v priečinkoch.')}
+            {t('Prehľad funkcií, ktoré koncept demonštruje. Niektoré sú len naznačené a nemusia byť dotiahnuté do konca.')}
           </p>
         </Reveal>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: 18 }}>
@@ -142,7 +142,7 @@ export default function HubPage() {
       <section style={{ marginBottom: 92 }}>
         <Reveal style={{ textAlign: 'center', marginBottom: 36 }}>
           <Eyebrow>{t('Ako to funguje')}</Eyebrow>
-          <Serif size={38} weight={600} style={{ display: 'block', marginTop: 12 }}>{t('Tri kroky k pripravenosti')}</Serif>
+          <Serif size={38} weight={600} style={{ display: 'block', marginTop: 12 }}>{t('Ako by to fungovalo')}</Serif>
         </Reveal>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: 20 }}>
           {steps.map((s, i) => <Reveal key={s.title} delay={i * 100}><StepCard num={i + 1} {...s} /></Reveal>)}
@@ -154,14 +154,14 @@ export default function HubPage() {
         <div style={{ position: 'relative', overflow: 'hidden', borderRadius: 20, padding: 'clamp(40px, 5vw, 72px)', background: 'var(--panel-ink)', textAlign: 'center' }}>
           <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', backgroundImage: 'radial-gradient(var(--panel-ink-line) 1px, transparent 1px)', backgroundSize: '22px 22px', opacity: .5 }} />
           <div style={{ position: 'relative' }}>
-            <span className="mkb-eyebrow" style={{ color: 'var(--panel-ink-variant)' }}>{t('Začni ešte dnes')}</span>
+            <span className="mkb-eyebrow" style={{ color: 'var(--panel-ink-variant)' }}>{t('Koncept')}</span>
             <Serif size={40} weight={700} style={{ display: 'block', color: '#fff', margin: '16px 0 14px', fontSize: 'clamp(30px, 4vw, 46px)' }}>
-              {t('Pripravený začať?')}
+              {t('Pozri si koncept v akcii')}
             </Serif>
             <p style={{ fontSize: 17, color: 'var(--panel-ink-variant)', maxWidth: 520, margin: '0 auto 30px', lineHeight: 1.6 }}>
-              {t('Prihlás sa, vyber si predmety a maj celú prípravu na maturitu pod kontrolou.')}
+              {t('Prihlás sa demo účtom a preklikaj si návrh aplikácie. Spätná väzba je vítaná — nejde o hotový produkt.')}
             </p>
-            <Link href="/login"><Button size="lg" variant="white" iconAfter="arrow_forward">{t('Prihlásiť sa')}</Button></Link>
+            <Link href="/login"><Button size="lg" variant="white" iconAfter="arrow_forward">{t('Otvoriť demo')}</Button></Link>
           </div>
         </div>
       </Reveal>
