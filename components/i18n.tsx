@@ -48,6 +48,22 @@ const EN: Record<string, string> = {
   'Prihlás sa, vyber si predmety a maj celú prípravu na maturitu pod kontrolou.':
     'Sign in, pick your subjects and keep your whole matura prep under control.',
   'Maturitných predmetov': 'Matura subjects', 'Typov okruhov': 'Topic types', 'Zdarma pre študentov': 'Free for students',
+  // concept
+  'Koncept': 'Concept', 'Vyskúšať koncept': 'Try the concept', 'Otvoriť demo': 'Open demo',
+  'Koncept · prototyp aplikácie na maturitu': 'Concept · a matura prep app prototype',
+  'Koncept pre': 'A concept for', 'Koncept · verzia 0.1': 'Concept · version 0.1',
+  'Čo koncept ukazuje': 'What the concept shows', 'Navrhované funkcie': 'Proposed features',
+  'Ako by to fungovalo': 'How it would work', 'Pozri si koncept v akcii': 'See the concept in action',
+  'Návrh, ako by mohla vyzerať príprava na maturitu: okruhy, materiály, poznámky, cvičné testy a sledovanie pokroku na jednom mieste. Ide o koncept — obsah a dáta sú ukážkové.':
+    'A proposal for what matura prep could look like: topics, materials, notes, mock tests and progress tracking in one place. It is a concept — content and data are sample only.',
+  'Prehľad funkcií, ktoré koncept demonštruje. Niektoré sú len naznačené a nemusia byť dotiahnuté do konca.':
+    'An overview of the features this concept demonstrates. Some are only sketched and may not be complete.',
+  'Prihlás sa demo účtom a preklikaj si návrh aplikácie. Spätná väzba je vítaná — nejde o hotový produkt.':
+    'Sign in with a demo account and click through the app proposal. Feedback is welcome — this is not a finished product.',
+  'Toto je koncept aplikácie — nie hotový produkt. Obsah, účty aj štatistiky sú ukážkové.':
+    'This is an app concept — not a finished product. Content, accounts and statistics are sample data.',
+  'Ukážková verzia portálu. Dáta slúžia len na demonštráciu nápadu.':
+    'Sample version of the portal. Data is for demonstrating the idea only.',
   // progress
   'Analytika': 'Analytics', 'Môj pokrok': 'My progress',
   'Sleduj hodiny štúdia, výsledky testov a zvládnutie predmetov.': 'Track study hours, test results and subject mastery.',

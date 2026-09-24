@@ -1,8 +1,27 @@
-# MaturitaKB
+# MaturitaKB — koncept
 
-Plnohodnotná webová aplikácia pre prípravu na maturitu — okruhy, materiály, poznámky a testy prehľadne na jednom mieste. Next.js 14 + NeonDB (PostgreSQL).
+> **⚠️ Toto je koncept (prototyp / proof of concept), nie hotový produkt.**
+> Repozitár ukazuje *nápad*, ako by mohla vyzerať webová aplikácia na prípravu na maturitu —
+> okruhy, materiály, poznámky a testy prehľadne na jednom mieste.
+> Obsah, účty, štatistiky aj „achievementy" sú **ukážkové**. Aplikácia nie je určená na
+> produkčné nasadenie, nie je bezpečnostne auditovaná a funkcie môžu byť nedokončené alebo sa môžu zmeniť.
 
-## Prihlasovacie údaje (demo)
+Postavené na Next.js 14 + NeonDB (PostgreSQL).
+
+## Stav konceptu
+
+| Oblasť | Stav |
+|--------|------|
+| UI / dizajn (Editorial / Ink) | návrh — hotový na ukážku |
+| Okruhy, materiály, poznámky, testy | funkčné na ukážkových dátach |
+| Roly (študent / učiteľ / admin / vlastník) | demonštrácia oprávnení |
+| Registrácia, obnova hesla, notifikácie | iba naznačené, nefunkčné |
+| Bezpečnosť, škálovanie, GDPR | neriešené — mimo rozsahu konceptu |
+
+V aplikácii je stav konceptu viditeľný všade: pás „Koncept" na úvodnej stránke,
+štítok pri logu a poznámka v portáli.
+
+## Demo účty
 
 | Rola | E-mail | Heslo |
 |------|--------|-------|
@@ -22,26 +41,11 @@ Na prihlasovacej stránke sú tlačidlá **Demo prístup** na rýchle vyplnenie 
 
 ## Vzhľad
 
-Aplikácia má prepracovaný „Aurora" dizajnový systém so **svetlým aj tmavým režimom**.
+Dizajnový smer **„Editorial / Ink"** — monochromatická paper/ink paleta, hairline okraje,
+jeden striedmy akcent (emerald, alternatívne SPSIT modrá). Svetlý, tmavý a systémový režim;
+prepínanie v hlavičke alebo v **Nastavenia → Vzhľad**.
 
-**Farebná téma**
-
-| Téma | Popis | Farby |
-|------|-------|-------|
-| Indigo (predvolená) | Moderná indigo/fialová paleta | `#4f46e5` |
-| SPSIT | Technická modrá paleta | `#1565c0` |
-
-**Režim**
-
-| Režim | Popis |
-|-------|-------|
-| Svetlý | Vždy svetlý |
-| Tmavý | Vždy tmavý |
-| Podľa systému (predvolený) | Rešpektuje nastavenie operačného systému |
-
-Tmavý režim prepneš rýchlo cez ikonu 🌙 v hlavičke/sidebar, alebo detailne v **Nastavenia → Vzhľad**. Výber sa ukladá do `localStorage` a aplikuje sa bez „bliknutia" pri načítaní.
-
-## Funkcie
+## Funkcie (navrhované v koncepte)
 
 - **Úvodná stránka** — hero s ukážkou produktu, prehľad funkcií, „ako to funguje" a výzva na akciu
 - **Prihlásenie** — JWT session (httpOnly cookie), demo prístup, svetlý/tmavý režim
@@ -61,7 +65,7 @@ Tmavý režim prepneš rýchlo cez ikonu 🌙 v hlavičke/sidebar, alebo detailn
 - Next.js 14 (App Router)
 - NeonDB PostgreSQL (`@neondatabase/serverless`)
 - JWT auth (`jose`)
-- Inline CSS + CSS custom properties (dizajnový systém „Aurora": Indigo / SPSIT, light / dark)
+- Inline CSS + CSS custom properties (dizajnový systém „Editorial / Ink": Emerald / SPSIT, light / dark)
 
 ## Vývoj
 
@@ -70,3 +74,8 @@ npm install
 cp .env.example .env.local   # doplň DATABASE_URL a JWT_SECRET
 npm run dev
 ```
+
+## Licencia a použitie
+
+Ide o študentský koncept na ukážku nápadu. Nepoužívaj ho so skutočnými osobnými údajmi
+ani ako produkčnú aplikáciu.

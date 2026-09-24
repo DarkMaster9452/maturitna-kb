@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Button, Logo, Icon, ModeToggle } from '@/components/ui';
 import { useT, LangToggle } from '@/components/i18n';
+import { ConceptBanner, ConceptBadge } from '@/components/concept';
 
 const navLinks = [
   { href: '/', label: 'Domov' },
@@ -28,6 +29,7 @@ export default function MarketingLayout({ children }: { children: React.ReactNod
 
   return (
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+      <ConceptBanner />
       <nav style={{
         position: 'sticky', top: 0, zIndex: 50,
         background: scrolled ? 'var(--surface)' : 'transparent',
@@ -36,7 +38,7 @@ export default function MarketingLayout({ children }: { children: React.ReactNod
         transition: 'border-color .3s, background .3s',
       }}>
         <div style={{ maxWidth: 1200, margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 16 }}>
-          <Link href="/" style={{ display: 'flex' }}><Logo /></Link>
+          <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: 10 }}><Logo /><ConceptBadge /></Link>
 
           <div className="mkb-hide-mobile" style={{ display: 'flex', gap: 4, alignItems: 'center', background: 'var(--surface-container-low)', border: '1px solid var(--outline-variant)', borderRadius: 9999, padding: 4 }}>
             {navLinks.map(l => {
@@ -55,7 +57,7 @@ export default function MarketingLayout({ children }: { children: React.ReactNod
           <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
             <LangToggle />
             <ModeToggle />
-            <div className="mkb-hide-mobile"><Link href="/login"><Button icon="login">{t('Prihlásiť sa')}</Button></Link></div>
+            <div className="mkb-hide-mobile"><Link href="/login"><Button icon="login">{t('Vyskúšať koncept')}</Button></Link></div>
             <button className="mkb-tap" onClick={() => setMenuOpen(o => !o)} aria-label="Menu" data-mobile-menu
               style={{ display: 'none', width: 40, height: 40, borderRadius: 12, border: '1px solid var(--outline-variant)', background: 'var(--surface-container-lowest)', color: 'var(--on-surface)', alignItems: 'center', justifyContent: 'center' }}>
               <Icon name={menuOpen ? 'close' : 'menu'} size={22} />
@@ -68,7 +70,7 @@ export default function MarketingLayout({ children }: { children: React.ReactNod
             {navLinks.map(l => (
               <Link key={l.href} href={l.href} style={{ padding: '12px 14px', borderRadius: 10, fontWeight: 600, fontSize: 15, color: pathname === l.href ? 'var(--primary)' : 'var(--on-surface)', background: pathname === l.href ? 'var(--primary-fixed)' : 'transparent' }}>{t(l.label)}</Link>
             ))}
-            <Link href="/login" style={{ marginTop: 6 }}><Button full icon="login">{t('Prihlásiť sa')}</Button></Link>
+            <Link href="/login" style={{ marginTop: 6 }}><Button full icon="login">{t('Vyskúšať koncept')}</Button></Link>
           </div>
         )}
       </nav>
@@ -87,7 +89,7 @@ export default function MarketingLayout({ children }: { children: React.ReactNod
             <div>
               <Logo />
               <p style={{ fontSize: 14, color: 'var(--on-surface-variant)', lineHeight: 1.6, marginTop: 14, maxWidth: 320 }}>
-                Okruhy, materiály, poznámky a testy pre všetky maturitné predmety — prehľadne, moderne a na jednom mieste.
+                Koncept aplikácie na prípravu na maturitu — okruhy, materiály, poznámky a testy na jednom mieste. Ide o prototyp nápadu, nie o hotový produkt.
               </p>
             </div>
             <div>
@@ -106,8 +108,8 @@ export default function MarketingLayout({ children }: { children: React.ReactNod
             </div>
           </div>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 16, flexWrap: 'wrap', paddingTop: 24, borderTop: '1px solid var(--outline-variant)', fontSize: 13, color: 'var(--on-surface-variant)' }}>
-            <span>© {new Date().getFullYear()} MaturitaKB</span>
-            <span>Vytvorené pre maturantov · Next.js</span>
+            <span>© {new Date().getFullYear()} MaturitaKB · koncept</span>
+            <span>Prototyp / proof of concept · Next.js</span>
           </div>
         </div>
       </footer>

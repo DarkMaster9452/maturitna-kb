@@ -3,8 +3,8 @@ import './globals.css';
 import { LangProvider } from '@/components/i18n';
 
 export const metadata: Metadata = {
-  title: 'MaturitaKB — Tvoja príprava na maturitu',
-  description: 'Organizovaná databáza okruhov, materiálov, poznámok a testov pre prípravu na maturitu. Prehľadne na jednom mieste.',
+  title: 'MaturitaKB — koncept aplikácie na prípravu na maturitu',
+  description: 'Koncept (prototyp) aplikácie na prípravu na maturitu — okruhy, materiály, poznámky a testy na jednom mieste. Nie je to hotový produkt; obsah je ukážkový.',
   themeColor: [
     { media: '(prefers-color-scheme: light)', color: '#f3f2ee' },
     { media: '(prefers-color-scheme: dark)', color: '#0c0d0f' },
