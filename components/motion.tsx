@@ -48,7 +48,7 @@ export function Counter({ value, duration = 1400, decimals = 0, prefix = '', suf
   const [display, setDisplay] = useState(0);
   const fromRef = useRef(0);
   const inView = useRef(false);
-  const rafRef = useRef<number>();
+  const rafRef = useRef<number | undefined>(undefined);
 
   const animate = (to: number) => {
     if (rafRef.current) cancelAnimationFrame(rafRef.current);

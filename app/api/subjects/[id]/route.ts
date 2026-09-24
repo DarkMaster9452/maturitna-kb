@@ -2,7 +2,8 @@ export const dynamic = 'force-dynamic';
 import { NextRequest, NextResponse } from 'next/server';
 import sql from '@/lib/db';
 
-export async function GET(_: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(_: NextRequest, props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   const rows = await sql`SELECT * FROM subjects WHERE id = ${params.id} OR slug = ${params.id}`;
   if (!rows.length) return NextResponse.json({ error: 'Not found' }, { status: 404 });
   const subject = rows[0];

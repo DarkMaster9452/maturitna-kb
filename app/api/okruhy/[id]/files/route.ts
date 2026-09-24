@@ -19,7 +19,8 @@ const ALLOWED_TYPES: Record<string, string> = {
 
 const MAX_SIZE = 30 * 1024 * 1024; // 30MB
 
-export async function POST(req: NextRequest, { params }: { params: { id: string } }) {
+export async function POST(req: NextRequest, props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   const rows = await sql`SELECT * FROM okruhy WHERE id = ${params.id}`;
   if (!rows.length) return NextResponse.json({ error: 'Okruh not found' }, { status: 404 });
 

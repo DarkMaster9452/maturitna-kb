@@ -1,9 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { jwtVerify } from 'jose';
+import { getJwtSecret } from './lib/jwt-secret';
 
-const SECRET = new TextEncoder().encode(
-  process.env.JWT_SECRET || 'maturita-kb-secret-2024'
-);
 
 const PUBLIC_PATHS = ['/', '/login', '/zdroje', '/predmety', '/rozvrh', '/api/auth/login', '/api/subjects', '/api/resources'];
 
@@ -24,7 +22,7 @@ export async function middleware(req: NextRequest) {
   }
 
   try {
-    await jwtVerify(token, SECRET);
+    await jwtVerify(token, getJwtSecret());
     return NextResponse.next();
   } catch {
     if (pathname.startsWith('/api/')) {
